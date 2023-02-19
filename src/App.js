@@ -1,9 +1,14 @@
 import "./App.css";
-import MainRoutes from "./routes";
+import Routes from "./routes";
+import {Provider} from 'react-redux'
+
+import store from "./redux/store";
 
 function App() {
   return (
-    <MainRoutes />
+    <Provider store={store}>
+      <Routes />
+    </Provider>
   );
 }
 

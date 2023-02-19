@@ -1,7 +1,8 @@
 import React from "react";
 import Header from "../../Header";
 import Sidebar from "../../Sidebar";
-import { Outlet } from 'react-router-dom'
+import { Outlet } from "react-router-dom";
+import Footer from "../../Footer";
 
 const AdminLayout = () => {
   return (
@@ -11,8 +12,9 @@ const AdminLayout = () => {
       <div className="flex-1 h-full overflow-y-scroll flex flex-col">
         {/* Header */}
         <Header />
-        <div className="w-full flex-1 bg-[#F3F6FF] p-8">
-            <Outlet />
+        <div className="w-full flex-1 bg-[#F3F6FF] p-8 relative">
+          <Outlet />
+          <Footer />
         </div>
       </div>
     </div>

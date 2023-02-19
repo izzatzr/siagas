@@ -4,17 +4,19 @@ const TextInput = (props) => {
   const { label, name, icon, placeholder, type = "text" } = props;
   return (
     <div className="flex gap-2 flex-col">
-      <label htmlFor={name} className="text-[#333333] text-base font-normal">
-        {label}
-      </label>
+      {label && (
+        <label htmlFor={name} className="text-[#333333] text-base font-normal">
+          {label}
+        </label>
+      )}
       <div
-        className={`group flex gap-[10px] rounded-lg border border-[#828282] p-3 ${
+        className={`group flex gap-[10px] rounded-lg border border-[#828282] p-3 bg-white ${
           icon ? "justify-between" : ""
         }`}
       >
         <input
           type={type}
-          className="outline-none text-[#333333] placeholder:text-[#828282] text-sm w-full group-focus-within:border group-focus-within:border-blue-400"
+          className="outline-none text-[#333333] placeholder:text-[#828282] text-sm w-full"
           placeholder={placeholder}
         />
 
