@@ -1,6 +1,7 @@
 import { LOGIN_SUCCESS, LOGOUT } from "../types";
+import  secureLocalStorage  from  "react-secure-storage";
 
-const isLoggedIn = localStorage.getItem("isLoggedIn") ? true : false;
+const isLoggedIn = secureLocalStorage.getItem("isLoggedIn") ? true : false;
 
 const initialState = {
   isLoggedIn: isLoggedIn,

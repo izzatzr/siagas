@@ -2,10 +2,21 @@ import React from "react";
 import Button from "../Button";
 
 import logo from "../../assets/images/logo.svg";
+import pdfFile from "../../assets/test-mb.pdf";
 
 const Footer = () => {
+  const downloadFileStatic = () => {
+    const link = document.createElement("a");
+    link.href = pdfFile;
+    link.setAttribute("download", "petunjuk-teknis.pdf");
+    document.body.appendChild(link);
+    link.click();
+
+    // Clean up and remove the link
+    link.parentNode.removeChild(link);
+  };
   return (
-    <div className=" bg-[#434343] rounded-lg py-6 px-4 flex flex-col gap-6 absolute bottom-[24px] right-6 left-6">
+    <div className=" bg-[#434343] rounded-lg py-6 px-4 flex flex-col gap-6">
       <div className="font-bold text-[#F2F2F2] text-lg">
         Indeks Inovasi Daerah 2023
       </div>
@@ -15,22 +26,21 @@ const Footer = () => {
         pengukuran dan penilaian terhadap masing-masing inovasi yang dikirimkan
         ke Kemendagri.
       </div>
-      <div className="bg-[#888888] w-full h-px"></div>
+      <div className="bg-[#888888] h-px"></div>
       <div className="flex justify-between items-center">
         <div className="">
           <Button
             text="Petunjuk Teknis"
             padding={"p-[10px]"}
             fontSize={"text-[14px]"}
+            onClick={downloadFileStatic}
           />
         </div>
         <div className="flex gap-4">
           <div className="flex gap-4 text-[#F2F2F2]">
             <img src={logo} alt="logo" className="w-[35px] h-[37px]" />
             <div className="flex flex-col">
-              <span className="font-bold text-xs">
-                &copy; 2022 BPP Litbang Kemendagri
-              </span>
+              <span className="font-bold text-xs">SIAGAS KAB SORONG</span>
               <span className="text-xs">All rights reserved</span>
             </div>
           </div>

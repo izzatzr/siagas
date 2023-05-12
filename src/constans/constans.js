@@ -41,7 +41,7 @@ export const sidebarDataDummy = [
     ],
   },
   {
-    label: "Penilaian Indeks",
+    label: "Verifikasi Indeks",
     icon: ratingIndexIcon,
     active: false,
     children: [
@@ -58,11 +58,6 @@ export const sidebarDataDummy = [
       {
         label: "Inovasi Yang Ditolak",
         link: "/inovasi-ditolak",
-        active: false,
-      },
-      {
-        label: "Quality Control",
-        link: "/quality-control",
         active: false,
       },
       {
@@ -122,48 +117,18 @@ export const sidebarDataDummy = [
     active: false,
     children: [
       {
-        label: "Analisis Rata-Rata",
-        link: "/analisis-rata",
-        active: false,
-      },
-      {
-        label: "Indeks Rata-Rata Inovasi Nasional",
-        link: "/inovasi-nasional",
-        active: false,
-      },
-      {
-        label: "Indeks Rata-Rata Inovasi Wilayah",
-        link: "/inovasi-wilayah",
-        active: false,
-      },
-      {
-        label: "Indeks Rata-Rata Inovasi Provinsi",
-        link: "/inovasi-provinsi",
-        active: false,
-      },
-      {
-        label: "Indeks Rata-Rata Inovasi Kota",
-        link: "/inovasi-kota",
-        active: false,
-      },
-      {
-        label: "Indeks Rata-Rata Inovasi Kabupaten",
+        label: "Indeks Rata-Rata Kabupaten",
         link: "/inovasi-kabupaten",
         active: false,
       },
       {
-        label: "Indeks Rata-Rata Inovasi Daerah Perbatasan",
-        link: "/inovasi-perbatasan",
+        label: "Indeks Rata-Rata OPD",
+        link: "/inovasi-opd",
         active: false,
       },
       {
-        label: "Indeks Rata-Rata Inovasi Daerah Tertinggal",
-        link: "/inovasi-tertinggal",
-        active: false,
-      },
-      {
-        label: "Indeks Rata-Rata Inovasi Papua - Papua Barat",
-        link: "/inovasi-papua",
+        label: "Indeks Rata-Rata Distrik",
+        link: "/inovasi-distrik",
         active: false,
       },
       {
@@ -172,23 +137,13 @@ export const sidebarDataDummy = [
         active: false,
       },
       {
-        label: "Rekap Bentuk Inovasi",
-        link: "/rekap-bentuk-inovasi",
+        label: "Rekap Inovasi berdasarkan urusan",
+        link: "/rekap-inovasi-urusan",
         active: false,
       },
       {
-        label: "Rekap Urusan Pemerintah",
-        link: "/rekap-urusan-pemerintah",
-        active: false,
-      },
-      {
-        label: "Rekap Urusan Pemerintah",
-        link: "/rekap-urusan-pemerintah",
-        active: false,
-      },
-      {
-        label: "Rekap Berdasarkan Inisiator",
-        link: "/rekap-inisiator",
+        label: "Rekap Inovasi berdasarkan inisiator",
+        link: "/rekap-inovasi-inisiator",
         active: false,
       },
     ],
@@ -199,7 +154,64 @@ export const sidebarDataDummy = [
     active: false,
     children: [
       {
-        label: "Belum ada",
+        label: "Tim Penilaian",
+        link: "/master/tim-penilaian",
+        active: false,
+      },
+      {
+        label: "Indikator",
+        link: "/master/indikator",
+        active: false,
+      },
+      {
+        label: "Urusan Pemerintah",
+        link: "/master/urusan-pemerintah",
+        active: false,
+      },
+      {
+        label: "OPD dan Daerah",
+        link: "/master/opd-daerah",
+        active: false,
+      },
+      {
+        label: "Distrik",
+        link: "/master/distrik",
+        active: false,
+      },
+      {
+        label: "Wilayah",
+        link: "/master/wilayah",
+        active: false,
+      },
+      {
+        label: "kategori Dokumen",
+        link: "/master/kategori-dokumen",
+        active: false,
+      },
+      {
+        label: "Dokumen",
+        link: "/master/dokumen",
+        active: false,
+      },
+      {
+        label: "Pengumuman",
+        link: "/master/pengumuman",
+        active: false,
+      },
+      {
+        label: "FAQ",
+        link: "/master/faq",
+        active: false,
+      },
+      {
+        label: "Recount",
+        link: "/master/recount",
+        active: false,
+      },
+      {
+        label: "Rawlog",
+        link: "/master/rawlog",
+        active: false,
       },
     ],
   },
@@ -253,15 +265,41 @@ export const announcementData = [
 export const guideData = [
   {
     date: "1 Januari 2022",
-    description:
-      "Manual Book Indeks Inovasi Daerah Tahun 2022",
+    description: "Manual Book Indeks Inovasi Daerah Tahun 2022",
   },
 ];
 
 export const documentData = [
   {
     date: "1 Januari 2022",
-    description:
-      "PEDOMAN UMUM IID 2022",
+    description: "PEDOMAN UMUM IID 2022",
   },
 ];
+
+export const BASE_API_URL = "https://siagas.api.sorong.koneksiku.my.id";
+
+//Contants for useQuery
+export const GET_ALL_GOVERNMENT_BUSINESS = "get_all_government_business";
+export const GET_GOVERNMENT_BUSINESS = "get_government_business";
+
+export const GET_ALL_REGIONAL = "get_all_regional";
+export const GET_REGIONAL = "get_regional";
+
+export const GET_ALL_INDICATOR = "get_all_indicator";
+export const GET_INDICATOR = "get_indicator";
+export const SUBMIT_INDICATOR = "submit_indicator";
+
+export const GET_ALL_WILAYAH = "get_all_wilayah";
+export const GET_WILAYAH = "get_wilayah";
+
+export const GET_ALL_DOCUEMNT_CATEGORY = "get_all_document_category";
+export const GET_DOCUEMNT_CATEGORY = "get_document_category";
+
+export const GET_ALL_DOCUEMNT = "get_all_document";
+export const GET_DOCUEMNT = "get_document";
+
+export const GET_ALL_ANNOUNCEMENT = "get_all_announcement";
+export const GET_ANNOUNCEMENT = "get_announcement";
+
+export const GET_ALL_FAQ = "get_all_faq";
+export const GET_FAQ = "get_faq";

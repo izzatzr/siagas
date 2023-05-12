@@ -1,10 +1,14 @@
 import React from "react";
+
+import { MdLogout } from "react-icons/md";
+import {useDispatch} from 'react-redux'
+import  secureLocalStorage  from  "react-secure-storage";
+
+import { sidebarDataDummy } from "../../constans/constans";
 import logo from "../../assets/images/logo.svg";
 import SidebarItem from "../SidebarItem";
-import { MdLogout } from "react-icons/md";
-import { sidebarDataDummy } from "../../constans/constans";
-import {useDispatch} from 'react-redux'
 import { signOut } from "../../redux/actions/auth";
+
 
 const Sidebar = () => {
   const dispatch = useDispatch()
@@ -26,7 +30,9 @@ const Sidebar = () => {
   };
 
   const handleSignOut = () => {
-    localStorage.removeItem("isLoggedIn");
+    secureLocalStorage.removeItem("isLoggedIn");
+    secureLocalStorage.removeItem("token");
+
     dispatch(signOut());
   };
 

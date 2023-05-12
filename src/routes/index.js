@@ -30,19 +30,12 @@ import SiagasRanking from "./GovernmentInnovate/SiagasRanking";
 import Login from "./Login";
 
 //Report
-import AverageAnalysis from "./Report/AverageAnalysis";
-import NationalInnovate from "./Report/NationalInnovate";
-import RegionInnovate from "./Report/RegionInnovate";
-import ProvinceInnovate from "./Report/ProvinceInnovate";
-import CityInnovate from "./Report/CityInnovate";
 import RegencyInnovate from "./Report/RegencyInnovate";
-import BorderInnovate from "./Report/BorderInnovate";
-import LeftBehindInnovate from "./Report/LeftBehindInnovate";
-import PapuaIndex from "./Report/PapuaIndex";
+import OPDInnovation from "./Report/OPDInnovation";
+import DistrictInnovate from "./Report/DistrictInnovate";
 import InnovationType from "./Report/InnovationType";
-import InnovationForm from "./Report/InnnovationForm";
-import GovernmentAffairs from "./Report/GovernmentAffairs";
-import Initiator from "./Report/Initiator";
+import BusinessInnovate from "./Report/BusinessInnovate";
+import InitiatorInnovate from "./Report/InitiatorInnovate";
 
 // Guest
 import GuesLayout from "../components/Layout/Guest";
@@ -50,6 +43,21 @@ import Announcement from "./Guest/Annoucement";
 import Guide from "./Guest/Guide";
 import YearReport from "./Guest/YearReport";
 import Document from "./Guest/Document";
+import GovernmentBusiness from "./MasterData/GovernmentBusiness";
+import FormGovernmentBusiness from "./MasterData/GovernmentBusiness/FormGovernmentBusiness";
+import Regional from "./MasterData/Regional";
+import FormRegional from "./MasterData/Regional/FormRegional";
+import Indicator from "./MasterData/Indicator";
+import Wilayah from "./MasterData/Wilayah";
+import FormWilayah from "./MasterData/Wilayah/FormWilayah";
+import DocumentCategory from "./MasterData/DocumentCategory";
+import FormIndicator from "./MasterData/Indicator/FormIndicator";
+import AnnouncementDashboard from "./MasterData/AnnouncementDashboard";
+import FormAnnouncementDashboard from "./MasterData/AnnouncementDashboard/FormAnnouncementDashboard";
+import FAQDashboard from "./MasterData/FAQDashboard";
+import FormFAQDashboard from "./MasterData/FAQDashboard/FormFAQDashboard";
+import DocumentDashboard from "./MasterData/DocumentDashboard";
+import FormDocumentDashboard from "./MasterData/DocumentDashboard/FormDocumentDashboard";
 
 const Routes = () => {
   const router = createBrowserRouter([
@@ -128,61 +136,100 @@ const Routes = () => {
           path: "/ranking-siagas",
           element: <SiagasRanking />,
         },
-        {
-          path: "/analisis-rata",
-          element: <AverageAnalysis />,
-        },
-        {
-          path: "/inovasi-nasional",
-          element: <NationalInnovate />,
-        },
-        {
-          path: "/inovasi-wilayah",
-          element: <RegionInnovate />,
-        },
-        {
-          path: "/inovasi-provinsi",
-          element: <ProvinceInnovate />,
-        },
-        {
-          path: "/inovasi-kota",
-          element: <CityInnovate />,
-        },
+        //Report
         {
           path: "/inovasi-kabupaten",
           element: <RegencyInnovate />,
         },
         {
-          path: "/inovasi-perbatasan",
-          element: <BorderInnovate />,
+          path: "/inovasi-opd",
+          element: <OPDInnovation />,
         },
         {
-          path: "/inovasi-tertinggal",
-          element: <LeftBehindInnovate />,
-        },
-        {
-          path: "/inovasi-papua",
-          element: <PapuaIndex />,
+          path: "/inovasi-distrik",
+          element: <DistrictInnovate />,
         },
         {
           path: "/rekap-jenis-inovasi",
           element: <InnovationType />,
         },
         {
-          path: "/rekap-bentuk-inovasi",
-          element: <InnovationForm />,
+          path: "/rekap-inovasi-urusan",
+          element: <BusinessInnovate />,
         },
         {
-          path: "/rekap-urusan-pemerintah",
-          element: <GovernmentAffairs />,
+          path: "/rekap-inovasi-inisiator",
+          element: <InitiatorInnovate />,
+        },
+        //Master Data
+        {
+          path: "/master/urusan-pemerintah",
+          element: <GovernmentBusiness />,
         },
         {
-          path: "/rekap-urusan-pemerintah",
-          element: <GovernmentAffairs />,
+          path: "/master/urusan-pemerintah/:action/:id?",
+          element: <FormGovernmentBusiness />,
         },
         {
-          path: "/rekap-inisiator",
-          element: <Initiator />,
+          path: "/master/opd-daerah",
+          element: <Regional />,
+        },
+        {
+          path: "/master/opd-daerah/:action/:id?",
+          element: <FormRegional />,
+        },
+        {
+          path: "/master/indikator",
+          element: <Indicator />,
+        },
+        {
+          path: "/master/indikator/:action/:id?",
+          element: <FormIndicator />,
+        },
+        {
+          path: "/master/indikator/:indicator_id/scale-indicator",
+          element: <FormIndicator />,
+        },
+        {
+          path: "/master/opd-daerah/:action/:id?",
+          element: <FormRegional />,
+        },
+        {
+          path: "/master/wilayah",
+          element: <Wilayah />,
+        },
+        {
+          path: "/master/wilayah/:action/:id?",
+          element: <FormWilayah />,
+        },
+
+        {
+          path: "/master/kategori-dokumen",
+          element: <DocumentCategory />,
+        },
+        {
+          path: "/master/pengumuman",
+          element: <AnnouncementDashboard />,
+        },
+        {
+          path: "/master/pengumuman/:action/:id?",
+          element: <FormAnnouncementDashboard />,
+        },
+        {
+          path: "/master/faq",
+          element: <FAQDashboard />,
+        },
+        {
+          path: "/master/faq/:action/:id?",
+          element: <FormFAQDashboard />,
+        },
+        {
+          path: "/master/dokumen",
+          element: <DocumentDashboard />,
+        },
+        {
+          path: "/master/dokumen/:action/:id?",
+          element: <FormDocumentDashboard />,
         },
       ],
     },
@@ -193,24 +240,24 @@ const Routes = () => {
     {
       path: "/",
       element: <GuesLayout />,
-      children : [
+      children: [
         {
-          path : "/pengumuman",
-          element : <Announcement />
+          path: "/pengumuman",
+          element: <Announcement />,
         },
         {
-          path : "/panduan",
-          element : <Guide />
+          path: "/panduan",
+          element: <Guide />,
         },
         {
-          path : "/laporan-tahunan",
-          element : <YearReport />
+          path: "/laporan-tahunan",
+          element: <YearReport />,
         },
         {
-          path : "/dokumen",
-          element : <Document />
+          path: "/dokumen",
+          element: <Document />,
         },
-      ]
+      ],
     },
   ]);
   return <RouterProvider router={router} />;

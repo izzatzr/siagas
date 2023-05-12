@@ -2,6 +2,7 @@ import React from "react";
 import announcementIcon from "../../../assets/images/announcement.svg";
 import { announcementData } from "../../../constans/constans";
 import { BiDownload } from "react-icons/bi";
+import pdfFile from '../../../assets/test-mb.pdf'
 
 const Announcement = () => {
   return (
@@ -22,10 +23,10 @@ const Announcement = () => {
                   {announcement.description}
                 </span>
               </div>
-              <div className="flex items-center gap-2">
+              <a href={pdfFile} download className="flex items-center gap-2">
                 <BiDownload color="#2F80ED" size={20} />
                 <span className="text-sm text-[#2F80ED]">Unduh Dokumen</span>
-              </div>
+              </a>
             </div>
           </div>
         ))}
