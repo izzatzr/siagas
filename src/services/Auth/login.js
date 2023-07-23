@@ -2,7 +2,6 @@ import { BASE_API_URL } from "../../constans/constans";
 
 export const doLogin = async (payload) => {
   try {
-    console.log(payload);
     const response = await fetch(`${BASE_API_URL}/authentication/login`, {
       method: "POST",
       body: JSON.stringify(payload),

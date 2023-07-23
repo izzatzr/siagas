@@ -75,6 +75,15 @@ const FormGovernmentBusiness = () => {
           </span>
         </div>
         <TextInput
+          label="Masukkan Tanggal Deadline"
+          placeholder="Masukkan Tanggal. (Format: MM-dd-YYYY)"
+          onChange={(e) => {
+            setName(e.target.value);
+          }}
+          value={name}
+          type={"date"}
+        />
+        <TextInput
           label="Nama Urusan"
           placeholder="Masukkan Nama Urusan"
           onChange={(e) => {

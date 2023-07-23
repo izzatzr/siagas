@@ -1,4 +1,4 @@
-import { convertQueryString } from "../../utils";
+import { convertQueryString, getToken } from "../../utils";
 import { BASE_API_URL } from "../../constans/constans";
 
 export const getAllGovernmentBusiness = (params) => async () => {
@@ -47,7 +47,10 @@ export const submitGovernmentBusiness = async (payload) => {
     }`;
     const response = await fetch(url, {
       method: payload?.id ? "PATCH" : "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken().token}`,
+      },
       body: JSON.stringify({ name: payload.name }),
     });
 

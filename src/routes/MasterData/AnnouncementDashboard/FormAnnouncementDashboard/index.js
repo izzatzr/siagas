@@ -66,9 +66,6 @@ const FormAnnouncementDashboard = () => {
       enabled: false,
       onSuccess: (res) => {
         const { data } = res;
-        console.log(
-          isHTML(data?.content) ? data?.content : `<div>${data?.content}</div>`
-        );
         setPayload({
           title: data?.title.toString(),
           slug: data?.slug.toString(),

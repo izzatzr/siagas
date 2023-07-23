@@ -58,6 +58,13 @@ import FAQDashboard from "./MasterData/FAQDashboard";
 import FormFAQDashboard from "./MasterData/FAQDashboard/FormFAQDashboard";
 import DocumentDashboard from "./MasterData/DocumentDashboard";
 import FormDocumentDashboard from "./MasterData/DocumentDashboard/FormDocumentDashboard";
+import AssessmentTeam from "./MasterData/AssessmentTeam";
+import UserAccount from "./Configuration/UserAccount";
+import OPDList from "./Configuration/OPDList";
+import APIAccess from "./Configuration/APIAccess";
+import Setting from "./Configuration/Setting";
+import Tuxedo from "./Configuration/Tuxedo";
+import UPTDList from "./Configuration/UPTDList";
 
 const Routes = () => {
   const router = createBrowserRouter([
@@ -163,6 +170,10 @@ const Routes = () => {
         },
         //Master Data
         {
+          path: "/master/tim-penilaian",
+          element: <AssessmentTeam />,
+        },
+        {
           path: "/master/urusan-pemerintah",
           element: <GovernmentBusiness />,
         },
@@ -231,6 +242,8 @@ const Routes = () => {
           path: "/master/dokumen/:action/:id?",
           element: <FormDocumentDashboard />,
         },
+        ...configurationRoutes
+        // Configuration
       ],
     },
     {
@@ -262,5 +275,32 @@ const Routes = () => {
   ]);
   return <RouterProvider router={router} />;
 };
+
+const configurationRoutes = [
+  {
+    path: "/konfigurasi/user-account",
+    element: <UserAccount />,
+  },
+  {
+    path: "/konfigurasi/daftar-opd",
+    element: <OPDList />,
+  },
+  {
+    path: "/konfigurasi/daftar-uptd",
+    element: <UPTDList />,
+  },
+  {
+    path: "/konfigurasi/tuxedo",
+    element: <Tuxedo />,
+  },
+  {
+    path: "/konfigurasi/setting",
+    element: <Setting />,
+  },
+  {
+    path: "/konfigurasi/akses-api",
+    element: <APIAccess />,
+  },
+];
 
 export default Routes;

@@ -11,12 +11,29 @@ import Checkbox from "../../components/Checkbox";
 import TextInput from "../../components/TextInput";
 
 import logo from "../../assets/images/logo.svg";
-import sideImage from "../../assets/images/side-image.png";
 import announcementLogo from "../../assets/images/announcement.svg";
 import { doLogin } from "../../services/Auth/login";
 import Loading from "../../components/Loading";
+import Slider from "react-slick";
 
-const Login = (props) => {
+import imageOne from "../../assets/images/slider/1.jpeg";
+import imageTwo from "../../assets/images/slider/2.jpeg";
+import imageThree from "../../assets/images/slider/3.jpeg";
+import imageFour from "../../assets/images/slider/4.jpeg";
+import imageFive from "../../assets/images/slider/5.jpeg";
+import imageSix from "../../assets/images/slider/6.jpeg";
+
+const settings = {
+  infinite: true,
+  speed: 500,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  arrows: false,
+  autoplay: true,
+  autoplaySpeed: 2000,
+};
+
+const Login = () => {
   const [loading, setLoading] = React.useState(false);
   const { auth } = useSelector((state) => state);
 
@@ -56,8 +73,14 @@ const Login = (props) => {
       },
       {
         onSuccess: (res) => {
+          const token = {
+            token: res.token,
+            token_expired_at: res.token_expired_at,
+          };
           secureLocalStorage.setItem("isLoggedIn", true);
-          secureLocalStorage.setItem("token", res);
+          secureLocalStorage.setItem("token", token);
+          secureLocalStorage.setItem("user", res.role);
+
           alert("Berhasil login");
           setLoading(false);
 
@@ -76,20 +99,17 @@ const Login = (props) => {
   return auth.isLoggedIn ? (
     <Navigate to="/" />
   ) : (
-    <div className="m-0 p-0 flex items-center w-screen h-full">
+    <div className="box-border w-screen h-screen flex flex-col">
       {loading && <Loading />}
-      <div className=" h-screen">
-        <img src={sideImage} alt="side" className="h-screen" />
-      </div>
-      <div className="flex-1 h-screen flex flex-col py-12 px-[38px]">
-        <div className="flex gap-4 h-[56px]">
+      <div className="py-6 px-24 w-full flex items-center justify-between shadow-lg z-10 bg-white">
+        <div className="flex gap-4">
           <img src={logo} alt="logo" className="w-[53px] h-[56px]" />
           <div className="flex flex-col">
             <span className="font-bold text-[#333333] text-base">SIAGAS</span>
             <span className="text-[#333333] text-base">KABUPATEN SORONG</span>
           </div>
         </div>
-        <div className="flex gap-4 w-full mt-12">
+        <div className="flex items-center gap-4 justify-end flex-1 text-[#131313]">
           <Link to="/pengumuman">
             <CardLogin label="Pengumuman" image={announcementLogo} />
           </Link>
@@ -100,8 +120,32 @@ const Login = (props) => {
             <CardLogin label="Petunjuk Teknis" image={announcementLogo} />
           </Link>
         </div>
-        <div className="flex mt-[54px] flex-col gap-4 ml-28">
-          <div className="flex flex-col gap-2">
+      </div>
+      <div className="w-full">
+        <Slider {...settings}>
+          <div className="w-full bg-red-400">
+            <img src={imageOne} className="w-full object-cover h-[900px]" />
+          </div>
+          <div className="w-full bg-red-400">
+            <img src={imageTwo} className="w-full object-cover h-[900px]" />
+          </div>
+          <div className="w-full bg-red-400">
+            <img src={imageThree} className="w-full object-cover h-[900px]" />
+          </div>
+          <div className="w-full bg-red-400">
+            <img src={imageFour} className="w-full object-cover h-[900px]" />
+          </div>
+          <div className="w-full bg-red-400">
+            <img src={imageFive} className="w-full object-cover h-[900px]" />
+          </div>
+          <div className="w-full bg-red-400">
+            <img src={imageSix} className="w-full object-cover h-[900px]" />
+          </div>
+        </Slider>
+      </div>
+      <div className="bg-cover flex items-center justify-center pb-6">
+        <div className="flex mt-[54px] flex-col gap-4 ml-28 bg-black/5 p-10 w-[484px] items-center shadow-lg rounded-lg">
+          <div className="flex flex-col gap-2 text-center">
             <span className="font-bold text-2xl text-[#333333]">
               Selamat datang
             </span>
@@ -109,7 +153,7 @@ const Login = (props) => {
               Login dibawah untuk akses akun Anda
             </span>
           </div>
-          <div className="w-3/5">
+          <div className="w-full">
             <TextInput
               value={payload.username}
               onChange={(e) => handleChange("username", e.target.value)}
@@ -119,7 +163,7 @@ const Login = (props) => {
               errorMessage={errors?.username}
             />
           </div>
-          <div className="w-3/5">
+          <div className="w-full">
             <TextInput
               value={payload.password}
               onChange={(e) => handleChange("password", e.target.value)}
@@ -132,13 +176,15 @@ const Login = (props) => {
               errorMessage={errors?.password}
             />
           </div>
-          <Checkbox
-            checked={payload.rememberMe}
-            onChange={() => handleChange("rememberMe", !payload.rememberMe)}
-            label="ingatkan saya"
-          />
+          <div className="w-full flex justify-between">
+            <Checkbox
+              checked={payload.rememberMe}
+              onChange={() => handleChange("rememberMe", !payload.rememberMe)}
+              label="ingatkan saya"
+            />
+          </div>
           {/* ini buat reChapta nunggu GOOGLE SITE KEY */}
-          <div className="w-28">
+          <div className="w-full">
             <Button text="Masuk" onClick={handleLogin} />
           </div>
         </div>

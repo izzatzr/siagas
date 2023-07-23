@@ -60,3 +60,7 @@ export const convertQueryString = (params) => {
 export const getToken = () => {
   return secureLocalStorage.getItem("token");
 };
+
+export const getUser = () => {
+  return secureLocalStorage.getItem('users')
+}

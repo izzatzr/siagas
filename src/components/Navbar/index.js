@@ -7,7 +7,7 @@ import Button from "../Button";
 const Navbar = () => {
   const location = useLocation();
   return (
-    <div className="py-6 px-24 w-full flex items-center justify-between shadow-lg">
+    <div className="py-6 px-24 w-full flex items-center justify-between shadow-lg z-10 bg-white">
       <div className="flex gap-4">
         <img src={logo} alt="logo" className="w-[53px] h-[56px]" />
         <div className="flex flex-col">

@@ -6,7 +6,7 @@ import pdfFile from '../../../assets/test-mb.pdf'
 
 const Announcement = () => {
   return (
-    <div className="w-full rounded-xl h-full bg-[#E2F8FF] py-8 px-6 flex flex-col gap-6">
+    <div className="w-full rounded-xl h-full bg-[#F2F2F2] py-8 px-6 flex flex-col gap-6">
       <div className="flex items-center gap-3">
         <img src={announcementIcon} alt="announcement" width={48} height={48} />
         <div className="text-2xl font-bold">Pengumuman</div>

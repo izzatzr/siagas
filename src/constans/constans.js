@@ -221,7 +221,34 @@ export const sidebarDataDummy = [
     active: false,
     children: [
       {
-        label: "Belum ada",
+        label: "User Account",
+        link: "/konfigurasi/user-account",
+        active: false,
+      },
+      {
+        label: "Daftar OPD",
+        link: "/konfigurasi/daftar-opd",
+        active: false,
+      },
+      {
+        label: "Daftar UPTD",
+        link: "/konfigurasi/daftar-uptd",
+        active: false,
+      },
+      {
+        label: "Tuxedo",
+        link: "/konfigurasi/tuxedo",
+        active: false,
+      },
+      {
+        label: "Setting",
+        link: "/konfigurasi/setting",
+        active: false,
+      },
+      {
+        label: "Akses API",
+        link: "/konfigurasi/akses-api",
+        active: false,
       },
     ],
   },
@@ -303,3 +330,14 @@ export const GET_ANNOUNCEMENT = "get_announcement";
 
 export const GET_ALL_FAQ = "get_all_faq";
 export const GET_FAQ = "get_faq";
+
+export const GET_ALL_PEMDA_PROFILE = "get_all_pemda_profile";
+export const GET_PEMDA_PROFILE = "get_pemda_profile";
+
+export const GET_ALL_USER_ACCOUNT = "get_all_user_account";
+export const GET_USER_ACCOUNT = "get_user_account";
+
+export const GET_ALL_OPD = "get_all_opd";
+export const GET_ALL_UPDT = "get_all_updt";
+export const GET_ALL_TUXEDO = "get_all_tuxedo";
+export const GET_ALL_SETTING = "get_all_setting";

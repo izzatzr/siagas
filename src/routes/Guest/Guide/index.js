@@ -5,7 +5,7 @@ import ReactPaginate from "react-paginate";
 
 const Guide = () => {
   return (
-    <div className="w-full rounded-xl bg-[#E2F8FF] py-8 px-6 flex flex-col">
+    <div className="w-full rounded-xl bg-[#F2F2F2] py-8 px-6 flex flex-col">
       <div className="w-full flex items-center justify-between">
         <div className="text-2xl font-bold">Panduan</div>
         <div className="min-w-[356px] flex items-center gap-3 bg-white rounded py-3 px-4">

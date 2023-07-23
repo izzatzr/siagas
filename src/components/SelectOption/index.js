@@ -11,7 +11,6 @@ const SelectOption = (props) => {
     value,
     paginate = false,
   } = props;
-  console.log(value);
   return (
     <div className="w-full flex flex-col gap-1">
       <label htmlFor="" className="text-xs text-[#333333]">

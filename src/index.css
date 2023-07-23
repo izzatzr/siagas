@@ -1,7 +1,11 @@
 @tailwind base;
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  display: none;
+}
 @tailwind components;
 @tailwind utilities;
 
 .ql-editor {
-    min-height:  188px;
+  min-height: 188px;
 }
