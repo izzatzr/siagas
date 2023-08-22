@@ -94,11 +94,13 @@ const FAQ = () => {
   const [faq, setFAQData] = React.useState(dataFAQ);
 
   const handleOpenAccordion = (index) => {
-    let tempFAQ = dataFAQ;
-    tempFAQ[index].isOpen = !tempFAQ[index].isOpen;
-    setFAQData(tempFAQ)
+    setFAQData((prevFAQ) =>
+      prevFAQ.map((item, i) =>
+        i === index ? {...item, isOpen: !item.isOpen} : item
+      )
+    );
   };
-  
+
   return (
     <div className="w-full flex flex-col gap-6 py-6">
       <div className="text-[#333333] text-2xl">
@@ -107,7 +109,7 @@ const FAQ = () => {
       <div className="flex flex-col gap-3">
         {faq.map((item, index) => (
           <Accordion
-            key={index}
+            key={item.title}
             label={item.title}
             isOpen={item.isOpen}
             index={index}
@@ -118,16 +120,16 @@ const FAQ = () => {
               {item.children && (
                 <ol
                   className="list-inside list-[upper-alpha]"
-                  style={{ listStyle: "revert-layer" }}
+                  style={{listStyle: "revert-layer"}}
                 >
-                  {item.children.map((child, childIndex) => (
-                    <li className="mt-4" key={childIndex}>
+                  {item.children.map((child) => (
+                    <li className="mt-4" key={child.title}>
                       Menu Database Inovasi Daerah terdiri atas submenu Profil
                       Pemda dan Inovasi Daerah :
                       {child.children && (
                         <ul className="pl-8 mt-4 space-y-1 list-disc list-outside">
-                          {child.children.map((subchild, subChildIndex) => (
-                            <li key={subChildIndex}>{subchild.title}</li>
+                          {child.children.map((subchild) => (
+                            <li key={subchild.title}>{subchild.title}</li>
                           ))}
                         </ul>
                       )}
