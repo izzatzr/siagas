@@ -149,16 +149,19 @@ const FormDocumentDashboard = () => {
 
     submitDocumentMutation.mutate(
       {
-        id : currentId,
-        ...newPayload
+        id: currentId,
+        ...newPayload,
       },
       {
         onSuccess: (res) => {
           if (res.code === 200) {
             setLoadingUtil(false);
-            snackbar(currentId ? "Berhasil diubah" : "Berhasil disimpan", () => {
-              navigate("/master/dokumen");
-            });
+            snackbar(
+              currentId ? "Berhasil diubah" : "Berhasil disimpan",
+              () => {
+                navigate("/master/dokumen");
+              }
+            );
           }
         },
         onError: () => {

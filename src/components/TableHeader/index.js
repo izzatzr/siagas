@@ -19,7 +19,7 @@ const TableHeader = (props) => {
           className="text-[13px] text-[#717171] font-medium py-3 px-2"
           key={index}
           style={{
-            width: column?.width ? 500 : "auto",
+            width: column?.width ? column?.width : "auto",
           }}
         >
           {column.title}

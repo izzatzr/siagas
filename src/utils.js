@@ -8,8 +8,14 @@ import {
   PDF_ACTION_TABLE,
   PREVIEW_ACTION_TABLE,
   REJECT_ACTION_TABLE,
+  TRANSFER_ACTION_TABLE,
 } from "./constants";
-import { IoMdEye, IoMdCloseCircle, IoMdCheckmarkCircle, IoMdTrash } from "react-icons/io";
+import {
+  IoMdEye,
+  IoMdCloseCircle,
+  IoMdCheckmarkCircle,
+  IoMdTrash,
+} from "react-icons/io";
 import {
   AiFillFile,
   AiFillFileExcel,
@@ -18,6 +24,7 @@ import {
 } from "react-icons/ai";
 import { MdDownloadForOffline, MdEdit } from "react-icons/md";
 import secureLocalStorage from "react-secure-storage";
+import { RiFolderTransferFill } from "react-icons/ri";
 
 export const actionTable = (actionName) => {
   switch (actionName) {
@@ -48,6 +55,9 @@ export const actionTable = (actionName) => {
     case DELETE_ACTION_TABLE:
       return <IoMdTrash />;
 
+    case TRANSFER_ACTION_TABLE:
+      return <RiFolderTransferFill />;
+
     default:
       return <AiFillFile />;
   }
@@ -62,5 +72,15 @@ export const getToken = () => {
 };
 
 export const getUser = () => {
-  return secureLocalStorage.getItem('users')
+  return secureLocalStorage.getItem("users");
+};
+
+export const downloadFile = (url, fileName) => {
+  const aTag = document.createElement("a")
+  aTag.href = url;
+  aTag.setAttribute("download", fileName);
+  aTag.setAttribute("target", '_blank')
+  document.body.appendChild(aTag);
+  aTag.click();
+  aTag.remove();
 }

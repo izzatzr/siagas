@@ -1,58 +1,34 @@
+import TableAction from "../components/TableAction";
+import { EDIT_ACTION_TABLE } from "../constants";
+
 export const jsonHeaderPemdaProfile = [
   {
-    key: "pemda_name",
+    key: "nama_daerah",
     title: "Nama Pemda",
   },
   {
-    key: "level",
-    title: "Tingkatan",
+    key: "",
+    title: "Input Indikator Spd",
+    render: (item) => {
+      return (
+        <div style={{ marginLeft: 10 }}>
+          <TableAction
+            data={[
+              {
+                code: EDIT_ACTION_TABLE,
+                onClick: () => {
+                  console.log(EDIT_ACTION_TABLE);
+                },
+              },
+            ]}
+          />
+        </div>
+      );
+    },
   },
   {
     key: "action",
     title: "Aksi",
-  },
-];
-
-export const jsonRowPemdaProfile = [
-  {
-    pemda_name: "Provinsi Jawa Timur",
-    level: "Kota/Kabupaten",
-  },
-  {
-    pemda_name: "Kabupaten Kutai Barat",
-    level: "Kota/Kabupaten",
-  },
-  {
-    pemda_name: "Provinsi Nusa Tenggara Timur",
-    level: "Kota/Kabupaten",
-  },
-  {
-    pemda_name: "Kabupaten Kotawaringin Barat",
-    level: "Kota/Kabupaten",
-  },
-  {
-    pemda_name: "Provinsi Jawa Timur",
-    level: "Kota/Kabupaten",
-  },
-  {
-    pemda_name: "Provinsi Jawa Timur",
-    level: "Kota/Kabupaten",
-  },
-  {
-    pemda_name: "Provinsi Jawa Timur",
-    level: "Kota/Kabupaten",
-  },
-  {
-    pemda_name: "Provinsi Jawa Timur",
-    level: "Kota/Kabupaten",
-  },
-  {
-    pemda_name: "Provinsi Jawa Timur",
-    level: "Kota/Kabupaten",
-  },
-  {
-    pemda_name: "Provinsi Jawa Timur",
-    level: "Kota/Kabupaten",
   },
 ];
 
@@ -93,93 +69,93 @@ export const jsonHeaderRegionalInnovation = [
 
 export const jsonRowRegionalInnovation = [
   {
-    pemda_name : "Provinsi Jawa Timur",
-    innovation_name : "SIMPAK Online",
-    innovation_level : "Penerapan",
-    gov_business : "sosial",
-    date_testing : "2020-01-10",
-    date : "2020-01-10",
-    score_estimate : "90.0",
+    pemda_name: "Provinsi Jawa Timur",
+    innovation_name: "SIMPAK Online",
+    innovation_level: "Penerapan",
+    gov_business: "sosial",
+    date_testing: "2020-01-10",
+    date: "2020-01-10",
+    score_estimate: "90.0",
   },
   {
-    pemda_name : "Provinsi Jawa Timur",
-    innovation_name : "SIMPAK Online",
-    innovation_level : "Penerapan",
-    gov_business : "sosial",
-    date_testing : "2020-01-10",
-    date : "2020-01-10",
-    score_estimate : "90.0",
+    pemda_name: "Provinsi Jawa Timur",
+    innovation_name: "SIMPAK Online",
+    innovation_level: "Penerapan",
+    gov_business: "sosial",
+    date_testing: "2020-01-10",
+    date: "2020-01-10",
+    score_estimate: "90.0",
   },
   {
-    pemda_name : "Provinsi Jawa Timur",
-    innovation_name : "SIMPAK Online",
-    innovation_level : "Penerapan",
-    gov_business : "sosial",
-    date_testing : "2020-01-10",
-    date : "2020-01-10",
-    score_estimate : "90.0",
+    pemda_name: "Provinsi Jawa Timur",
+    innovation_name: "SIMPAK Online",
+    innovation_level: "Penerapan",
+    gov_business: "sosial",
+    date_testing: "2020-01-10",
+    date: "2020-01-10",
+    score_estimate: "90.0",
   },
   {
-    pemda_name : "Provinsi Jawa Timur",
-    innovation_name : "SIMPAK Online",
-    innovation_level : "Penerapan",
-    gov_business : "sosial",
-    date_testing : "2020-01-10",
-    date : "2020-01-10",
-    score_estimate : "90.0",
+    pemda_name: "Provinsi Jawa Timur",
+    innovation_name: "SIMPAK Online",
+    innovation_level: "Penerapan",
+    gov_business: "sosial",
+    date_testing: "2020-01-10",
+    date: "2020-01-10",
+    score_estimate: "90.0",
   },
   {
-    pemda_name : "Provinsi Jawa Timur",
-    innovation_name : "SIMPAK Online",
-    innovation_level : "Penerapan",
-    gov_business : "sosial",
-    date_testing : "2020-01-10",
-    date : "2020-01-10",
-    score_estimate : "90.0",
+    pemda_name: "Provinsi Jawa Timur",
+    innovation_name: "SIMPAK Online",
+    innovation_level: "Penerapan",
+    gov_business: "sosial",
+    date_testing: "2020-01-10",
+    date: "2020-01-10",
+    score_estimate: "90.0",
   },
   {
-    pemda_name : "Provinsi Jawa Timur",
-    innovation_name : "SIMPAK Online",
-    innovation_level : "Penerapan",
-    gov_business : "sosial",
-    date_testing : "2020-01-10",
-    date : "2020-01-10",
-    score_estimate : "90.0",
+    pemda_name: "Provinsi Jawa Timur",
+    innovation_name: "SIMPAK Online",
+    innovation_level: "Penerapan",
+    gov_business: "sosial",
+    date_testing: "2020-01-10",
+    date: "2020-01-10",
+    score_estimate: "90.0",
   },
   {
-    pemda_name : "Provinsi Jawa Timur",
-    innovation_name : "SIMPAK Online",
-    innovation_level : "Penerapan",
-    gov_business : "sosial",
-    date_testing : "2020-01-10",
-    date : "2020-01-10",
-    score_estimate : "90.0",
+    pemda_name: "Provinsi Jawa Timur",
+    innovation_name: "SIMPAK Online",
+    innovation_level: "Penerapan",
+    gov_business: "sosial",
+    date_testing: "2020-01-10",
+    date: "2020-01-10",
+    score_estimate: "90.0",
   },
   {
-    pemda_name : "Provinsi Jawa Timur",
-    innovation_name : "SIMPAK Online",
-    innovation_level : "Penerapan",
-    gov_business : "sosial",
-    date_testing : "2020-01-10",
-    date : "2020-01-10",
-    score_estimate : "90.0",
+    pemda_name: "Provinsi Jawa Timur",
+    innovation_name: "SIMPAK Online",
+    innovation_level: "Penerapan",
+    gov_business: "sosial",
+    date_testing: "2020-01-10",
+    date: "2020-01-10",
+    score_estimate: "90.0",
   },
   {
-    pemda_name : "Provinsi Jawa Timur",
-    innovation_name : "SIMPAK Online",
-    innovation_level : "Penerapan",
-    gov_business : "sosial",
-    date_testing : "2020-01-10",
-    date : "2020-01-10",
-    score_estimate : "90.0",
+    pemda_name: "Provinsi Jawa Timur",
+    innovation_name: "SIMPAK Online",
+    innovation_level: "Penerapan",
+    gov_business: "sosial",
+    date_testing: "2020-01-10",
+    date: "2020-01-10",
+    score_estimate: "90.0",
   },
   {
-    pemda_name : "Provinsi Jawa Timur",
-    innovation_name : "SIMPAK Online",
-    innovation_level : "Penerapan",
-    gov_business : "sosial",
-    date_testing : "2020-01-10",
-    date : "2020-01-10",
-    score_estimate : "90.0",
+    pemda_name: "Provinsi Jawa Timur",
+    innovation_name: "SIMPAK Online",
+    innovation_level: "Penerapan",
+    gov_business: "sosial",
+    date_testing: "2020-01-10",
+    date: "2020-01-10",
+    score_estimate: "90.0",
   },
-]
+];

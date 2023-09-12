@@ -1,23 +1,23 @@
 import React from "react";
 import { BiArrowBack } from "react-icons/bi";
-import { MdCheckCircle } from "react-icons/md";
-import { useMutation, useQuery } from "react-query";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import Button from "../../../../components/Button";
-import TextInput from "../../../../components/TextInput";
-import { GET_GOVERNMENT_BUSINESS } from "../../../../constans/constans";
-import {
-  findGovernmentBusiness,
-  submitGovernmentBusiness,
-} from "../../../../services/MasterData/GovernmentBusiness";
 import { useUtilContexts } from "../../../../context/Utils";
+import {
+  findDocumentCategory,
+  submitDocumentCategory,
+} from "../../../../services/MasterData/documentCategory";
+import TextInput from "../../../../components/TextInput";
+import { useMutation, useQuery } from "react-query";
+import Button from "../../../../components/Button";
+import { MdCheckCircle } from "react-icons/md";
+import { GET_DOCUEMNT_CATEGORY } from "../../../../constans/constans";
 
 const initialPayload = {
-  deadline: "",
+  slug: "",
   name: "",
 };
 
-const FormGovernmentBusiness = () => {
+const DocumentCategoryForm = () => {
   const params = useParams();
   const currentId = params.id;
 
@@ -26,30 +26,6 @@ const FormGovernmentBusiness = () => {
 
   const [payload, setPayload] = React.useState(initialPayload);
   const [error, setError] = React.useState({});
-
-  const { isFetching } = useQuery(
-    [GET_GOVERNMENT_BUSINESS],
-    findGovernmentBusiness(currentId),
-    {
-      enabled: !!currentId,
-      onSuccess: (res) => {
-        const { data } = res;
-        setPayload({
-          name: data?.name,
-          deadline: data?.deadline,
-        });
-      },
-      onError: () => {
-        snackbar(
-          "Terjadi Kesalahan",
-          () => {
-            navigate("/master/urusan-pemerintah");
-          },
-          { type: "error" }
-        );
-      },
-    }
-  );
 
   const onHandleChange = (key, value) => {
     if (value.length > 0) {
@@ -64,9 +40,31 @@ const FormGovernmentBusiness = () => {
     });
   };
 
-  const submitGovernmentBusinessMutation = useMutation(
-    submitGovernmentBusiness
+  const { isFetching } = useQuery(
+    [GET_DOCUEMNT_CATEGORY],
+    findDocumentCategory(currentId),
+    {
+      enabled: !!currentId,
+      onSuccess: (res) => {
+        const { data } = res;
+        setPayload({
+          name: data?.name,
+          slug: data?.slug,
+        });
+      },
+      onError: () => {
+        snackbar(
+          "Terjadi Kesalahan",
+          () => {
+            navigate("/master/kategori-dokumen");
+          },
+          { type: "error" }
+        );
+      },
+    }
   );
+
+  const submitDocumentCategoryMutation = useMutation(submitDocumentCategory);
 
   const onHandleSubmit = () => {
     let isValidPayload = true,
@@ -84,68 +82,72 @@ const FormGovernmentBusiness = () => {
 
     if (Object.keys(errorMessage).length === 0) {
       setLoadingUtil(true);
-      submitGovernmentBusinessMutation.mutate({
-        ...payload,
-        id : currentId
-      }, {
-        onSuccess: (res) => {
-          if (res.code === 200) {
+      submitDocumentCategoryMutation.mutate(
+        {
+          ...payload,
+          id: currentId,
+        },
+        {
+          onSuccess: (res) => {
+            if (res.code === 200) {
+              setLoadingUtil(false);
+              snackbar(
+                currentId ? "Berhasil diubah" : "Berhasil disimpan",
+                () => {
+                  navigate("/master/kategori-dokumen");
+                }
+              );
+            }
+          },
+          onError: () => {
             setLoadingUtil(false);
-            snackbar(
-              currentId ? "Berhasil diubah" : "Berhasil disimpan",
-              () => {
-                navigate("/master/urusan-pemerintah");
-              }
-            );
-          }
-        },
-        onError: () => {
-          setLoadingUtil(false);
-          snackbar("Terjadi kesalahan", () => {}, "error");
-        },
-      });
+            snackbar("Terjadi kesalahan", () => {}, "error");
+          },
+        }
+      );
     } else {
       setError(errorMessage);
     }
   };
 
   React.useEffect(() => {
-    setLoadingUtil(isFetching)
+    setLoadingUtil(isFetching);
   }, [isFetching]);
 
   return (
     <div className="w-full flex flex-col gap-6 py-6">
       <div className="text-[#333333] font-medium text-2xl">
-        Urusan Pemerintah
+        Kategori Dokumen
       </div>
       <div className="w-full bg-white rounded-lg p-8 flex flex-col gap-6">
         <div className="flex items-center gap-2">
-          <Link to="/master/urusan-pemerintah">
+          <Link to="/master/kategori-dokumen">
             <BiArrowBack />
           </Link>
           <span className="font-medium text-lg">
             {params?.action === "tambah" ? "Tambah " : "Edit "}
-            Urusan Pemerintah
+            Kategori Dokumen
           </span>
         </div>
+
         <TextInput
-          label="Masukkan Tanggal Deadline"
-          placeholder="Masukkan Tanggal. (Format: MM-dd-YYYY)"
-          onChange={(e) => {
-            onHandleChange("deadline", e.target.value);
-          }}
-          value={payload?.deadline}
-          type={"date"}
-          errorMessage={error?.deadline}
-        />
-        <TextInput
-          label="Nama Urusan"
-          placeholder="Masukkan Nama Urusan"
+          label="Nama Kategori"
+          placeholder="Masukkan Nama Kategori"
           onChange={(e) => {
             onHandleChange("name", e.target.value);
           }}
           value={payload?.name}
           errorMessage={error?.name}
+        />
+
+        <TextInput
+          label="Slug"
+          placeholder="Masukkan Slug"
+          onChange={(e) => {
+            onHandleChange("slug", e.target.value);
+          }}
+          value={payload?.slug}
+          errorMessage={error?.slug}
         />
 
         <div className="flex items-center gap-4 w-60">
@@ -171,4 +173,4 @@ const FormGovernmentBusiness = () => {
   );
 };
 
-export default FormGovernmentBusiness;
+export default DocumentCategoryForm;

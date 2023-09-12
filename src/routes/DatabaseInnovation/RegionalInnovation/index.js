@@ -1,18 +1,149 @@
 import React from "react";
 import { AiFillInfoCircle } from "react-icons/ai";
-import { BiChevronLeft, BiChevronRight, BiSearch } from "react-icons/bi";
-import ReactPaginate from "react-paginate";
-import SelectOption from "../../../components/SelectOption";
+import { BiPlus, BiSearch } from "react-icons/bi";
 import Table from "../../../components/Table";
 import TableAction from "../../../components/TableAction";
-import { EXCEL_ACTION_TABLE, PDF_ACTION_TABLE } from "../../../constants";
 import {
-  jsonHeaderRegionalInnovation,
-  jsonRowRegionalInnovation,
-} from "../../../dummies/innovationDatabase";
+  EDIT_ACTION_TABLE,
+  EXCEL_ACTION_TABLE,
+  PDF_ACTION_TABLE,
+  TRANSFER_ACTION_TABLE,
+} from "../../../constants";
 import FilterArsip from "../../Dashboard/Archive/components/FilterArsip";
+import { useQuery } from "react-query";
+import { GET_ALL_REGIONAL_INNOVATION_QUERY_KEY } from "../../../constans/constans";
+import { getAllRegionalInnovation } from "../../../services/DatabaseInnovation/regional";
+import { useUtilContexts } from "../../../context/Utils";
+import Pagination from "../../../components/Pagination";
+import Button from "../../../components/Button";
+import { useNavigate } from "react-router-dom";
+
+const initialParams = {
+  page: 0,
+  limit: 10,
+  q: "",
+  tahap: "",
+};
 
 const RegionalInnovation = () => {
+  const [params, setParams] = React.useState(initialParams);
+  const { setLoadingUtil, snackbar } = useUtilContexts();
+  const navigate = useNavigate();
+
+  const tableHeader = [
+    {
+      key: "government_name",
+      title: "Nama Pemda",
+    },
+    {
+      key: "innovation_name",
+      title: "Nama Inovasi",
+    },
+    {
+      key: "",
+      title: "Tahapan Inovasi",
+      render: (item) => {
+        return item.innovation_phase.toUpperCase();
+      },
+    },
+    {
+      key: "",
+      title: "Urusan Pemerintahan",
+      render: () => {
+        return "Belum tau yang mana";
+      },
+    },
+    {
+      key: "trial_time",
+      title: "Waktu Uji Coba",
+    },
+    {
+      key: "implementation_time",
+      title: "Waktu Penerapan",
+    },
+    {
+      key: "",
+      title: "Estimasi Skor Kematangan",
+      render: () => {
+        return "Belum tau yang mana";
+      },
+    },
+    {
+      key: "form-action",
+      title: "Aksi",
+      render: (item) => <TableAction data={actionTableData} itemData={item} />,
+    },
+  ];
+
+  const [listFilter, setListFilter] = React.useState([
+    {
+      label: "Semua",
+      value: "all",
+      active: true,
+    },
+    {
+      label: "Inisiatif",
+      value: "inisiatif",
+      active: false,
+    },
+    {
+      label: "Uji Coba",
+      value: "uji coba",
+      active: false,
+    },
+    {
+      label: "Penerapan",
+      value: "penerapan",
+      active: false,
+    },
+  ]);
+
+  const { data, isFetching } = useQuery(
+    [params, GET_ALL_REGIONAL_INNOVATION_QUERY_KEY, params],
+    getAllRegionalInnovation(params)
+  );
+
+  const onHandlePagination = (page) => {
+    setParams({
+      ...params,
+      page: page + 1,
+    });
+  };
+
+  const onHandleSarch = (event) => {
+    if (event.key === "Enter") {
+      setParams({
+        ...params,
+        q: event.target.value,
+      });
+    }
+  };
+
+  const onHandleChangeFilter = (value) => {
+    const tempListFilter = listFilter;
+    tempListFilter.forEach((item) => {
+      if (item.value === value) {
+        item.active = true;
+      } else {
+        item.active = false;
+      }
+    });
+
+    if (value === "all") {
+      setParams({
+        params,
+        tahap: "",
+      });
+    } else {
+      setParams({
+        params,
+        tahap: value,
+      });
+    }
+
+    setListFilter(tempListFilter);
+  };
+
   const actionTableData = [
     {
       code: PDF_ACTION_TABLE,
@@ -26,102 +157,27 @@ const RegionalInnovation = () => {
         console.log(EXCEL_ACTION_TABLE);
       },
     },
-  ];
-
-  const regions = [
-    { value: "kerinci", label: "Kabupaten Kerinci" },
-    { value: "siak", label: "Kabupaten Siak" },
-    { value: "mirangi", label: "Kabupaten Mirangin" },
-    { value: "simalungu", label: "Kabupaten Simalungun" },
-    { value: "labuhanbatu selatan", label: "Kabupaten LabuhanBatu Selatan" },
-    { value: "subulussalam", label: "Kota Subulussalam" },
-  ];
-
-  const innovationForm = [
     {
-      value:
-        "Inovasi daerah lainnya sesuai dengan urusan pemerintahan yang menjadi kewenagan daerah",
-      label:
-        "Inovasi daerah lainnya sesuai dengan urusan pemerintahan yang menjadi kewenagan daerah",
-    },
-    { value: "Inovasi pelayanan publik", label: "Inovasi pelayanan publik" },
-    {
-      value: "Invasi tata kelola pemerintahan daerah",
-      label: "Invasi tata kelola pemerintahan daerah",
+      code: TRANSFER_ACTION_TABLE,
+      onClick: (item) => {
+        navigate(`/inovasi-daerah/${item.id}/indicator`);
+      },
     },
     {
-      value: "Lorem ipsum dolor sit amet consectetur. Magna viverra integer.",
-      label: "Lorem ipsum dolor sit amet consectetur. Magna viverra integer.",
-    },
-    {
-      value: "Lorem ipsum dolor sit amet consectetur. Magna viverra integer.",
-      label: "Lorem ipsum dolor sit amet consectetur. Magna viverra integer.",
-    },
-    {
-      value: "Lorem ipsum dolor sit amet consectetur. Magna viverra integer.",
-      label: "Lorem ipsum dolor sit amet consectetur. Magna viverra integer.",
+      code: EDIT_ACTION_TABLE,
+      onClick: (item) => {
+        navigate(`/inovasi-daerah/edit/${item.id}`)
+      },
     },
   ];
 
-  const businessType = [
-    {
-      value:
-        "Lorem ipsum dolor sit amet consectetur. Leo ipsum laoreet urna massa.",
-      label:
-        "Lorem ipsum dolor sit amet consectetur. Leo ipsum laoreet urna massa.",
-    },
-    {
-      value:
-        "Lorem ipsum dolor sit amet consectetur. Facilisi nunc amet et in amet.",
-      label:
-        "Lorem ipsum dolor sit amet consectetur. Facilisi nunc amet et in amet.",
-    },
-    {
-      value:
-        "Lorem ipsum dolor sit amet consectetur. Egestas lectus morbi eget.",
-      label:
-        "Lorem ipsum dolor sit amet consectetur. Egestas lectus morbi eget.",
-    },
-    {
-      value:
-        "Lorem ipsum dolor sit amet consectetur. Leo ipsum laoreet urna massa.",
-      label:
-        "Lorem ipsum dolor sit amet consectetur. Leo ipsum laoreet urna massa.",
-    },
-    {
-      value:
-        "Lorem ipsum dolor sit amet consectetur. Egestas lectus morbi eget.",
-      label:
-        "Lorem ipsum dolor sit amet consectetur. Egestas lectus morbi eget.",
-    },
-  ];
-
-  const innitiators = [
-    {
-      label: "Kepala Daerah",
-      value: "Kepala Daerah",
-    },
-    {
-      label: "Anggota DPRD",
-      value: "Anggota DPRD",
-    },
-    {
-      label: "OPD",
-      value: "OPD",
-    },
-    {
-      label: "ASN",
-      value: "ASN",
-    },
-    {
-      label: "Masyarakat",
-      value: "Masyarakat",
-    },
-  ];
+  React.useEffect(() => {
+    setLoadingUtil(isFetching);
+  }, [isFetching]);
 
   return (
     <div className="w-full flex flex-col gap-6 py-6">
-      <div className="text-[#333333] text-2xl">Inovasi Daerah</div>
+      <div className="text-[#333333] text-2xl font-bold">Inovasi Daerah</div>
       <div className="w-full rounded-lg text-[#333333] bg-[#FFC90C4D] p-6 flex flex-col gap-2">
         <div className="flex items-center gap-2">
           <AiFillInfoCircle color="#F2994A" />
@@ -136,7 +192,12 @@ const RegionalInnovation = () => {
         </p>
       </div>
       <div className="mt-4">
-        <FilterArsip />
+        <FilterArsip
+          data={listFilter}
+          onChangeFilter={(value) => {
+            onHandleChangeFilter(value);
+          }}
+        />
       </div>
       <div className="w-full rounded-lg text-[#333333] bg-white p-6 flex flex-col gap-4">
         <div className="">
@@ -146,29 +207,18 @@ const RegionalInnovation = () => {
               type="text"
               className="outline-none"
               placeholder="Pencarian"
+              onKeyDown={onHandleSarch}
             />
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          <SelectOption
-            label="Daerah"
-            placeholder="Pilih Daerah"
-            options={regions}
-          />
-          <SelectOption
-            label="Bentuk Inovasi"
-            placeholder="Pilih Bentuk Inovasi"
-            options={innovationForm}
-          />
-          <SelectOption
-            label="Jenis Urusan"
-            placeholder="Pilih Jenis Urusan"
-            options={businessType}
-          />
-          <SelectOption
-            label="Inisiator"
-            placeholder="Pilih Inisiator"
-            options={innitiators}
+        <div className="ml-auto">
+          <Button
+            text="Tambah Inovasi Daerah"
+            icon={<BiPlus size="16" />}
+            padding="p-[10px]"
+            onClick={() => {
+              navigate("/inovasi-daerah/tambah");
+            }}
           />
         </div>
       </div>
@@ -176,30 +226,16 @@ const RegionalInnovation = () => {
       <div className="w-full rounded-lg text-[#333333] bg-white p-6">
         <Table
           showNum={true}
-          data={jsonRowRegionalInnovation}
-          columns={jsonHeaderRegionalInnovation}
+          data={data?.data || []}
+          columns={tableHeader}
           action={<TableAction data={actionTableData} />}
         />
-        <div className="flex justify-between items-center py-[20px] pl-6">
-          <span className="trext-[#828282] text-xs">
-            Menampilkan 1 sampai 10 dari 48 entri
-          </span>
-          <ReactPaginate
-            breakLabel="..."
-            nextLabel={<BiChevronRight />}
-            onPageChange={(page) => console.log(page)}
-            pageRangeDisplayed={3}
-            pageCount={10}
-            previousLabel={<BiChevronLeft />}
-            renderOnZeroPageCount={null}
-            className="flex gap-3 items-center text-xs"
-            pageClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
-            previousClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
-            nextClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
-            disabledClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center bg-[#828282] text-white"
-            activeClassName="w-[28px] h-[28px] rounded-md border border-[#069DD9] flex justify-center items-center bg-[#069DD9] text-white"
-          />
-        </div>
+        <Pagination
+          pageCount={data?.pagination?.pages}
+          onHandlePagination={onHandlePagination}
+          totalData={data?.pagination?.total}
+          size={params.limit}
+        />
       </div>
     </div>
   );

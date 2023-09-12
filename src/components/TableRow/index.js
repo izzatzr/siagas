@@ -6,11 +6,15 @@ const TableRowCell = ({ item, column, action }) => {
 
   return column.key !== "action" ? (
     <td
-      className={`text-[13px] px-2 py-3 ${
-        column.key === "title" ? "w-40" : ""
+      className={`text-[13px] px-4 py-3 ${
+        column.key === "title"
+          ? "w-40"
+          : column?.width
+          ? `w-[${column?.width}]`
+          : ""
       }`}
     >
-      {column?.render ? (column?.render(item)) : value}
+      {column?.render ? column?.render(item) : value !== null ? value : "-"}
     </td>
   ) : (
     action

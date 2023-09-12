@@ -1,19 +1,18 @@
 import React from "react";
 import {
-  BiChevronLeft,
-  BiChevronRight,
   BiPlus,
   BiSearch,
 } from "react-icons/bi";
-import ReactPaginate from "react-paginate";
 import { useQuery } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import SelectOption from "../../../components/SelectOption";
 import Table from "../../../components/Table";
 import TableAction from "../../../components/TableAction";
-import { GET_ALL_INDICATOR } from "../../../constans/constans";
+import { GET_ALL_INDICATOR, typeList } from "../../../constans/constans";
 import { EDIT_ACTION_TABLE, INDICATOR_ACTION_TABLE } from "../../../constants";
 import { getAllIndicator } from "../../../services/MasterData/indicator";
+import Pagination from "../../../components/Pagination";
+import { useUtilContexts } from "../../../context/Utils";
 
 const initialFilter = {
   page: 1,
@@ -24,11 +23,18 @@ const initialFilter = {
 
 const Indicator = () => {
   const [filterParams, setFilterParams] = React.useState(initialFilter);
+  const { setLoadingUtil, snackbar } = useUtilContexts();
   const navigate = useNavigate();
 
-  const { data } = useQuery(
+  const { data, isFetching } = useQuery(
     [GET_ALL_INDICATOR, filterParams],
     getAllIndicator(filterParams),
+    {
+      retry : 0,
+      onError: (error) => {
+        snackbar(error?.message || "Terjadi Kesalahan", () => {}, {type : "error"})
+      },
+    }
   );
 
   const actionTableData = [
@@ -48,71 +54,42 @@ const Indicator = () => {
 
   const tableHeader = [
     {
-      key: "serial_number",
+      key: "no_urut",
       title: "No. Urut",
-      width: 100,
+      width: 93,
     },
     {
-      key: "type",
+      key: "jenis_indikator",
       title: "Tipe",
-      width: 120,
+      width: 300,
+      render : (item) => {
+        return typeList.find((type) => type?.value === item?.jenis_indikator)?.label || "-"
+      }
     },
     {
-      key: "indicator",
+      key: "nama_indikator",
       title: "Indikator",
-      width: 120,
+      width: 200,
     },
     {
-      key: "supporting_data",
-      title: "Data Pendukung",
-      width: 120,
+      key: "nama_dokumen_pendukung",
+      title: "Nama Dokumen Pendukung",
+      width: 450,
     },
     {
-      key: "file_type",
+      key: "jenis_file",
       title: "Jenis File",
       width: 120,
     },
     {
-      key: "document_form",
-      title: "Bentuk Dokumen",
-      width: 120,
-    },
-    {
-      key: "file_format",
-      title: "Format File",
-      width: 120,
-    },
-
-    {
-      key: "value",
+      key: "bobot",
       title: "Bobot",
-      width: 80,
-    },
-    {
-      key: "value",
-      title: "Satuan Nilai",
-      width: 80,
-      render: () => <>-</>,
-    },
-    {
-      key: "indicator_type",
-      title: "Jenis",
-      width: 120,
-    },
-    {
-      key: "group",
-      title: "Group",
       width: 120,
     },
     {
       key: "parent",
       title: "Parent",
-      width: 120,
-    },
-    {
-      key: "sub",
-      title: "Subs",
-      width: 120,
+      width: 300,
     },
     {
       key: "mandatory",
@@ -125,24 +102,6 @@ const Indicator = () => {
       render: (item) => <TableAction data={actionTableData} itemData={item} />,
     },
   ];
-  const categories = [
-    {
-      value: "category 1",
-      label: "Category 1",
-    },
-    {
-      value: "category 2",
-      label: "Category 2",
-    },
-    {
-      value: "category 3",
-      label: "Category 3",
-    },
-    {
-      value: "category 4",
-      label: "Category 4",
-    },
-  ];
 
   const onHandlePagination = (page) => {
     setFilterParams({
@@ -150,6 +109,37 @@ const Indicator = () => {
       page: page + 1,
     });
   };
+
+  const onHandleSearch = (e) => {
+    let value = e.target.value;
+
+    if (value.length === 0) {
+      setFilterParams({
+        ...filterParams,
+        q: "",
+        page: 1,
+      });
+    }
+
+    if (value.length >= 3) {
+      setFilterParams({
+        ...filterParams,
+        q: e.target.value,
+        page: 1,
+      });
+    }
+  };
+
+  const onChangeIndicatorType = (value) => {
+    setFilterParams({
+      ...filterParams,
+      jenis_indikator : value?.value
+    })
+  }
+
+  React.useEffect(() => {
+    setLoadingUtil(isFetching)
+  }, [isFetching])
   
   return (
     <div className="w-full flex flex-col gap-6 py-6">
@@ -168,7 +158,8 @@ const Indicator = () => {
           <SelectOption
             label="Jenis Indikator"
             placholder="Pilih indikator"
-            options={categories}
+            options={typeList}
+            onChange={onChangeIndicatorType}
           />
         </div>
         <div className="flex items-center gap-3 text-sm border border-[#333333] placeholder:text-[#828282] rounded px-3 py-2 w-[30%]">
@@ -177,34 +168,20 @@ const Indicator = () => {
             type="text"
             className="outline-none"
             placeholder="Pencarian"
-            onChange={() => console.log("TEST")}
+            onChange={onHandleSearch}
           />
         </div>
       </div>
       <div className="w-full rounded-lg bg-white py-4 px-6">
         <div className="overflow-x-scroll">
-          <Table showNum={true} data={data?.data || []} columns={tableHeader} width="w-[2000px]" />
+          <Table showNum={true} data={data?.data} columns={tableHeader} width="w-[1500px]" />
         </div>
-        <div className="flex justify-between items-center py-[20px]">
-          <span className="trext-[#828282] text-xs">
-            Menampilkan 1 sampai 10 dari 48 entri
-          </span>
-          <ReactPaginate
-            breakLabel="..."
-            nextLabel={<BiChevronRight />}
-            onPageChange={(page) => onHandlePagination(page.selected)}
-            pageRangeDisplayed={3}
-            pageCount={data?.pagination?.pages}
-            previousLabel={<BiChevronLeft />}
-            renderOnZeroPageCount={null}
-            className="flex gap-3 items-center text-xs"
-            pageClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
-            previousClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
-            nextClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
-            disabledClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center bg-[#828282] text-white"
-            activeClassName="w-[28px] h-[28px] rounded-md border border-[#069DD9] flex justify-center items-center bg-[#069DD9] text-white"
-          />
-        </div>
+        <Pagination
+          pageCount={data?.pagination?.pages}
+          onHandlePagination={onHandlePagination}
+          totalData={data?.pagination?.total}
+          size={filterParams?.limit}
+        />
       </div>
     </div>
   );

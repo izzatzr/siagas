@@ -47,7 +47,6 @@ export const findFAQ = (id) => async () => {
 };
 
 export const submitFAQ = async (payload) => {
-  console.log("PAYLOAD ", payload);
   try {
     const url = `${BASE_API_URL}/faq${payload?.id ? "/" + payload?.id : ""}`;
 

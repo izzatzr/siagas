@@ -10,7 +10,7 @@ const Table = (props) => {
         <TableHeader columns={columns} showNum={showNum} ranking={ranking} />
       </thead>
       <tbody>
-        {data.length > 0 ? (
+        {data?.length > 0 ? (
           <TableRow
             data={data}
             columns={columns}

@@ -8,3 +8,4 @@ export const EXCEL_ACTION_TABLE = "excel_action_table";
 export const DOCUMENT_ACTION_TABLE = "document_action_table";
 export const INDICATOR_ACTION_TABLE = "indicator_action_table";
 export const DELETE_ACTION_TABLE = "delete_action_table";
+export const TRANSFER_ACTION_TABLE = "transfer_action_table";

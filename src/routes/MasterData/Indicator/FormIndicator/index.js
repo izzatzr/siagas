@@ -13,160 +13,34 @@ import {
   findIndicator,
   submitIndicator,
 } from "../../../../services/MasterData/indicator";
-import { GET_INDICATOR } from "../../../../constans/constans";
+import {
+  GET_INDICATOR,
+  formats,
+  modules,
+  typeList,
+} from "../../../../constans/constans";
 
 import "react-quill/dist/quill.snow.css";
+import { useUtilContexts } from "../../../../context/Utils";
 
 const FormIndicator = () => {
   const [payload, setPayload] = React.useState({
     no_urut: "",
-    tipe: {},
-    indikator: "",
-    deskripsi: "",
-    data_pendukung: "",
+    jenis_indikator: null,
+    nama_indikator: "",
+    keterangan: "",
+    nama_dokumen_pendukung: "",
     jenis_file: "",
-    bentuk_dokumen: {},
-    format_file: "",
     bobot: "",
-    jenis: {},
-    group: {},
-    parent: {},
-    sub: "",
-    mandatory: {},
+    parent: null,
+    mandatory: null,
   });
+  const [error, setError] = React.useState({});
+
+  const { setLoadingUtil, snackbar } = useUtilContexts();
   const navigate = useNavigate();
   const params = useParams();
   const currentId = params.id;
-
-  const types = [
-    {
-      value: "Satuan Pemerintah Daerah",
-      label: "Satuan Pemerintah Daerah",
-    },
-    {
-      value: "Satuan Inovasi",
-      label: "Satuan Inovasi",
-    },
-    {
-      value: "Indikator Validasi",
-      label: "Indikator Validasi",
-    },
-    {
-      value: "Indikator Presentasi Kepala Daerah",
-      label: "Indikator Presentasi Kepala Daerah",
-    },
-  ];
-
-  const documentForms = [
-    {
-      value: "Umum",
-      label: "Umum",
-    },
-    {
-      value: "Resmi",
-      label: "Resmi",
-    },
-
-    {
-      value: "Video",
-      label: "Video",
-    },
-    {
-      value: "Foto",
-      label: "Foto",
-    },
-    {
-      value: "URL",
-      label: "URL",
-    },
-  ];
-
-  const documentTypes = [
-    {
-      value: "Visi dan Misi",
-      label: "Visi dan Misi",
-    },
-    {
-      value: "Kuantitatif",
-      label: "Kuantitatif",
-    },
-
-    {
-      value: "Kualitatif",
-      label: "Kualitatif",
-    },
-    {
-      value: "Pilihan",
-      label: "Pilihan",
-    },
-    {
-      value: "Progress",
-      label: "Progress",
-    },
-    {
-      value: "T2 - T1",
-      label: "T2 - T1",
-    },
-    {
-      value: "(T2 - T1) dibagi T1 dikalikan 100%",
-      label: "(T2 - T1) dibagi T1 dikalikan 100%",
-    },
-    {
-      value: "(T2 - T1) * -1",
-      label: "(T2 - T1) * -1",
-    },
-    {
-      value: "T1 - T2",
-      label: "T1 - T2",
-    },
-    {
-      value: "Upload Video dan Kolom URL",
-      label: "Upload Video dan Kolom URL",
-    },
-    {
-      value: "Upload Foto",
-      label: "Upload Foto",
-    },
-    {
-      value: "Otomatis oleh sistem",
-      label: "Otomatis oleh sistem",
-    },
-  ];
-
-  const groups = [
-    {
-      value: "Institusi",
-      label: "Institusi",
-    },
-    {
-      value: "Sumber Daya Manusia",
-      label: "Sumber Daya Manusia",
-    },
-    {
-      value: "Ekosistem Inovasi dan Kajian",
-      label: "Ekosistem Inovasi dan Kajian",
-    },
-    {
-      value: "Infrastruktur",
-      label: "Infrastruktur",
-    },
-    {
-      value: "Kecanggihan Produk",
-      label: "Kecanggihan Produk",
-    },
-    {
-      value: "Kecepatan Bisnis Proses",
-      label: "Kecepatan Bisnis Proses",
-    },
-    {
-      value: "Output Pengetahuan dan Teknologi",
-      label: "Output Pengetahuan dan Teknologi",
-    },
-    {
-      value: "Jumlah Inovasi dan hasil Kreatif",
-      label: "Jumlah Inovasi dan hasil Kreatif",
-    },
-  ];
 
   const parents = [
     {
@@ -201,6 +75,10 @@ const FormIndicator = () => {
       value: "Jumlah Peningkatan PAD",
       label: "Jumlah Peningkatan PAD",
     },
+    {
+      value: "Opini BPK",
+      label: "Opini BPK",
+    },
   ];
 
   const mandatories = [
@@ -214,73 +92,36 @@ const FormIndicator = () => {
     },
   ];
 
-  const modules = {
-    toolbar: [
-      [{ header: [1, 2, false] }],
-      ["bold", "italic", "underline", "strike", "blockquote"],
-      [
-        { list: "ordered" },
-        { list: "bullet" },
-        { indent: "-1" },
-        { indent: "+1" },
-      ],
-      ["link", "image"],
-      ["clean"],
-    ],
-  };
-
-  const formats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "blockquote",
-    "list",
-    "bullet",
-    "indent",
-    "link",
-    "image",
-  ];
-
-  const { refetch } = useQuery([GET_INDICATOR], findIndicator(currentId), {
-    enabled: false,
+  useQuery([GET_INDICATOR], findIndicator(currentId), {
+    enabled: !!currentId,
     onSuccess: (res) => {
       const { data } = res;
       setPayload({
-        no_urut: data.serial_number,
-        tipe: types.find((type) => type.label === data.type),
-        indikator: data.indicator,
-        deskripsi: data.description,
-        data_pendukung: data.supporting_data,
-        jenis_file: data.file_type,
-        bentuk_dokumen: documentForms.find(
-          (documentForm) => documentForm.label === data.document_form
-        ),
-        format_file: data.file_format,
-        bobot: data.value,
-        jenis: documentTypes.find(
-          (documentType) => documentType.label === data.indicator_type
-        ),
-        group: groups.find((group) => group.label === data.group),
-        parent: parents.find((parent) => parent.label === data.parent),
-        sub: data.sub,
-        mandatory: mandatories.find(
-          (mandatory) => mandatory.label === data.mandatory
-        ),
-      });
+        no_urut : data?.no_urut,
+        jenis_indikator : typeList?.find((item) => item.value === data?.jenis_indikator),
+        nama_indikator : data?.nama_indikator,
+        keterangan : data?.keterangan,
+        nama_dokumen_pendukung : data?.nama_dokumen_pendukung,
+        jenis_file : data?.jenis_file,
+        bobot : data?.bobot,
+        parent : parents?.find(item => item.value === data?.parent) ?? null,
+        mandatory : mandatories?.find(item => item.value === data?.mandatory) ?? null,
+      })
     },
-  });
-
-  React.useEffect(() => {
-    if (currentId) {
-      refetch();
+    onError : () => {
+      snackbar("Terjadi Kesalahan", () => {}, {type : "error"})
     }
-  }, [currentId]);
+  });
 
   const submitIndicatorMutation = useMutation(submitIndicator);
 
   const handleChange = (name, value) => {
+    if (value.length > 0 || value?.value?.length > 0) {
+      setError({
+        ...error,
+        [name]: "",
+      });
+    }
     setPayload({
       ...payload,
       [name]: value,
@@ -288,32 +129,54 @@ const FormIndicator = () => {
   };
 
   const handleSubmit = () => {
-    const body = {
-      id: currentId,
-      no_urut: payload.no_urut,
-      tipe: payload.tipe?.value,
-      indikator: payload.indikator,
-      deskripsi: payload.deskripsi,
-      data_pendukung: payload.data_pendukung,
-      jenis_file: payload.jenis_file,
-      bentuk_dokumen: payload.bentuk_dokumen?.value,
-      format_file: payload.format_file,
-      bobot: payload.bobot,
-      jenis: payload.jenis?.value,
-      group: payload.group?.value,
-      parent: payload.parent?.value,
-      sub: payload.sub,
-      mandatory: payload.mandatory?.value,
-    };
+    let isValidPayload = true,
+      errorMessage = {};
 
-    submitIndicatorMutation.mutate(body, {
-      onSuccess: (res) => {
-        if (res.isSuccess) {
-          navigate("/master/indikator");
-          alert("BERHASIL");
-        }
-      },
+    Object.keys(payload)?.forEach((key, index) => {
+      switch (true) {
+        case !payload?.[key]:
+          errorMessage[key] = "Harus diisi";
+          if (index === Object.keys(payload).length - 1) {
+            return (isValidPayload = false);
+          }
+      }
     });
+
+    if (Object.keys(errorMessage).length === 0) {
+      setLoadingUtil(true);
+      const body = {
+        id: currentId,
+        no_urut: payload.no_urut,
+        jenis_indikator: payload.jenis_indikator?.value,
+        nama_indikator: payload.nama_indikator,
+        keterangan: payload?.keterangan,
+        nama_dokumen_pendukung: payload?.nama_dokumen_pendukung,
+        jenis_file: payload?.jenis_file,
+        bobot: payload?.bobot,
+        parent: payload?.parent?.value,
+        mandatory: payload?.mandatory?.value,
+      };
+
+      submitIndicatorMutation.mutate(body, {
+        onSuccess: (res) => {
+          if (res.code === 200) {
+            setLoadingUtil(false);
+            snackbar(
+              currentId ? "Berhasil diubah" : "Berhasil disimpan",
+              () => {
+                navigate("/master/indikator");
+              }
+            );
+          }
+        },
+        onError: () => {
+          setLoadingUtil(false);
+          snackbar("Terjadi kesalahan", () => {}, "error");
+        },
+      });
+    } else {
+      setError(errorMessage);
+    }
   };
 
   return (
@@ -336,41 +199,57 @@ const FormIndicator = () => {
               placeholder="Tulis No urut"
               value={payload.no_urut}
               onChange={(e) => handleChange("no_urut", e.target.value)}
+              errorMessage={error?.no_urut}
             />
           </div>
           <div className="w-[35%]">
             <SelectOption
               label="Tipe"
-              placeholder="Pilih tipe"
-              options={types}
-              onChange={(value) => handleChange("tipe", value)}
-              value={payload.tipe}
+              options={typeList}
+              onChange={(value) => handleChange("jenis_indikator", value)}
+              value={payload?.jenis_indikator}
+              placeholder="Pilih Tipe"
+              errorMessage={error?.jenis_indikator}
             />
           </div>
           <div className="w-[35%]">
             <TextInput
-              label="Indikator"
+              label="Nama Indikator"
               placeholder="Tulis Indikator..."
-              onChange={(e) => handleChange("indikator", e.target.value)}
-              value={payload.indikator}
+              onChange={(e) => handleChange("nama_indikator", e.target.value)}
+              value={payload?.nama_indikator}
+              errorMessage={error?.nama_indikator}
             />
           </div>
         </div>
-        <div className="">
+        <div className="flex flex-col gap-2 relative mb-2">
+          <label
+            htmlFor={"content"}
+            className="text-[#333333] text-sm font-normal"
+          >
+            Keterangan
+          </label>
           <ReactQuill
             theme="snow"
-            value={payload.deskripsi}
-            onChange={(value) => handleChange("deskripsi", value)}
+            value={payload.keterangan}
+            onChange={(value) => handleChange("keterangan", value)}
             modules={modules}
             formats={formats}
             placeholder="Tulis disini"
+            className={error?.keterangan ? "border border-red-500" : ""}
           />
+          <span className="text-xs text-red-600 absolute -bottom-4">
+            {error?.keterangan}
+          </span>
         </div>
         <TextInput
-          label="Data Pendukung"
-          placeholder="Tulis Data Pendukung..."
-          onChange={(e) => handleChange("data_pendukung", e.target.value)}
-          value={payload.data_pendukung}
+          label="Nama Dokumen Pendukung"
+          placeholder="Tulis Nama Dokumen Pendukung..."
+          onChange={(e) =>
+            handleChange("nama_dokumen_pendukung", e.target.value)
+          }
+          value={payload.nama_dokumen_pendukung}
+          errorMessage={error?.nama_dokumen_pendukung}
         />
         <div className="flex items-center gap-[11px]">
           <div className="flex-1">
@@ -379,55 +258,21 @@ const FormIndicator = () => {
               placeholder="Tulis Jenis File..."
               onChange={(e) => handleChange("jenis_file", e.target.value)}
               value={payload.jenis_file}
+              errorMessage={error?.jenis_file}
             />
           </div>
-          <div className="flex-1">
-            <SelectOption
-              label="Bentuk Dokumen"
-              placeholder="Pilih Bentuk Dokumen"
-              options={documentForms}
-              onChange={(value) => handleChange("bentuk_dokumen", value)}
-              value={payload.bentuk_dokumen}
-            />
-          </div>
-          <div className="flex-1">
-            <TextInput
-              label="Format File"
-              placeholder="Tulis Format File..."
-              onChange={(e) => handleChange("format_file", e.target.value)}
-              value={payload.format_file}
-            />
-          </div>
-        </div>
-
-        <div className="flex items-center gap-[11px]">
           <div className="flex-1">
             <TextInput
               label="Bobot"
               placeholder="Tulis Bobot..."
               onChange={(e) => handleChange("bobot", e.target.value)}
               value={payload.bobot}
-            />
-          </div>
-          <div className="flex-1">
-            <SelectOption
-              label="Jenis"
-              placeholder="Pilih Jenis"
-              options={documentTypes}
-              onChange={(value) => handleChange("jenis", value)}
-              value={payload.jenis}
-            />
-          </div>
-          <div className="flex-1">
-            <SelectOption
-              label="Group"
-              placeholder="Pilih Group"
-              options={groups}
-              onChange={(value) => handleChange("group", value)}
-              value={payload.group}
+              type="number"
+              errorMessage={error?.bobot}
             />
           </div>
         </div>
+
         <div className="flex items-center gap-[11px]">
           <div className="flex-1">
             <SelectOption
@@ -436,14 +281,7 @@ const FormIndicator = () => {
               options={parents}
               onChange={(value) => handleChange("parent", value)}
               value={payload.parent}
-            />
-          </div>
-          <div className="flex-1">
-            <TextInput
-              label="Subs"
-              placeholder="Tulis Subs..."
-              onChange={(e) => handleChange("sub", e.target.value)}
-              value={payload.sub}
+              errorMessage={error?.parent}
             />
           </div>
           <div className="flex-1">
@@ -453,6 +291,7 @@ const FormIndicator = () => {
               options={mandatories}
               onChange={(value) => handleChange("mandatory", value)}
               value={payload.mandatory}
+              errorMessage={error?.mandatory}
             />
           </div>
         </div>

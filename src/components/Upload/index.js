@@ -13,15 +13,15 @@ const Upload = (props) => {
         <span className="text-sm text-[#828282]">{description}</span>
         <button
           className={`border border-[#069DD9] border-dotted flex gap-3 py-3 items-center justify-center w-[313px] rounded-lg text-[#069DD9] ${
-            value !== null && "bg-[#069DD9] text-white"
+            value && "bg-[#069DD9] text-white"
           }`}
           onClick={() => {
             fileUploadRef?.current?.click();
           }}
         >
-          {value === null ? <IoMdCloudUpload /> : <IoMdCheckmarkCircle />}
+          {!value ? <IoMdCloudUpload /> : <IoMdCheckmarkCircle />}
 
-          {value !== null ? "File is Uploaded" : "Upload File"}
+          {value ? "File is Uploaded" : "Upload File"}
         </button>
       </div>
       <input
