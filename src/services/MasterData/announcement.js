@@ -1,5 +1,6 @@
 import { convertQueryString, getToken } from "../../utils";
 import { BASE_API_URL } from "../../constans/constans";
+import { processResult, throwErrorUtil } from "../../helpers/fetchingUtils";
 
 export const getAllAnnouncement = (params) => async () => {
   try {
@@ -13,17 +14,19 @@ export const getAllAnnouncement = (params) => async () => {
       }
     );
 
-    const result = await response.json();
+    if (response.status === 200) {
+      const result = await processResult(response);
 
-    const isSuccess = result.code === 200;
+      const isSuccess = result.code === 200;
 
-    if (isSuccess) {
-      return result;
+      if (isSuccess) {
+        return result;
+      }
     }
 
-    return [];
+    throw Error("Terjadi kesalahan");
   } catch (error) {
-    console.log(error);
+    throwErrorUtil(error, `${error?.message || error}`);
   }
 };
 
@@ -35,17 +38,19 @@ export const findAnnouncement = (id) => async () => {
       },
     });
 
-    const result = await response.json();
+    if (response.status === 200) {
+      const result = await processResult(response);
 
-    const isSuccess = result.code === 200;
+      const isSuccess = result.code === 200;
 
-    if (isSuccess) {
-      return result;
+      if (isSuccess) {
+        return result;
+      }
     }
 
-    return [];
+    throw Error("Terjadi kesalahan");
   } catch (error) {
-    console.log(error);
+    throwErrorUtil(error, `${error?.message || error}`);
   }
 };
 
@@ -59,7 +64,9 @@ export const submitAnnouncement = async (payload) => {
     formData.append("title", payload.title);
     formData.append("slug", payload.slug);
     formData.append("content", payload.content);
-    formData.append("document", payload.document);
+    if (payload?.document) {
+      formData.append("document", payload.document);
+    }
 
     const response = await fetch(url, {
       method: payload?.id ? "PATCH" : "POST",
@@ -69,20 +76,23 @@ export const submitAnnouncement = async (payload) => {
       body: formData,
     });
 
-    const result = await response.json();
-    const isSuccess = result.code === 200;
+    if (response.status === 200) {
+      const result = await processResult(response);
 
-    if (isSuccess) {
-      return result;
+      const isSuccess = result.code === 200;
+
+      if (isSuccess) {
+        return result;
+      }
     }
 
-    throw Error(result.message);
+    throw Error("Terjadi kesalahan");
   } catch (error) {
-    throw Error("Submit pengumuman error");
+    throwErrorUtil(error, `${error?.message || error}`);
   }
 };
 
-export const deleteAnnouncemet = async ({id}) => {
+export const deleteAnnouncemet = async ({ id }) => {
   try {
     const response = await fetch(`${BASE_API_URL}/pengumuman/${id}`, {
       headers: {
@@ -91,15 +101,18 @@ export const deleteAnnouncemet = async ({id}) => {
       method: "DELETE",
     });
 
-    const result = await response.json();
-    const isSuccess = result.code === 200;
+    if (response.status === 200) {
+      const result = await processResult(response);
 
-    if (isSuccess) {
-      return result;
+      const isSuccess = result.code === 200;
+
+      if (isSuccess) {
+        return result;
+      }
     }
 
-    throw Error("Error");
+    throw Error("Terjadi kesalahan");
   } catch (error) {
-    console.log("Error");
+    throwErrorUtil(error, `${error?.message || error}`);
   }
 };

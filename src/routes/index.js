@@ -46,11 +46,7 @@ import YearReport from "./Guest/YearReport";
 import Document from "./Guest/Document";
 import GovernmentBusiness from "./MasterData/GovernmentBusiness";
 import FormGovernmentBusiness from "./MasterData/GovernmentBusiness/FormGovernmentBusiness";
-import Regional from "./MasterData/Regional";
-import FormRegional from "./MasterData/Regional/FormRegional";
 import Indicator from "./MasterData/Indicator";
-import Wilayah from "./MasterData/Wilayah";
-import FormWilayah from "./MasterData/Wilayah/FormWilayah";
 import DocumentCategory from "./MasterData/DocumentCategory";
 import FormIndicator from "./MasterData/Indicator/FormIndicator";
 import AnnouncementDashboard from "./MasterData/AnnouncementDashboard";
@@ -211,14 +207,6 @@ const masterDataRoutes = [
     element: <FormGovernmentBusiness />,
   },
   {
-    path: "/master/opd-daerah",
-    element: <Regional />,
-  },
-  {
-    path: "/master/opd-daerah/:action/:id?",
-    element: <FormRegional />,
-  },
-  {
     path: "/master/indikator",
     element: <Indicator />,
   },
@@ -229,18 +217,6 @@ const masterDataRoutes = [
   {
     path: "/master/indikator/:indicator_id/scale-indicator",
     element: <FormIndicator />,
-  },
-  {
-    path: "/master/opd-daerah/:action/:id?",
-    element: <FormRegional />,
-  },
-  {
-    path: "/master/wilayah",
-    element: <Wilayah />,
-  },
-  {
-    path: "/master/wilayah/:action/:id?",
-    element: <FormWilayah />,
   },
   {
     path: "/master/kategori-dokumen",

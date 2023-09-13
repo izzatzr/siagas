@@ -169,21 +169,6 @@ export const sidebarDataDummy = [
         active: false,
       },
       {
-        label: "OPD dan Daerah",
-        link: "/master/opd-daerah",
-        active: false,
-      },
-      {
-        label: "Distrik",
-        link: "/master/distrik",
-        active: false,
-      },
-      {
-        label: "Wilayah",
-        link: "/master/wilayah",
-        active: false,
-      },
-      {
         label: "Kategori Dokumen",
         link: "/master/kategori-dokumen",
         active: false,

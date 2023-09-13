@@ -5,9 +5,16 @@ import SelectOption from "../../../components/SelectOption";
 import { DELETE_ACTION_TABLE, EDIT_ACTION_TABLE } from "../../../constants";
 import TableAction from "../../../components/TableAction";
 import Table from "../../../components/Table";
-import { useQuery } from "react-query";
-import { getAllDocuments } from "../../../services/MasterData/document";
-import { GET_ALL_DOCUEMNT } from "../../../constans/constans";
+import { useMutation, useQuery } from "react-query";
+import {
+  deleteDocument,
+  getAllDocuments,
+} from "../../../services/MasterData/document";
+import { BASE_API_URL, GET_ALL_DOCUEMNT } from "../../../constans/constans";
+import { useUtilContexts } from "../../../context/Utils";
+import Pagination from "../../../components/Pagination";
+import ModalDelete from "../../../components/ModalDelete";
+import { convertQueryString, getToken } from "../../../utils";
 
 const initialFilter = {
   page: 1,
@@ -16,12 +23,20 @@ const initialFilter = {
   category: "",
 };
 
+const initialDocumentCategoryParams = {
+  page: 1,
+  limit: 20,
+  q: "",
+};
+
 const DocumentDashboard = () => {
   const [filterParams, setFilterParams] = React.useState(initialFilter);
-  const navigate = useNavigate();
-
   const [showDelete, setShowDelete] = React.useState(false);
   const [currentItem, setCurrentItem] = React.useState(null);
+  const [categorySelected, setCategorySelected] = React.useState(null);
+
+  const { setLoadingUtil, snackbar } = useUtilContexts();
+  const navigate = useNavigate();
 
   const actionTableData = [
     {
@@ -49,12 +64,23 @@ const DocumentDashboard = () => {
       title: "Judul",
     },
     {
-      key: "content",
       title: "Deskripsi",
+      render: (item) => {
+        return (
+          <div
+            className="truncate w-60"
+            dangerouslySetInnerHTML={{
+              __html: `${item?.content}`,
+            }}
+          ></div>
+        );
+      },
     },
     {
-      key: "document.name",
       title: "File Dokumen",
+      render: (item) => {
+        return item?.document?.name?.replace(item?.document?.extension, "");
+      },
     },
     {
       key: "form-action",
@@ -63,44 +89,131 @@ const DocumentDashboard = () => {
     },
   ];
 
-  const categories = [
-    {
-      value: "category 1",
-      label: "Category 1",
-    },
-    {
-      value: "category 2",
-      label: "Category 2",
-    },
-    {
-      value: "category 3",
-      label: "Category 3",
-    },
-    {
-      value: "category 4",
-      label: "Category 4",
-    },
-  ];
+  const loadDocumentCategory = async () => {
+    const paramsQueryString = convertQueryString(initialDocumentCategoryParams);
 
-  const { data, isLoading, refetch } = useQuery(
+    const response = await fetch(
+      `${BASE_API_URL}/kategori_dokumen?${paramsQueryString}`,
+      {
+        headers: {
+          Authorization: `Bearer ${getToken().token}`,
+        },
+      }
+    );
+
+    return await response.json();
+  };
+
+  const loadedOptionsDocumentCategory = async (
+    search,
+    loadedOptions,
+    { page }
+  ) => {
+    const responseJSON = await loadDocumentCategory();
+    const results = [];
+    responseJSON.data.map((item) => {
+      results.push({
+        id: item.id,
+        label: item.name,
+        value: item?.name,
+      });
+    });
+
+    return {
+      options: results,
+      hasMore: responseJSON.length >= 1,
+      additional: {
+        page: search ? 2 : page + 1,
+      },
+    };
+  };
+
+  const { data, isFetching } = useQuery(
     [GET_ALL_DOCUEMNT, filterParams],
-    getAllDocuments(filterParams)
+    getAllDocuments(filterParams),
+    {
+      retry: 0,
+      onError: (error) => {
+        snackbar(error?.message || "Terjadi Kesalahan", () => {}, {
+          type: "error",
+        });
+      },
+    }
   );
+
+  const deleteDocumentMutation = useMutation(deleteDocument);
 
   const onHandleSearch = (value) => {
     if (value.length > 3) {
       setFilterParams({
+        ...filterParams,
         q: value,
       });
     } else if (value.length === 0) {
       setFilterParams({
+        ...filterParams,
         q: "",
       });
     }
   };
 
+  const onHandlePagination = (page) => {
+    setFilterParams({
+      ...filterParams,
+      page: page + 1,
+    });
+  };
+
+  const onHandleDelete = () => {
+    setShowDelete(false);
+    setLoadingUtil(true);
+
+    deleteDocumentMutation.mutate(
+      {
+        id: currentItem?.id,
+      },
+      {
+        onSuccess: (res) => {
+          if (res.code === 200) {
+            setLoadingUtil(false);
+            snackbar("Berhasil dihapus", () => {
+              navigate(0);
+            });
+          }
+        },
+        onError: () => {
+          setLoadingUtil(false);
+          snackbar("Terjadi kesalahan", () => {}, "error");
+        },
+      }
+    );
+  };
+
+  const onHandleChangeDocumentCategory = (value) => {
+    setCategorySelected(value);
+  };
+
+  React.useEffect(() => {
+    setLoadingUtil(isFetching);
+  }, [isFetching]);
+
+  React.useEffect(() => {
+    if (categorySelected) {
+      setFilterParams({
+        ...filterParams,
+        category: categorySelected?.id,
+      });
+    }
+  }, [categorySelected]);
+
   return (
     <div className="w-full flex flex-col gap-6 py-6">
+      {showDelete && (
+        <ModalDelete
+          cancelDelete={() => setShowDelete(false)}
+          doDelete={onHandleDelete}
+        />
+      )}
       <div className="text-[#333333] font-medium text-2xl">Dokumen</div>
       <div className="flex justify-end items-center gap-2">
         <Link
@@ -116,7 +229,10 @@ const DocumentDashboard = () => {
           <SelectOption
             label="Kategori"
             placeholder="Pilih Kategori"
-            options={categories}
+            options={loadedOptionsDocumentCategory}
+            paginate={true}
+            onChange={onHandleChangeDocumentCategory}
+            value={categorySelected}
           />
         </div>
         <div className="flex items-center gap-3 text-sm border border-[#333333] placeholder:text-[#828282] rounded px-3 py-2 w-[30%]">
@@ -133,6 +249,12 @@ const DocumentDashboard = () => {
         <div className="overflow-x-scroll">
           <Table showNum={true} data={data?.data || []} columns={tableHeader} />
         </div>
+        <Pagination
+          pageCount={data?.pagination?.pages}
+          onHandlePagination={onHandlePagination}
+          totalData={data?.pagination?.total}
+          size={filterParams?.limit}
+        />
       </div>
     </div>
   );
