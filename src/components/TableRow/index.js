@@ -1,7 +1,7 @@
 import React from "react";
 import get from "lodash.get";
 
-const TableRowCell = ({ item, column, action }) => {
+const TableRowCell = ({ item, column, action, align }) => {
   const value = get(item, column.key !== "action" && column.key);
 
   return column.key !== "action" ? (
@@ -12,7 +12,7 @@ const TableRowCell = ({ item, column, action }) => {
           : column?.width
           ? `w-[${column?.width}]`
           : ""
-      }`}
+      } ${align && align}`}
     >
       {column?.render ? column?.render(item) : value !== null ? value : "-"}
     </td>
@@ -22,16 +22,16 @@ const TableRowCell = ({ item, column, action }) => {
 };
 
 const TableRow = (props) => {
-  const { data, columns, showNum, action } = props;
+  const { data, columns, showNum, action, align } = props;
   return (
     <>
       {data.map((item, itemIndex) => (
         <tr
-          className="border-b text-[#333333] px-4"
+          className="border-b border-[#F3F6FF] text-[#333333] px-4"
           key={`table-body=${itemIndex}`}
         >
           {showNum && (
-            <td className="text-[13px] px-2 py-3">{itemIndex + 1}</td>
+            <td className={`text-[13px] px-3 py-3  ${align && align} w-4`}>{itemIndex + 1}</td>
           )}
           {columns.map((column, columnIndex) => (
             <TableRowCell
@@ -39,6 +39,7 @@ const TableRow = (props) => {
               item={item}
               column={column}
               action={action}
+              align={align}
             />
           ))}
         </tr>

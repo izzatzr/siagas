@@ -1,4 +1,5 @@
 import { BASE_API_URL } from "../../constans/constans";
+import { processResult, throwErrorUtil } from "../../helpers/fetchingUtils";
 import { convertQueryString, getToken } from "../../utils";
 
 export const getAllPemdaProfiles = (params) => async () => {
@@ -35,16 +36,20 @@ export const getPemdaProfiles = (id) => async () => {
       },
     });
 
-    const result = await response.json();
+    if (response.status === 200) {
+      const result = await processResult(response);
 
-    const isSuccess = result.code === 200;
+      const isSuccess = result.code === 200;
 
-    if (isSuccess) {
-      return result;
+      if (isSuccess) {
+        return result;
+      }
     }
 
-    return null;
-  } catch (error) {}
+    throw Error("Terjadi kesalahan");
+  } catch (error) {
+    throwErrorUtil(error, `${error?.message || error}`);
+  }
 };
 
 export const submitPemdaProfil = async (payload) => {

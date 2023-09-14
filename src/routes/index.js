@@ -69,6 +69,7 @@ import RegionalInnovationForm from "./DatabaseInnovation/RegionalInnovation/Form
 import IndicatorRegionalInnovation from "./DatabaseInnovation/RegionalInnovation/Indicator";
 import AssessmentTeamForm from "./MasterData/AssessmentTeam/Form";
 import DocumentCategoryForm from "./MasterData/DocumentCategory/Form";
+import Rawlog from "./MasterData/Rawlog";
 
 const Routes = () => {
   const router = createBrowserRouter([
@@ -250,6 +251,10 @@ const masterDataRoutes = [
     path: "/master/dokumen/:action/:id?",
     element: <FormDocumentDashboard />,
   },
+  {
+    path : '/master/rawlog/:id?',
+    element : <Rawlog />
+  }
 ];
 
 const innovationDatabaseRoutes = [

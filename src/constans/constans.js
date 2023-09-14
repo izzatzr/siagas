@@ -189,11 +189,6 @@ export const sidebarDataDummy = [
         active: false,
       },
       {
-        label: "Recount",
-        link: "/master/recount",
-        active: false,
-      },
-      {
         label: "Rawlog",
         link: "/master/rawlog",
         active: false,
@@ -294,9 +289,7 @@ export const modules = {
     ["bold", "italic", "underline", "strike", "blockquote"],
     [
       { list: "ordered" },
-      { list: "bullet" },
-      { indent: "-1" },
-      { indent: "+1" },
+      { list: "bullet" }
     ],
     ["link", "image"],
     ["clean"],
@@ -363,6 +356,8 @@ export const GET_ANNOUNCEMENT = "get_announcement";
 
 export const GET_ALL_FAQ = "get_all_faq";
 export const GET_FAQ = "get_faq";
+
+export const GET_ALL_RAWLOG_QUERY_KEY = 'get_all_rawlog'
 
 export const GET_ALL_PEMDA_PROFILE = "get_all_pemda_profile";
 export const GET_PEMDA_PROFILE = "get_pemda_profile";
