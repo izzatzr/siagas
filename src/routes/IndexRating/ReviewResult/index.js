@@ -15,55 +15,214 @@ import {
   REJECT_ACTION_TABLE,
 } from "../../../constants";
 import {
-  jsonHeaderReviewResults,
-  jsonRowReviewResults,
-} from "../../../dummies/indexRatings";
+  BASE_API_URL,
+  GET_ALL_REVIEW_RESULT,
+} from "../../../constans/constans";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import {
+  deleteReviewResult,
+  getAllReviewResult,
+} from "../../../services/IndexRating/ReviewResult/reviewResult";
+import { useNavigate } from "react-router-dom";
+import { useUtilContexts } from "../../../context/Utils";
+import ModalConfirmation from "../../../components/ModalConfirmation";
+import { convertQueryString, getToken } from "../../../utils";
+import { updateRegionalInnovationReview } from "../../../services/IndexRating/RegionalInnovationReview/regionalInnovationReview";
+
+const initialFilter = {
+  limit: 20,
+  page: 1,
+  q: "",
+  nama_pemda: "",
+};
+
+const initialParamsRegion = {
+  page: 1,
+  limit: 20,
+  name: "",
+};
 
 const ReviewResult = () => {
+  const [filterParams, setFilterParams] = React.useState(initialFilter);
+  const [showDelete, setShowDelete] = React.useState(false);
+  const [currentItem, setCurrentItem] = React.useState(null);
+  const [selectedRegion, setSelectedRegion] = React.useState(null);
+
+  const { setLoadingUtil, snackbar } = useUtilContexts();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const { data, isLoading } = useQuery(
+    [GET_ALL_REVIEW_RESULT, filterParams],
+    getAllReviewResult(filterParams)
+  );
+
   const actionTableData = [
     {
       code: DOWNLOAD_TABLE,
-      onClick: () => {
-        console.log(DOWNLOAD_TABLE);
-      },
+      onClick: (item) => {},
     },
     {
       code: PREVIEW_ACTION_TABLE,
-      onClick: () => {
-        console.log(PREVIEW_ACTION_TABLE);
+      onClick: (item) => {
+        navigate(`/review-inovasi-daerah/detail/${item.review_inovasi_id}`);
       },
     },
     {
       code: REJECT_ACTION_TABLE,
-      onClick: () => {
-        console.log(REJECT_ACTION_TABLE);
+      onClick: (value) => {
+        setCurrentItem(value);
+        setShowDelete(true);
       },
     },
   ];
 
-  const regions = [
+  const tableHeader = [
     {
-      value: "wilayah 1",
-      label: "Wilayah 1",
+      key: "nomor",
+      title: "Nomor",
     },
     {
-      value: "wilayah 2",
-      label: "Wilayah 2",
+      key: "judul",
+      title: "Judul",
     },
     {
-      value: "wilayah 3",
-      label: "Wilayah 3",
+      key: "pemda.pemda_name",
+      title: "Pemda",
     },
     {
-      value: "wilayah 4",
-      label: "Wilayah 4",
+      key: "waktu_penerapan",
+      title: "Waktu Penerapan",
+    },
+    {
+      key: "kematangan",
+      title: "Kematangan",
+    },
+    {
+      key: "skor_verifikasi",
+      title: "Skor Verifikasi",
+    },
+    {
+      key: "qc",
+      title: "QC",
+    },
+    {
+      key: "form-action",
+      title: "Aksi",
+      render: (item) => <TableAction data={actionTableData} itemData={item} />,
     },
   ];
 
+  const loadOptionRegions = async (search, loadedOptions, { page }) => {
+    const paramsQueryString = convertQueryString({
+      ...initialParamsRegion,
+      name: search,
+    });
+    const response = await fetch(
+      `${BASE_API_URL}/daerah?${paramsQueryString}`,
+      {
+        headers: {
+          Authorization: `Bearer ${getToken().token}`,
+        },
+      }
+    );
+
+    const responseJSON = await response.json();
+
+    return {
+      options: responseJSON?.data,
+      hasMore: responseJSON.has_more,
+      additional: {
+        page: page + 1,
+      },
+    };
+  };
+
+  const updateRegionalInnovationReviewMutation = useMutation(
+    updateRegionalInnovationReview
+  );
+
+  React.useEffect(() => {
+    if (isLoading) {
+      setLoadingUtil(true);
+    } else {
+      setLoadingUtil(false);
+    }
+  }, [isLoading]);
+
+  const onHandlePagination = (page) => {
+    setFilterParams({
+      ...filterParams,
+      page: page + 1,
+    });
+  };
+
+  const onHandleSearch = (value) => {
+    if (value.length > 3) {
+      setFilterParams({
+        q: value,
+      });
+    } else if (value.length === 0) {
+      setFilterParams({
+        q: "",
+      });
+    }
+  };
+
+  const onHandleDelete = () => {
+    setShowDelete(false);
+    setLoadingUtil(true);
+    updateRegionalInnovationReviewMutation.mutate(
+      {
+        id: currentItem?.review_inovasi_id,
+        status: "Rejected",
+        skor: currentItem?.skor_verifikasi,
+      },
+      {
+        onSuccess: (res) => {
+          setLoadingUtil(false);
+          setCurrentItem(null);
+          if (res.code) {
+            queryClient.invalidateQueries([GET_ALL_REVIEW_RESULT]);
+
+            snackbar("Berhasil ditolak", () => {
+              navigate("/review-inovasi-daerah");
+            });
+          }
+        },
+      }
+    );
+  };
+
+  const onHandleRegionChange = (value) => {
+    setSelectedRegion(value);
+    setFilterParams({
+      ...filterParams,
+      nama_pemda: value.name,
+    });
+  };
+
+  const resetRegion = () => {
+    setSelectedRegion(null);
+    setFilterParams({
+      ...filterParams,
+      nama_pemda: "",
+    });
+  };
+
   return (
-    <div className="w-full flex flex-col gap-6 py-6">
+    <div className="flex flex-col w-full gap-6 py-6">
+      {showDelete && (
+        <ModalConfirmation
+          variant="reject"
+          message="Apakah Anda yakin ingin menolak"
+          onCancel={() => setShowDelete(false)}
+          onConfirm={onHandleDelete}
+        />
+      )}
+
       <div className="text-[#333333] text-2xl">Hasil Review Inovasi Daerah</div>
-      <div className="flex justify-end items-center gap-2">
+      <div className="flex items-center justify-end gap-2">
         <button className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5">
           <BiDownload className="text-base" />
           Unduh Data (PDF)
@@ -78,24 +237,35 @@ const ReviewResult = () => {
           <div className="w-[60%]">
             <SelectOption
               label="Tampilkan berdasarkan daerah"
-              placholder="Pilih Wilayah"
-              options={regions}
+              placeholder="Pilih Daerah"
+              options={loadOptionRegions}
+              onChange={onHandleRegionChange}
+              value={selectedRegion}
+              paginate
             />
           </div>
-          <button className="border border-[#333333] px-6 py-2 text-sm rounded">
+          <button
+            onClick={resetRegion}
+            className="border border-[#333333] px-6 py-2 text-sm rounded"
+          >
             Tampilkan Semua
           </button>
         </div>
         <div className="flex items-center gap-3 text-sm border border-[#333333] placeholder:text-[#828282] rounded px-3 py-2 w-[30%]">
           <BiSearch />
-          <input type="text" className="outline-none" placeholder="Pencarian" />
+          <input
+            type="text"
+            className="outline-none"
+            placeholder="Pencarian"
+            onChange={(e) => onHandleSearch(e.target.value)}
+          />
         </div>
       </div>
       <div className="w-full rounded-lg text-[#333333] bg-white p-6">
         <Table
           showNum={true}
-          data={jsonRowReviewResults}
-          columns={jsonHeaderReviewResults}
+          data={data?.data || []}
+          columns={tableHeader}
           action={<TableAction data={actionTableData} />}
           ranking={true}
         />
@@ -106,12 +276,12 @@ const ReviewResult = () => {
           <ReactPaginate
             breakLabel="..."
             nextLabel={<BiChevronRight />}
-            onPageChange={(page) => console.log(page)}
+            onPageChange={(page) => onHandlePagination(page.selected)}
             pageRangeDisplayed={3}
-            pageCount={10}
+            pageCount={data?.pagination.pages || 0}
             previousLabel={<BiChevronLeft />}
             renderOnZeroPageCount={null}
-            className="flex gap-3 items-center text-xs"
+            className="flex items-center gap-3 text-xs"
             pageClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
             previousClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
             nextClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"

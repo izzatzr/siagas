@@ -9,7 +9,12 @@ import {
   PREVIEW_ACTION_TABLE,
   REJECT_ACTION_TABLE,
 } from "./constants";
-import { IoMdEye, IoMdCloseCircle, IoMdCheckmarkCircle, IoMdTrash } from "react-icons/io";
+import {
+  IoMdEye,
+  IoMdCloseCircle,
+  IoMdCheckmarkCircle,
+  IoMdTrash,
+} from "react-icons/io";
 import {
   AiFillFile,
   AiFillFileExcel,
@@ -18,6 +23,7 @@ import {
 } from "react-icons/ai";
 import { MdDownloadForOffline, MdEdit } from "react-icons/md";
 import secureLocalStorage from "react-secure-storage";
+import { BASE_API_URL } from "./constans/constans";
 
 export const actionTable = (actionName) => {
   switch (actionName) {
@@ -54,7 +60,10 @@ export const actionTable = (actionName) => {
 };
 
 export const convertQueryString = (params) => {
-  return new URLSearchParams(params).toString();
+  const filteredParams = Object.fromEntries(
+    Object.entries(params).filter(([_, value]) => value !== null)
+  );
+  return new URLSearchParams(filteredParams).toString();
 };
 
 export const getToken = () => {
@@ -62,5 +71,57 @@ export const getToken = () => {
 };
 
 export const getUser = () => {
-  return secureLocalStorage.getItem('users')
-}
+  return secureLocalStorage.getItem("users");
+};
+
+export const fetchData = async ({ params, endpoint }) => {
+  const baseUrl = `${BASE_API_URL}/${endpoint}`;
+
+  let fullUrl = baseUrl;
+
+  if (params) {
+    const queryString = convertQueryString(params);
+    fullUrl += `?${queryString}`;
+  }
+
+  const token = getToken().token;
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  };
+
+  const response = await fetch(fullUrl, { headers });
+
+  const result = await response.json();
+
+  return result.code === 200 ? result : null;
+};
+
+export const patchData = async ({ params, endpoint, data }) => {
+  const baseUrl = `${BASE_API_URL}/${endpoint}`;
+
+  let fullUrl = baseUrl;
+
+  if (params) {
+    const queryString = convertQueryString(params);
+    fullUrl += `?${queryString}`;
+  }
+
+  const token = getToken().token;
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  };
+
+  const response = await fetch(fullUrl, {
+    method: "PATCH",
+    headers,
+    body: JSON.stringify(data),
+  });
+
+  const result = await response.json();
+
+  return result.code === 200 ? result : null;
+};

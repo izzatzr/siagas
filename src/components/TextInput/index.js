@@ -1,18 +1,30 @@
 import React from "react";
 
 const TextInput = (props) => {
-  const { label, name, icon, placeholder, type = "text", onChange, value, clickIcon, errorMessage } = props;
+  const {
+    label,
+    name,
+    icon,
+    placeholder,
+    type = "text",
+    onChange,
+    value,
+    clickIcon,
+    errorMessage,
+    required = false,
+  } = props;
   return (
-    <div className="flex gap-2 flex-col">
+    <div className="flex flex-col gap-2">
       {label && (
         <label htmlFor={name} className="text-[#333333] text-sm font-normal">
+          {required && <span className="mr-1 text-red-600">*</span>}
           {label}
         </label>
       )}
       <div
-        className={`group flex gap-[10px] rounded-lg border border-[#828282] ${errorMessage && "border-[red]"} p-3 bg-white ${
-          icon ? "justify-between" : ""
-        }`}
+        className={`group flex gap-[10px] rounded-lg border border-[#828282] ${
+          errorMessage && "border-[red]"
+        } px-3 py-2 bg-white ${icon ? "justify-between" : ""}`}
       >
         <input
           type={type}
@@ -22,7 +34,9 @@ const TextInput = (props) => {
           value={value}
         />
 
-        <div className="cursor-pointer" onClick={clickIcon}>{icon}</div>
+        <div className="cursor-pointer" onClick={clickIcon}>
+          {icon}
+        </div>
       </div>
       <span className="text-xs text-red-600">{errorMessage}</span>
     </div>

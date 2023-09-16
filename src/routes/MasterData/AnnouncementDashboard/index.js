@@ -1,24 +1,16 @@
 import React from "react";
 import SelectOption from "../../../components/SelectOption";
-import {
-  BiChevronLeft,
-  BiChevronRight,
-  BiPlus,
-  BiSearch,
-} from "react-icons/bi";
+import {BiChevronLeft, BiChevronRight, BiPlus, BiSearch,} from "react-icons/bi";
 import Table from "../../../components/Table";
-import { useMutation, useQuery } from "react-query";
-import { GET_ALL_ANNOUNCEMENT } from "../../../constans/constans";
-import {
-  deleteAnnouncemet,
-  getAllAnnouncement,
-} from "../../../services/MasterData/announcement";
-import { DELETE_ACTION_TABLE, EDIT_ACTION_TABLE } from "../../../constants";
+import {useMutation, useQuery} from "react-query";
+import {GET_ALL_ANNOUNCEMENT} from "../../../constans/constans";
+import {deleteAnnouncemet, getAllAnnouncement,} from "../../../services/MasterData/announcement";
+import {DELETE_ACTION_TABLE, EDIT_ACTION_TABLE} from "../../../constants";
 import TableAction from "../../../components/TableAction";
 import ReactPaginate from "react-paginate";
-import { Link, useNavigate } from "react-router-dom";
-import { useUtilContexts } from "../../../context/Utils";
-import ModalDelete from "../../../components/ModalDelete";
+import {Link, useNavigate} from "react-router-dom";
+import {useUtilContexts} from "../../../context/Utils";
+import ModalConfirmation from "../../../components/ModalConfirmation";
 
 const initialFilter = {
   page: 1,
@@ -32,7 +24,7 @@ const AnnouncementDashboard = () => {
   const [showDelete, setShowDelete] = React.useState(false);
   const [currentItem, setCurrentItem] = React.useState(null);
 
-  const { setLoadingUtil, snackbar } = useUtilContexts();
+  const {setLoadingUtil, snackbar} = useUtilContexts();
   const navigate = useNavigate();
   const categories = [
     {
@@ -73,7 +65,7 @@ const AnnouncementDashboard = () => {
     {
       key: "form-action",
       title: "Aksi",
-      render: (item) => <TableAction data={actionTableData} itemData={item} />,
+      render: (item) => <TableAction data={actionTableData} itemData={item}/>,
     },
   ];
 
@@ -95,7 +87,7 @@ const AnnouncementDashboard = () => {
 
   const deleteAnnouncementMutation = useMutation(deleteAnnouncemet);
 
-  const { data, isLoading } = useQuery(
+  const {data, isLoading} = useQuery(
     [GET_ALL_ANNOUNCEMENT, filterParams],
     getAllAnnouncement(filterParams)
   );
@@ -149,24 +141,24 @@ const AnnouncementDashboard = () => {
   }, [isLoading]);
 
   return (
-    <div className="w-full flex flex-col gap-6 py-6">
+    <div className="flex flex-col w-full gap-6 py-6">
       {showDelete && (
-        <ModalDelete
+        <ModalConfirmation
           cancelDelete={() => setShowDelete(false)}
           doDelete={onHandleDelete}
         />
       )}
       <div className="text-[#333333] font-medium text-2xl">Pengumuman</div>
-      <div className="flex justify-end items-center gap-2">
+      <div className="flex items-center justify-end gap-2">
         <Link
           to="/master/pengumuman/tambah"
           className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
         >
-          <BiPlus className="text-base" />
+          <BiPlus className="text-base"/>
           Tambah Pengumuman
         </Link>
       </div>
-      <div className="w-full rounded-lg bg-white py-4 px-6 flex items-end justify-between">
+      <div className="flex items-end justify-between w-full px-6 py-4 bg-white rounded-lg">
         <div className="w-[30%]">
           <SelectOption
             label="Kategori"
@@ -174,8 +166,9 @@ const AnnouncementDashboard = () => {
             options={categories}
           />
         </div>
-        <div className="flex items-center gap-3 text-sm border border-[#333333] placeholder:text-[#828282] rounded px-3 py-2 w-[30%]">
-          <BiSearch />
+        <div
+          className="flex items-center gap-3 text-sm border border-[#333333] placeholder:text-[#828282] rounded px-3 py-2 w-[30%]">
+          <BiSearch/>
           <input
             type="text"
             className="outline-none"
@@ -184,9 +177,9 @@ const AnnouncementDashboard = () => {
           />
         </div>
       </div>
-      <div className="w-full rounded-lg bg-white py-4 px-6">
+      <div className="w-full px-6 py-4 bg-white rounded-lg">
         <div className="overflow-x-scroll">
-          <Table showNum={true} data={data?.data || []} columns={tableHeader} />
+          <Table showNum={true} data={data?.data || []} columns={tableHeader}/>
         </div>
         <div className="flex justify-between items-center py-[20px]">
           <span className="trext-[#828282] text-xs">
@@ -194,13 +187,13 @@ const AnnouncementDashboard = () => {
           </span>
           <ReactPaginate
             breakLabel="..."
-            nextLabel={<BiChevronRight />}
+            nextLabel={<BiChevronRight/>}
             onPageChange={(page) => onHandlePagination(page.selected)}
             pageCount={data?.pagination?.pages}
             pageRangeDisplayed={3}
-            previousLabel={<BiChevronLeft />}
+            previousLabel={<BiChevronLeft/>}
             renderOnZeroPageCount={null}
-            className="flex gap-3 items-center text-xs"
+            className="flex items-center gap-3 text-xs"
             pageClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
             previousClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
             nextClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"

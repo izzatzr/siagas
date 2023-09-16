@@ -10,10 +10,12 @@ const SelectOption = (props) => {
     onChange,
     value,
     paginate = false,
+    required = false,
   } = props;
   return (
-    <div className="w-full flex flex-col gap-1">
-      <label htmlFor="" className="text-xs text-[#333333]">
+    <div className="flex flex-col w-full gap-1">
+      <label htmlFor="" className="text-xs text-[#333333] mb-2">
+        {required && <span className="mr-1 text-red-600">*</span>}
         {label}
       </label>
       {paginate ? (
@@ -22,10 +24,8 @@ const SelectOption = (props) => {
             control: (provided, state) => ({
               ...provided,
               boxShadow: "none",
-              borderColor: "#333333",
-              padding: "4px",
               borderRadius: "0.5rem",
-              border: "1px solid #828282",
+              border: "1px solid #333333",
             }),
             placeholder: (defaultStyles) => {
               return {
@@ -40,10 +40,10 @@ const SelectOption = (props) => {
           additional={{
             page: 1,
           }}
+          getOptionValue={(value) => value.name || value.value}
           getOptionLabel={(value) => value.name || value.value}
           placeholder={placeholder}
         />
-        
       ) : (
         <Select
           value={value}
@@ -52,7 +52,6 @@ const SelectOption = (props) => {
               ...provided,
               boxShadow: "none",
               borderColor: "#333333",
-              padding: "4px",
               borderRadius: "0.5rem",
               border: "1px solid #828282",
             }),

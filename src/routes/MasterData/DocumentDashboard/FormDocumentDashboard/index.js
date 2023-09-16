@@ -149,21 +149,24 @@ const FormDocumentDashboard = () => {
 
     submitDocumentMutation.mutate(
       {
-        id : currentId,
-        ...newPayload
+        id: currentId,
+        ...newPayload,
       },
       {
         onSuccess: (res) => {
           if (res.code === 200) {
             setLoadingUtil(false);
-            snackbar(currentId ? "Berhasil diubah" : "Berhasil disimpan", () => {
-              navigate("/master/dokumen");
-            });
+            snackbar(
+              currentId ? "Berhasil diubah" : "Berhasil disimpan",
+              () => {
+                navigate("/master/dokumen");
+              }
+            );
           }
         },
         onError: () => {
           setLoadingUtil(false);
-          snackbar("Terjadi kesalahan", () => {}, "error");
+          // snackbar("Terjadi kesalahan", () => {}, "error");
         },
       }
     );
@@ -177,14 +180,14 @@ const FormDocumentDashboard = () => {
   }, [currentId]);
 
   return (
-    <div className="w-full flex flex-col gap-6 py-6">
+    <div className="flex flex-col w-full gap-6 py-6">
       <div className="text-[#333333] font-medium text-2xl">Dokumen</div>
-      <div className="w-full bg-white rounded-lg p-8 flex flex-col gap-6">
+      <div className="flex flex-col w-full gap-6 p-8 bg-white rounded-lg">
         <div className="flex items-center gap-2">
           <Link to="/master/dokumen">
             <BiArrowBack />
           </Link>
-          <span className="font-medium text-lg">
+          <span className="text-lg font-medium">
             {params?.action === "tambah" ? "Tambah " : "Edit "}
             Dokumen
           </span>

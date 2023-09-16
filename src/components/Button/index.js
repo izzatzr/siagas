@@ -1,17 +1,32 @@
-import React from 'react'
+import React from "react";
 
-const Button = (props) => {
-    const {text, icon, onClick, padding = "px-6 py-[8px]", fontSize, background, fontColor} = props;
+const Button = ({
+  text,
+  icon,
+  onClick,
+  padding = "px-6 py-[8px]",
+  fontSize,
+  background = "#069DD9",
+  fontColor = "#fff",
+  border,
+  disabled,
+}) => {
+  const buttonClasses = `flex items-center gap-2 justify-center rounded-lg disabled:cursor-not-allowed ${padding} ${fontSize} ${border}`;
+
   return (
-    <button className={`w-full flex items-center gap-2 justify-center rounded-lg ${padding} ${fontSize}`} onClick={onClick}
-    style={{
-      background : background || "#069DD9",
-      color : fontColor || '#fff'
-    }}>
+    <button
+      className={buttonClasses}
+      onClick={onClick}
+      disabled={disabled}
+      style={{
+        background: disabled ? "#d1e5ed" : background,
+        color: fontColor,
+      }}
+    >
       {icon && icon}
       {text}
-      </button>
-  )
-}
+    </button>
+  );
+};
 
-export default Button
+export default Button;

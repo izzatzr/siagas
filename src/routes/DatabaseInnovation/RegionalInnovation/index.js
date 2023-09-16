@@ -10,7 +10,7 @@ import {
   jsonHeaderRegionalInnovation,
   jsonRowRegionalInnovation,
 } from "../../../dummies/innovationDatabase";
-import FilterArsip from "../../Dashboard/Archive/components/FilterArsip";
+import FilterOption from "../../../components/FilterOption";
 
 const RegionalInnovation = () => {
   const actionTableData = [
@@ -120,7 +120,7 @@ const RegionalInnovation = () => {
   ];
 
   return (
-    <div className="w-full flex flex-col gap-6 py-6">
+    <div className="flex flex-col w-full gap-6 py-6">
       <div className="text-[#333333] text-2xl">Inovasi Daerah</div>
       <div className="w-full rounded-lg text-[#333333] bg-[#FFC90C4D] p-6 flex flex-col gap-2">
         <div className="flex items-center gap-2">
@@ -136,7 +136,7 @@ const RegionalInnovation = () => {
         </p>
       </div>
       <div className="mt-4">
-        <FilterArsip />
+        <FilterOption />
       </div>
       <div className="w-full rounded-lg text-[#333333] bg-white p-6 flex flex-col gap-4">
         <div className="">
@@ -192,7 +192,7 @@ const RegionalInnovation = () => {
             pageCount={10}
             previousLabel={<BiChevronLeft />}
             renderOnZeroPageCount={null}
-            className="flex gap-3 items-center text-xs"
+            className="flex items-center gap-3 text-xs"
             pageClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
             previousClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
             nextClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"

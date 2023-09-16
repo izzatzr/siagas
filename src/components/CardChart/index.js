@@ -5,11 +5,9 @@ import { Chart as ChartJS } from "chart.js/auto";
 
 import { BiDownload } from "react-icons/bi";
 
-const CardChart = (props) => {
-  const { label } = props;
-
+const CardChart = ({ label, labels, data }) => {
   const dataChart = {
-    labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+    labels,
     options: {
       legend: {
         display: false,
@@ -17,8 +15,8 @@ const CardChart = (props) => {
     },
     datasets: [
       {
-        label: "# of Votes",
-        data: [12, 19, 3, 5, 2, 3],
+        label: "Total Keseluruhan",
+        data,
         backgroundColor: [
           "rgba(255, 99, 132, 0.2)",
           "rgba(54, 162, 235, 0.2)",
@@ -48,7 +46,7 @@ const CardChart = (props) => {
           <span className="text-sm text-[#2F80ED]">Simpan</span>
         </div>
       </div>
-      <div className="w-full flex justify-center items-center">
+      <div className="flex items-center justify-center w-full">
         <div className="w-[200px]">
           <Doughnut
             data={dataChart}
