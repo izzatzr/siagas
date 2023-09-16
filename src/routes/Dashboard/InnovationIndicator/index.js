@@ -71,7 +71,7 @@ const InnovationIndicator = () => {
 
   const { setLoadingUtil } = useUtilContexts();
 
-  const loadOptionOPD = async (search, loadedOptions, { page }) => {
+  const getOPD = async (search = "") => {
     const paramsQueryString = convertQueryString({
       ...initialParamsOPD,
       q: search,
@@ -84,14 +84,32 @@ const InnovationIndicator = () => {
 
     const responseJSON = await response.json();
 
-    return {
-      options: responseJSON?.data,
-      hasMore: responseJSON.has_more,
+    return responseJSON;
+  };
+
+  const loadOptionOPD = async (search, loadedOptions, { page }) => {
+    const res = await getOPD(search);
+
+    const data = {
+      options: res?.data,
+      hasMore: res.has_more,
       additional: {
         page: page + 1,
       },
     };
+
+    return data;
   };
+
+  React.useEffect(() => {
+    getOPD().then((data) => {
+      setSelectedOPD(data.data[0]);
+      setFilterParams({
+        ...filterParams,
+        pemda_id: data.data[0].id,
+      });
+    });
+  }, []);
 
   React.useEffect(() => {
     if (isLoading) {
