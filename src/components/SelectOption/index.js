@@ -11,7 +11,7 @@ const SelectOption = (props) => {
     onChange,
     value,
     paginate = false,
-    errorMessage
+    errorMessage,
     required = false,
   } = props;
   return (
@@ -28,7 +28,7 @@ const SelectOption = (props) => {
               ...provided,
               boxShadow: "none",
               borderRadius: "0.5rem",
-              border: `1px solid ${ errorMessage ? "red" : "#828282"}`,
+              border: `1px solid ${errorMessage ? "red" : "#828282"}`,
             }),
             placeholder: (defaultStyles) => {
               return {
@@ -59,7 +59,7 @@ const SelectOption = (props) => {
               boxShadow: "none",
               borderColor: "#333333",
               borderRadius: "0.5rem",
-              border: `1px solid ${ errorMessage ? "red" : "#828282"}`,
+              border: `1px solid ${errorMessage ? "red" : "#828282"}`,
             }),
             placeholder: (defaultStyles) => {
               return {
@@ -74,7 +74,9 @@ const SelectOption = (props) => {
           getOptionLabel={(value) => value.name || value.label}
         />
       )}
-      <span className="absolute text-xs text-red-600 -bottom-4">{errorMessage}</span>
+      <span className="absolute text-xs text-red-600 -bottom-4">
+        {errorMessage}
+      </span>
     </div>
   );
 };

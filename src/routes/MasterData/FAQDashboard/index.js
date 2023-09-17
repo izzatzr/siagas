@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  BiChevronLeft,
-  BiChevronRight,
-  BiPlus,
-  BiSearch,
-} from "react-icons/bi";
+import { BiPlus, BiSearch } from "react-icons/bi";
 import { Link, useNavigate } from "react-router-dom";
 import Table from "../../../components/Table";
 import { useMutation, useQuery } from "react-query";
@@ -13,9 +8,8 @@ import { deleteFAQ, getAllFAQ } from "../../../services/MasterData/faq";
 import TableAction from "../../../components/TableAction";
 import { DELETE_ACTION_TABLE, EDIT_ACTION_TABLE } from "../../../constants";
 import { useUtilContexts } from "../../../context/Utils";
-import ReactPaginate from "react-paginate";
-import ModalDelete from "../../../components/ModalDelete";
 import Pagination from "../../../components/Pagination";
+import ModalConfirmation from "../../../components/ModalConfirmation";
 
 const initialFilter = {
   page: 1,

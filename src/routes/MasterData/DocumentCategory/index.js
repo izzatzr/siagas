@@ -5,7 +5,7 @@ import {
   BiPlus,
   BiSearch,
 } from "react-icons/bi";
-import ReactPaginate from "react-paginate";
+
 import { useMutation, useQuery } from "react-query";
 import Table from "../../../components/Table";
 import { GET_ALL_DOCUEMNT_CATEGORY } from "../../../constans/constans";
@@ -18,7 +18,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useUtilContexts } from "../../../context/Utils";
 import { DELETE_ACTION_TABLE, EDIT_ACTION_TABLE } from "../../../constants";
 import TableAction from "../../../components/TableAction";
-import ModalDelete from "../../../components/ModalDelete";
+import ModalConfirmation from "../../../components/ModalConfirmation";
 
 const initialFilter = {
   limit: 7,
@@ -132,17 +132,19 @@ const DocumentCategory = () => {
   }, [isFetching]);
 
   return (
-    <div className="w-full flex flex-col gap-6 py-6">
+    <div className="flex flex-col w-full gap-6 py-6">
       {showDelete && (
-        <ModalDelete
-          cancelDelete={() => setShowDelete(false)}
-          doDelete={onHandleDelete}
+        <ModalConfirmation
+          variant="delete"
+          message="Apakah Anda yakin ingin menghapus ?"
+          onCancel={() => setShowDelete(false)}
+          onConfirm={onHandleDelete}
         />
       )}
       <div className="text-[#333333] font-medium text-2xl">
         Kategori Dokumen
       </div>
-      <div className="flex justify-end items-center gap-2">
+      <div className="flex items-center justify-end gap-2">
         <Link
           to="/master/kategori-dokumen/tambah"
           className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
@@ -151,18 +153,18 @@ const DocumentCategory = () => {
           Tambah Kategori Dokumen
         </Link>
       </div>
-      <div className="w-full rounded-lg bg-white py-4 px-6">
+      <div className="w-full px-6 py-4 bg-white rounded-lg">
         <div className="flex items-center gap-3 text-sm border border-[#333333] placeholder:text-[#828282] rounded px-3 py-2 w-[30%]">
           <BiSearch />
           <input
             type="text"
-            className="outline-none w-full"
+            className="w-full outline-none"
             placeholder="Pencarian"
             onChange={onHandleSearch}
           />
         </div>
       </div>
-      <div className="w-full rounded-lg bg-white py-4 px-6">
+      <div className="w-full px-6 py-4 bg-white rounded-lg">
         <Table showNum={true} data={data?.data || []} columns={tableHeader} />
         <Pagination
           pageCount={data?.pagination?.pages}

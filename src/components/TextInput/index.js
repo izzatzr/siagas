@@ -2,28 +2,19 @@ import React from "react";
 
 const TextInput = (props) => {
   const {
-   
     label,
-   
     name,
-   
     icon,
-   
     placeholder,
-   
     type = "text",
-   
     onChange,
-   
     value,
-   
     clickIcon,
-   
     errorMessage,
     disabled,
- ,
     required = false,
   } = props;
+
   return (
     <div className="flex gap-2 flex-col relative -mt-[7px]">
       {label && (
@@ -52,7 +43,9 @@ const TextInput = (props) => {
           {icon}
         </div>
       </div>
-      <span className="absolute text-xs text-red-600 -bottom-4">{errorMessage}</span>
+      <span className="absolute text-xs text-red-600 -bottom-4">
+        {errorMessage}
+      </span>
     </div>
   );
 };

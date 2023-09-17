@@ -9,7 +9,6 @@ import {
   PDF_ACTION_TABLE,
   TRANSFER_ACTION_TABLE,
 } from "../../../constants";
-import FilterArsip from "../../Dashboard/Archive/components/FilterArsip";
 import { useQuery } from "react-query";
 import { GET_ALL_REGIONAL_INNOVATION_QUERY_KEY } from "../../../constans/constans";
 import { getAllRegionalInnovation } from "../../../services/DatabaseInnovation/regional";
@@ -17,6 +16,7 @@ import { useUtilContexts } from "../../../context/Utils";
 import Pagination from "../../../components/Pagination";
 import Button from "../../../components/Button";
 import { useNavigate } from "react-router-dom";
+import FilterOption from "../../../components/FilterOption";
 
 const initialParams = {
   page: 0,
@@ -192,9 +192,9 @@ const RegionalInnovation = () => {
         </p>
       </div>
       <div className="mt-4">
-        <FilterArsip
-          data={listFilter}
-          onChangeFilter={(value) => {
+        <FilterOption
+          items={listFilter}
+          onFilterChange={(value) => {
             onHandleChangeFilter(value);
           }}
         />

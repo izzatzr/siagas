@@ -11,8 +11,8 @@ import { DELETE_ACTION_TABLE, EDIT_ACTION_TABLE } from "../../../constants";
 import TableAction from "../../../components/TableAction";
 import { Link, useNavigate } from "react-router-dom";
 import { useUtilContexts } from "../../../context/Utils";
-import ModalDelete from "../../../components/ModalDelete";
 import Pagination from "../../../components/Pagination";
+import ModalConfirmation from "../../../components/ModalConfirmation";
 
 const initialFilter = {
   page: 1,
@@ -148,8 +148,9 @@ const AnnouncementDashboard = () => {
     <div className="flex flex-col w-full gap-6 py-6">
       {showDelete && (
         <ModalConfirmation
-          cancelDelete={() => setShowDelete(false)}
-          doDelete={onHandleDelete}
+          variant="delete"
+          onCancel={() => setShowDelete(false)}
+          onConfirm={onHandleDelete}
         />
       )}
       <div className="text-[#333333] font-medium text-2xl">Pengumuman</div>
