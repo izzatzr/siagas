@@ -1,4 +1,5 @@
 import { BASE_API_URL } from "../../constans/constans";
+import { processResult, throwErrorUtil } from "../../helpers/fetchingUtils";
 import { convertQueryString, getToken } from "../../utils";
 
 export const getAllDocuments = (params) => async () => {
@@ -13,17 +14,19 @@ export const getAllDocuments = (params) => async () => {
       }
     );
 
-    const result = await response.json();
+    if (response.status === 200) {
+      const result = await processResult(response);
 
-    const isSuccess = result.code === 200;
+      const isSuccess = result.code === 200;
 
-    if (isSuccess) {
-      return result;
+      if (isSuccess) {
+        return result;
+      }
     }
 
-    return [];
+    throw Error("Terjadi kesalahan");
   } catch (error) {
-    console.log(error);
+    throwErrorUtil(error, `${error?.message || error}`);
   }
 };
 
@@ -35,17 +38,19 @@ export const findDocument = (id) => async () => {
       },
     });
 
-    const result = await response.json();
+    if (response.status === 200) {
+      const result = await processResult(response);
 
-    const isSuccess = result.code === 200;
+      const isSuccess = result.code === 200;
 
-    if (isSuccess) {
-      return result;
+      if (isSuccess) {
+        return result;
+      }
     }
 
-    return [];
+    throw Error("Terjadi kesalahan");
   } catch (error) {
-    console.log(error);
+    throwErrorUtil(error, `${error?.message || error}`);
   }
 };
 
@@ -59,7 +64,9 @@ export const submitDocument = async (payload) => {
     formData.append("title", payload.title);
     formData.append("category_id", payload.category_id);
     formData.append("content", payload.content);
-    formData.append("document", payload.document);
+    if (payload?.document) {
+      formData.append("document", payload.document);
+    }
 
     const response = await fetch(url, {
       method: payload?.id ? "PATCH" : "POST",
@@ -69,15 +76,43 @@ export const submitDocument = async (payload) => {
       body: formData,
     });
 
-    const result = await response.json();
-    const isSuccess = result.code === 200;
+    if (response.status === 200) {
+      const result = await processResult(response);
 
-    if (isSuccess) {
-      return result;
+      const isSuccess = result.code === 200;
+
+      if (isSuccess) {
+        return result;
+      }
     }
 
-    throw Error(result.message);
+    throw Error("Terjadi kesalahan");
   } catch (error) {
-    throw Error("Submit pengumuman error");
+    throwErrorUtil(error, `${error?.message || error}`);
+  }
+};
+
+export const deleteDocument = async ({ id }) => {
+  try {
+    const response = await fetch(`${BASE_API_URL}/dokumen/${id}`, {
+      headers: {
+        Authorization: `Bearer ${getToken().token}`,
+      },
+      method: "DELETE",
+    });
+
+    if (response.status === 200) {
+      const result = await processResult(response);
+
+      const isSuccess = result.code === 200;
+
+      if (isSuccess) {
+        return result;
+      }
+    }
+
+    throw Error("Terjadi kesalahan");
+  } catch (error) {
+    throwErrorUtil(error, `${error?.message || error}`);
   }
 };

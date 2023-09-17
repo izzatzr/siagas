@@ -1,18 +1,20 @@
 import React from "react";
 
 import { MdLogout } from "react-icons/md";
-import {useDispatch} from 'react-redux'
-import  secureLocalStorage  from  "react-secure-storage";
+import { useDispatch } from "react-redux";
+import secureLocalStorage from "react-secure-storage";
 
 import { sidebarDataDummy } from "../../constans/constans";
 import logo from "../../assets/images/logo.svg";
 import SidebarItem from "../SidebarItem";
 import { signOut } from "../../redux/actions/auth";
-
+import { useLocation } from "react-router-dom";
 
 const Sidebar = () => {
-  const dispatch = useDispatch()
+  const location = useLocation();
+  const dispatch = useDispatch();
   const [sidebarData, setSidebarData] = React.useState(sidebarDataDummy);
+  const [sidebarActive, setSidebarActive] = React.useState(0);
 
   const handleOpenAccordion = (label, active) => {
     const sidebarDataTemp = sidebarData;
@@ -21,6 +23,7 @@ const Sidebar = () => {
     sidebarDataTemp.forEach((sidebar, i) => {
       if (i === index) {
         sidebar.active = active;
+        setSidebarActive(i);
       } else {
         sidebar.active = false;
       }
@@ -35,6 +38,24 @@ const Sidebar = () => {
 
     dispatch(signOut());
   };
+
+  React.useEffect(() => {
+    let sidebarTemp = sidebarDataDummy;
+
+    sidebarTemp.forEach((sidebar, index) => {
+      const childIndex = sidebar.children.findIndex((item) =>
+        location.pathname.includes(item.link)
+      );
+
+      
+      if (childIndex > 0) {
+        sidebar.active = true
+        setSidebarActive(index);
+      }
+    });
+
+    setSidebarData(sidebarTemp)
+  }, []);
 
   return (
     <div className="min-w-[281px] max-w-[281px] flex flex-col justify-between">
@@ -53,6 +74,8 @@ const Sidebar = () => {
           {sidebarData.map((item, key) => {
             return (
               <SidebarItem
+                indexSidebar={key}
+                sidebarActive={sidebarActive}
                 key={key}
                 label={item.label}
                 icon={item.icon}
@@ -65,7 +88,10 @@ const Sidebar = () => {
         </div>
         <div className="w-full h-px bg-[#EBEFF2]"></div>
         <div className="w-full p-6 flex flex-col gap-6">
-          <div className="flex gap-2 items-center text-[#BDBDBD] cursor-pointer hover:text-[#069DD9]" onClick={handleSignOut}>
+          <div
+            className="flex gap-2 items-center text-[#BDBDBD] cursor-pointer hover:text-[#069DD9]"
+            onClick={handleSignOut}
+          >
             <MdLogout />
             <div className="flex-1">
               <span className="font-medium">Keluar</span>

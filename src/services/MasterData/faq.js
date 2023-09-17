@@ -1,5 +1,6 @@
 import { convertQueryString, getToken } from "../../utils";
 import { BASE_API_URL } from "../../constans/constans";
+import { processResult, throwErrorUtil } from "../../helpers/fetchingUtils";
 
 export const getAllFAQ = (params) => async () => {
   try {
@@ -10,17 +11,19 @@ export const getAllFAQ = (params) => async () => {
       },
     });
 
-    const result = await response.json();
+    if (response.status === 200) {
+      const result = await processResult(response);
 
-    const isSuccess = result.code === 200;
+      const isSuccess = result.code === 200;
 
-    if (isSuccess) {
-      return result;
+      if (isSuccess) {
+        return result;
+      }
     }
 
-    return [];
+    throw Error("Terjadi kesalahan");
   } catch (error) {
-    console.log(error);
+    throwErrorUtil(error, `${error?.message || error}`);
   }
 };
 
@@ -32,22 +35,23 @@ export const findFAQ = (id) => async () => {
       },
     });
 
-    const result = await response.json();
+    if (response.status === 200) {
+      const result = await processResult(response);
 
-    const isSuccess = result.code === 200;
+      const isSuccess = result.code === 200;
 
-    if (isSuccess) {
-      return result;
+      if (isSuccess) {
+        return result;
+      }
     }
 
-    return null;
+    throw Error("Terjadi kesalahan");
   } catch (error) {
-    console.log(error);
+    throwErrorUtil(error, `${error?.message || error}`);
   }
 };
 
 export const submitFAQ = async (payload) => {
-  console.log("PAYLOAD ", payload);
   try {
     const url = `${BASE_API_URL}/faq${payload?.id ? "/" + payload?.id : ""}`;
 
@@ -61,15 +65,23 @@ export const submitFAQ = async (payload) => {
       body: JSON.stringify(payload),
     });
 
-    const result = await response.json();
+    if (response.status === 200) {
+      const result = await processResult(response);
 
-    return result;
+      const isSuccess = result.code === 200;
+
+      if (isSuccess) {
+        return result;
+      }
+    }
+
+    throw Error("Terjadi kesalahan");
   } catch (error) {
-    return error;
+    throwErrorUtil(error, `${error?.message || error}`);
   }
 };
 
-export const deleteFAQ = async ({id}) => {
+export const deleteFAQ = async ({ id }) => {
   try {
     const response = await fetch(`${BASE_API_URL}/faq/${id}`, {
       headers: {
@@ -78,15 +90,18 @@ export const deleteFAQ = async ({id}) => {
       method: "DELETE",
     });
 
-    const result = await response.json();
-    const isSuccess = result.code === 200;
+    if (response.status === 200) {
+      const result = await processResult(response);
 
-    if (isSuccess) {
-      return result;
+      const isSuccess = result.code === 200;
+
+      if (isSuccess) {
+        return result;
+      }
     }
 
-    throw Error("Error");
+    throw Error("Terjadi kesalahan");
   } catch (error) {
-    console.log("Error");
+    throwErrorUtil(error, `${error?.message || error}`);
   }
 };

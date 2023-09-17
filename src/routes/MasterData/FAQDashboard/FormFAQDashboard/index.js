@@ -8,68 +8,46 @@ import { MdCheckCircle } from "react-icons/md";
 import { useMutation, useQuery } from "react-query";
 import { findFAQ, submitFAQ } from "../../../../services/MasterData/faq";
 import { useUtilContexts } from "../../../../context/Utils";
-import { GET_FAQ } from "../../../../constans/constans";
+import { GET_FAQ, formats, modules } from "../../../../constans/constans";
 
 const initialPayload = {
   question: "",
   answer: "",
 };
 
-const modules = {
-  toolbar: [
-    [{ header: [1, 2, false] }],
-    ["bold", "italic", "underline", "strike", "blockquote"],
-    [
-      { list: "ordered" },
-      { list: "bullet" },
-      { indent: "-1" },
-      { indent: "+1" },
-    ],
-    ["link", "image"],
-    ["clean"],
-  ],
-};
-
-const formats = [
-  "header",
-  "bold",
-  "italic",
-  "underline",
-  "strike",
-  "blockquote",
-  "list",
-  "bullet",
-  "indent",
-  "link",
-  "image",
-];
-
 const FormFAQDashboard = () => {
   const params = useParams();
   const currentId = params.id;
+
   const { setLoadingUtil, snackbar } = useUtilContexts();
   const navigate = useNavigate();
 
   const [payload, setPayload] = React.useState(initialPayload);
-  const [errorMessage, setErrorMessage] = React.useState({
-    question: "",
-    answer: "",
-  });
+  const [error, setError] = React.useState({});
 
-  const { refetch: refetchFAQ } = useQuery([GET_FAQ], findFAQ(currentId), {
-    onSuccess: (res) => {
+  useQuery([GET_FAQ], findFAQ(currentId), {
+    enabled: !!currentId,
+    onSuccess: async (res) => {
       const { data } = res;
-      setPayload({ question: data.question, answer: data.answer });
+      setPayload({
+        question: data?.question,
+        answer: data?.answer,
+      });
+    },
+    onError: () => {
+      snackbar("Terjadi Kesalahan", () => {}, { type: "error" });
     },
   });
 
   const submitFAQMutation = useMutation(submitFAQ);
 
   const onHandleChange = (name, value) => {
-    setErrorMessage({
-      ...errorMessage,
-      [name]: "",
-    });
+    if (value.length > 0) {
+      setError({
+        ...error,
+        [name]: "",
+      });
+    }
     setPayload({
       ...payload,
       [name]: value,
@@ -77,54 +55,60 @@ const FormFAQDashboard = () => {
   };
 
   const onHandleSubmit = () => {
-    setLoadingUtil(true);
+    let isValidPayload = true,
+      errorMessage = {};
 
-    let newPayload = payload;
+    Object.keys(payload)?.forEach((key, index) => {
+      switch (true) {
+        case !payload?.document && !currentId && key === "document":
+          errorMessage[key] = "Harus diisi";
+        case !payload?.[key] && key !== "document":
+          errorMessage[key] = "Harus diisi";
 
-    for (var key in newPayload) {
-      if (newPayload[key] === "") {
-        delete newPayload[key];
+          if (index === Object.keys(payload).length - 1) {
+            return (isValidPayload = false);
+          }
       }
+    });
+
+    if (Object.keys(errorMessage).length === 0) {
+      setLoadingUtil(true);
+
+      let newPayload = payload;
+
+      for (var key in newPayload) {
+        if (newPayload[key] === "") {
+          delete newPayload[key];
+        }
+      }
+
+      submitFAQMutation.mutate(
+        {
+          id: currentId,
+          ...newPayload,
+        },
+        {
+          onSuccess: (res) => {
+            if (res.code === 200) {
+              setLoadingUtil(false);
+              snackbar(
+                currentId ? "Berhasil diubah" : "Berhasil disimpan",
+                () => {
+                  navigate("/master/faq");
+                }
+              );
+            }
+          },
+          onError: () => {
+            setLoadingUtil(false);
+            snackbar("Terjadi kesalahan", () => {}, "error");
+          },
+        }
+      );
+    } else {
+      setError(errorMessage);
     }
-
-    submitFAQMutation.mutate(
-      {
-        id: currentId,
-        ...newPayload,
-      },
-      {
-        onSuccess: (res) => {
-          if (res.code === 200) {
-            snackbar("Berhasil disimpan", () => {
-              navigate("/master/faq");
-            });
-          }
-
-          if (res.status === "validation") {
-            const errorTemp = errorMessage;
-            res.error.map((error) => {
-              errorTemp[error.object] = error.message;
-            });
-
-            setErrorMessage(errorTemp);
-          }
-
-          setLoadingUtil(false);
-        },
-        onError: () => {
-          snackbar("Terjadi kesalahan", () => {
-            window.location.reload();
-          });
-        },
-      }
-    );
   };
-
-  React.useEffect(() => {
-    if (currentId) {
-      refetchFAQ();
-    }
-  }, [currentId]);
 
   return (
     <div className="flex flex-col w-full gap-6 py-6">
@@ -147,7 +131,7 @@ const FormFAQDashboard = () => {
               onHandleChange("question", e.target.value);
             }}
             value={payload?.question}
-            errorMessage={errorMessage?.question}
+            errorMessage={error?.question}
           />
         </div>
         <div className="flex flex-col gap-2">
@@ -164,11 +148,9 @@ const FormFAQDashboard = () => {
             modules={modules}
             formats={formats}
             placeholder="Tulis disini"
-            className={`border ${
-              errorMessage?.answer !== "" && "border-[red]"
-            }`}
+            className={error?.answer ? "border border-red-500" : ""}
           />
-          <span className="text-xs text-red-600">{errorMessage?.answer}</span>
+          <span className="text-xs text-red-600">{error?.answer}</span>
         </div>
         <div className="flex items-center gap-4 w-60">
           <div className="flex-1">

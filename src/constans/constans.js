@@ -184,22 +184,7 @@ export const sidebarDataDummy = [
         active: false,
       },
       {
-        label: "OPD dan Daerah",
-        link: "/master/opd-daerah",
-        active: false,
-      },
-      {
-        label: "Distrik",
-        link: "/master/distrik",
-        active: false,
-      },
-      {
-        label: "Wilayah",
-        link: "/master/wilayah",
-        active: false,
-      },
-      {
-        label: "kategori Dokumen",
+        label: "Kategori Dokumen",
         link: "/master/kategori-dokumen",
         active: false,
       },
@@ -216,11 +201,6 @@ export const sidebarDataDummy = [
       {
         label: "FAQ",
         link: "/master/faq",
-        active: false,
-      },
-      {
-        label: "Recount",
-        link: "/master/recount",
         active: false,
       },
       {
@@ -318,6 +298,49 @@ export const documentData = [
   },
 ];
 
+export const modules = {
+  toolbar: [
+    [{ header: [1, 2, false] }],
+    ["bold", "italic", "underline", "strike", "blockquote"],
+    [{ list: "ordered" }, { list: "bullet" }],
+    ["link", "image"],
+    ["clean"],
+  ],
+};
+
+export const formats = [
+  "header",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "blockquote",
+  "list",
+  "bullet",
+  "indent",
+  "link",
+  "image",
+];
+
+export const typeList = [
+  {
+    value: "spd",
+    label: "Satuan Pemerintah Daerah",
+  },
+  {
+    value: "si",
+    label: "Satuan Inovasi",
+  },
+  {
+    value: "iv",
+    label: "Indikator Validasi",
+  },
+  {
+    value: "ipkd",
+    label: "Indikator Presentasi Kepala Daerah",
+  },
+];
+
 export const BASE_API_URL = "https://siagas.api.sorong.koneksiku.my.id";
 
 //Contants for useQuery
@@ -348,8 +371,19 @@ export const GET_ANNOUNCEMENT = "get_announcement";
 export const GET_ALL_FAQ = "get_all_faq";
 export const GET_FAQ = "get_faq";
 
+export const GET_ALL_RAWLOG_QUERY_KEY = "get_all_rawlog";
+
 export const GET_ALL_PEMDA_PROFILE = "get_all_pemda_profile";
 export const GET_PEMDA_PROFILE = "get_pemda_profile";
+
+export const GET_ALL_DOCUMENT_PEMDA_PROFILE = "get_all_document_pemda_profile";
+export const GET_ALL_INDICATOR_PEMDA_PROFILES =
+  "get_all_indicator_pemda_profiles";
+export const UPLOAD_INDICATOR_DOCUMENT_PEMDA_PROFILE =
+  "upload_indicator_document_pemda_profile";
+
+export const DELETE_INDICATOR_DOCUMENT_PEMDA_PROFILE =
+  "delete_indicator_document_pemda_profile";
 
 export const GET_ALL_USER_ACCOUNT = "get_all_user_account";
 export const GET_USER_ACCOUNT = "get_user_account";
@@ -364,6 +398,16 @@ export const GET_ALL_TUXEDO = "get_all_tuxedo";
 export const GET_TUXEDO = "get_tuxedo";
 
 export const GET_ALL_SETTING = "get_all_setting";
+
+export const CHECK_USER = "check_user";
+
+export const GET_ALL_REGIONAL_INNOVATION_QUERY_KEY =
+  "get_all_regional_innovation";
+export const GET_REGIONAL_INNOVATION_QUERY_KEY = "get_regional_innovation";
+export const GET_INDICATOR_REGIONAL_INNOVATION_QUERY_KEY =
+  "get_indicator_regional_innovation";
+
+export const GET_ALL_ASSESSMENT_TEAM_QUERY_KEY = "get_all_assessment_team";
 export const GET_SETTING = "get_setting";
 
 export const GET_ALL_ARCHIVE = "get_all_archive";

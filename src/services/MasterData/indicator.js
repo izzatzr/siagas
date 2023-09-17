@@ -1,5 +1,6 @@
 import { convertQueryString, getToken } from "../../utils";
 import { BASE_API_URL } from "../../constans/constans";
+import { processResult, throwErrorUtil } from "../../helpers/fetchingUtils";
 
 export const getAllIndicator = (params) => async () => {
   try {
@@ -13,17 +14,19 @@ export const getAllIndicator = (params) => async () => {
       }
     );
 
-    const result = await response.json();
+    if (response.status === 200) {
+      const result = await processResult(response);
 
-    const isSuccess = result.code === 200;
+      const isSuccess = result.code === 200;
 
-    if (isSuccess) {
-      return result;
+      if (isSuccess) {
+        return result;
+      }
     }
 
-    return [];
+    throw Error("Terjadi kesalahan");
   } catch (error) {
-    console.log(error);
+    throwErrorUtil(error, `${error?.message || error}`);
   }
 };
 
@@ -35,17 +38,19 @@ export const findIndicator = (id) => async () => {
       },
     });
 
-    const result = await response.json();
+    if (response.status === 200) {
+      const result = await processResult(response);
 
-    const isSuccess = result.code === 200;
+      const isSuccess = result.code === 200;
 
-    if (isSuccess) {
-      return result;
+      if (isSuccess) {
+        return result;
+      }
     }
 
-    return [];
+    throw Error("Terjadi kesalahan");
   } catch (error) {
-    console.log(error);
+    throwErrorUtil(error, `${error?.message || error}`);
   }
 };
 
@@ -63,14 +68,18 @@ export const submitIndicator = async (payload) => {
       body: JSON.stringify(payload),
     });
 
-    const result = await response.json();
-    const isSuccess = result.code === 200;
+    if (response.status === 200) {
+      const result = await processResult(response);
 
-    if (isSuccess) {
-      return result;
+      const isSuccess = result.code === 200;
+
+      if (isSuccess) {
+        return result;
+      }
     }
-    console.log("ERROR", result.message);
+
+    throw Error("Terjadi kesalahan");
   } catch (error) {
-    console.log("ERROR", error);
+    throwErrorUtil(error, `${error?.message || error}`);
   }
 };

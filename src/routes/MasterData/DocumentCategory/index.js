@@ -1,10 +1,24 @@
 import React from "react";
-import { BiChevronLeft, BiChevronRight, BiSearch } from "react-icons/bi";
+import {
+  BiChevronLeft,
+  BiChevronRight,
+  BiPlus,
+  BiSearch,
+} from "react-icons/bi";
 import ReactPaginate from "react-paginate";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import Table from "../../../components/Table";
 import { GET_ALL_DOCUEMNT_CATEGORY } from "../../../constans/constans";
-import { getAllDocumentCategory } from "../../../services/MasterData/documentCategory";
+import {
+  deleteDocumentCategory,
+  getAllDocumentCategory,
+} from "../../../services/MasterData/documentCategory";
+import Pagination from "../../../components/Pagination";
+import { Link, useNavigate } from "react-router-dom";
+import { useUtilContexts } from "../../../context/Utils";
+import { DELETE_ACTION_TABLE, EDIT_ACTION_TABLE } from "../../../constants";
+import TableAction from "../../../components/TableAction";
+import ModalDelete from "../../../components/ModalDelete";
 
 const initialFilter = {
   limit: 7,
@@ -14,21 +28,54 @@ const initialFilter = {
 
 const DocumentCategory = () => {
   const [filterParams, setFilterParams] = React.useState(initialFilter);
+  const [showDelete, setShowDelete] = React.useState(false);
+  const [currentItem, setCurrentItem] = React.useState(null);
+
+  const { setLoadingUtil, snackbar } = useUtilContexts();
+  const navigate = useNavigate();
+
+  const actionTableData = [
+    {
+      code: EDIT_ACTION_TABLE,
+      onClick: (value) => {
+        navigate(`/master/kategori-dokumen/edit/${value.id}`);
+      },
+    },
+    {
+      code: DELETE_ACTION_TABLE,
+      onClick: (value) => {
+        setCurrentItem(value);
+        setShowDelete(true);
+      },
+    },
+  ];
+
   const tableHeader = [
     { key: "name", title: "Nama Kategori" },
     { key: "slug", title: "Slug" },
+    {
+      key: "form-action",
+      title: "Aksi",
+      render: (item) => <TableAction data={actionTableData} itemData={item} />,
+    },
   ];
 
-  const { data } = useQuery(
+  const { data, isFetching } = useQuery(
     [GET_ALL_DOCUEMNT_CATEGORY, filterParams],
     getAllDocumentCategory(filterParams),
     {
-      refetchOnWindowFocus: false,
       retry: 0,
+      onError: (error) => {
+        snackbar(error?.message || "Terjadi Kesalahan", () => {}, {
+          type: "error",
+        });
+      },
     }
   );
 
-  const handleSearch = (e) => {
+  const deleteDocumentCategoryMutation = useMutation(deleteDocumentCategory);
+
+  const onHandleSearch = (e) => {
     let value = e.target.value;
 
     if (value.length === 0) {
@@ -55,44 +102,74 @@ const DocumentCategory = () => {
     });
   };
 
+  const onHandleDelete = () => {
+    setShowDelete(false);
+    setLoadingUtil(true);
+
+    deleteDocumentCategoryMutation.mutate(
+      {
+        id: currentItem?.id,
+      },
+      {
+        onSuccess: (res) => {
+          if (res.code === 200) {
+            setLoadingUtil(false);
+            snackbar("Berhasil dihapus", () => {
+              navigate(0);
+            });
+          }
+        },
+        onError: () => {
+          setLoadingUtil(false);
+          snackbar("Terjadi kesalahan", () => {}, "error");
+        },
+      }
+    );
+  };
+
+  React.useEffect(() => {
+    setLoadingUtil(isFetching);
+  }, [isFetching]);
+
   return (
     <div className="w-full flex flex-col gap-6 py-6">
+      {showDelete && (
+        <ModalDelete
+          cancelDelete={() => setShowDelete(false)}
+          doDelete={onHandleDelete}
+        />
+      )}
       <div className="text-[#333333] font-medium text-2xl">
         Kategori Dokumen
+      </div>
+      <div className="flex justify-end items-center gap-2">
+        <Link
+          to="/master/kategori-dokumen/tambah"
+          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
+        >
+          <BiPlus className="text-base" />
+          Tambah Kategori Dokumen
+        </Link>
       </div>
       <div className="w-full rounded-lg bg-white py-4 px-6">
         <div className="flex items-center gap-3 text-sm border border-[#333333] placeholder:text-[#828282] rounded px-3 py-2 w-[30%]">
           <BiSearch />
           <input
             type="text"
-            className="outline-none"
+            className="outline-none w-full"
             placeholder="Pencarian"
-            onChange={handleSearch}
+            onChange={onHandleSearch}
           />
         </div>
       </div>
       <div className="w-full rounded-lg bg-white py-4 px-6">
         <Table showNum={true} data={data?.data || []} columns={tableHeader} />
-        <div className="flex justify-between items-center py-[20px]">
-          <span className="trext-[#828282] text-xs">
-            Menampilkan 1 sampai 10 dari 48 entri
-          </span>
-          <ReactPaginate
-            breakLabel="..."
-            nextLabel={<BiChevronRight />}
-            onPageChange={(page) => onHandlePagination(page.selected)}
-            pageRangeDisplayed={3}
-            pageCount={data?.pagination?.pages}
-            previousLabel={<BiChevronLeft />}
-            renderOnZeroPageCount={null}
-            className="flex gap-3 items-center text-xs"
-            pageClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
-            previousClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
-            nextClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
-            disabledClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center bg-[#828282] text-white"
-            activeClassName="w-[28px] h-[28px] rounded-md border border-[#069DD9] flex justify-center items-center bg-[#069DD9] text-white"
-          />
-        </div>
+        <Pagination
+          pageCount={data?.pagination?.pages}
+          onHandlePagination={onHandlePagination}
+          totalData={data?.pagination?.total}
+          size={filterParams?.limit}
+        />
       </div>
     </div>
   );

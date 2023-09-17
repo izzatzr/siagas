@@ -1,11 +1,8 @@
 import React from "react";
 import {
-  BiChevronLeft,
-  BiChevronRight,
   BiPlus,
   BiSearch,
 } from "react-icons/bi";
-import ReactPaginate from "react-paginate";
 import { useQuery } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import Table from "../../../components/Table";
@@ -13,6 +10,9 @@ import TableAction from "../../../components/TableAction";
 import { GET_ALL_GOVERNMENT_BUSINESS } from "../../../constans/constans";
 import { EDIT_ACTION_TABLE } from "../../../constants";
 import { getAllGovernmentBusiness } from "../../../services/MasterData/GovernmentBusiness";
+import Pagination from "../../../components/Pagination";
+import { useUtilContexts } from "../../../context/Utils";
+import { diffDate, setBgColorByDiffDate } from "../../../helpers/common";
 
 const initialFilter = {
   limit: 20,
@@ -22,13 +22,14 @@ const initialFilter = {
 
 const GovernmentBusiness = () => {
   const [filterParams, setFilterParams] = React.useState(initialFilter);
+  const { setLoadingUtil, snackbar } = useUtilContexts();
   const navigate = useNavigate();
 
   const actionTableData = [
     {
       code: EDIT_ACTION_TABLE,
       onClick: (value) => {
-        navigate(`/master/urusan-pemerintah/edit/${value.id}`)
+        navigate(`/master/urusan-pemerintah/edit/${value.id}`);
       },
     },
   ];
@@ -36,20 +37,38 @@ const GovernmentBusiness = () => {
   const tableHeader = [
     { key: "name", title: "Nama" },
     {
+      key: "",
+      title: "Deadline",
+      width : 300,
+      render: (item) => {
+        return (
+          <div
+            className={`px-3 py-2 ${setBgColorByDiffDate(
+              diffDate(item?.deadline)
+            )}`}
+          >
+            {diffDate(item?.deadline)} Hari
+          </div>
+        );
+      },
+    },
+    {
       key: "form-action",
       title: "Aksi",
-      render: (item) => (
-        <TableAction data={actionTableData} itemData={item} />
-      ),
+      render: (item) => <TableAction data={actionTableData} itemData={item} />,
     },
   ];
 
-  const { data } = useQuery(
+  const { data, isFetching } = useQuery(
     [GET_ALL_GOVERNMENT_BUSINESS, filterParams],
     getAllGovernmentBusiness(filterParams),
     {
-      refetchOnWindowFocus: false,
       retry: 0,
+      onError: (error) => {
+        snackbar(error?.message || "Terjadi Kesalahan", () => {}, {
+          type: "error",
+        });
+      },
     }
   );
 
@@ -60,7 +79,7 @@ const GovernmentBusiness = () => {
     });
   };
 
-  const handleSearch = (e) => {
+  const onHandleSearch = (e) => {
     let value = e.target.value;
 
     if (value.length === 0) {
@@ -79,6 +98,10 @@ const GovernmentBusiness = () => {
       });
     }
   };
+
+  React.useEffect(() => {
+    setLoadingUtil(isFetching);
+  }, [isFetching]);
 
   return (
     <div className="w-full flex flex-col gap-6 py-6">
@@ -99,34 +122,20 @@ const GovernmentBusiness = () => {
           <BiSearch />
           <input
             type="text"
-            className="outline-none"
+            className="outline-none w-full"
             placeholder="Pencarian"
-            onChange={handleSearch}
+            onChange={onHandleSearch}
           />
         </div>
       </div>
       <div className="w-full rounded-lg bg-white py-4 px-6">
         <Table showNum={true} data={data?.data || []} columns={tableHeader} />
-        <div className="flex justify-between items-center py-[20px]">
-          <span className="trext-[#828282] text-xs">
-            Menampilkan 1 sampai 10 dari 48 entri
-          </span>
-          <ReactPaginate
-            breakLabel="..."
-            nextLabel={<BiChevronRight />}
-            onPageChange={(page) => onHandlePagination(page.selected)}
-            pageRangeDisplayed={3}
-            pageCount={data?.pagination?.pages}
-            previousLabel={<BiChevronLeft />}
-            renderOnZeroPageCount={null}
-            className="flex gap-3 items-center text-xs"
-            pageClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
-            previousClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
-            nextClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
-            disabledClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center bg-[#828282] text-white"
-            activeClassName="w-[28px] h-[28px] rounded-md border border-[#069DD9] flex justify-center items-center bg-[#069DD9] text-white"
-          />
-        </div>
+        <Pagination
+          pageCount={data?.pagination?.pages}
+          onHandlePagination={onHandlePagination}
+          totalData={data?.pagination?.total}
+          size={filterParams?.limit}
+        />
       </div>
     </div>
   );

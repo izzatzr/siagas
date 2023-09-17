@@ -8,6 +8,7 @@ import {
   PDF_ACTION_TABLE,
   PREVIEW_ACTION_TABLE,
   REJECT_ACTION_TABLE,
+  TRANSFER_ACTION_TABLE,
 } from "./constants";
 import {
   IoMdEye,
@@ -23,6 +24,7 @@ import {
 } from "react-icons/ai";
 import { MdDownloadForOffline, MdEdit } from "react-icons/md";
 import secureLocalStorage from "react-secure-storage";
+import { RiFolderTransferFill } from "react-icons/ri";
 import { BASE_API_URL } from "./constans/constans";
 
 export const actionTable = (actionName) => {
@@ -54,6 +56,9 @@ export const actionTable = (actionName) => {
     case DELETE_ACTION_TABLE:
       return <IoMdTrash />;
 
+    case TRANSFER_ACTION_TABLE:
+      return <RiFolderTransferFill />;
+
     default:
       return <AiFillFile />;
   }
@@ -74,54 +79,12 @@ export const getUser = () => {
   return secureLocalStorage.getItem("users");
 };
 
-export const fetchData = async ({ params, endpoint }) => {
-  const baseUrl = `${BASE_API_URL}/${endpoint}`;
-
-  let fullUrl = baseUrl;
-
-  if (params) {
-    const queryString = convertQueryString(params);
-    fullUrl += `?${queryString}`;
-  }
-
-  const token = getToken().token;
-  const headers = {
-    Authorization: `Bearer ${token}`,
-    Accept: "application/json",
-    "Content-Type": "application/json",
-  };
-
-  const response = await fetch(fullUrl, { headers });
-
-  const result = await response.json();
-
-  return result.code === 200 ? result : null;
-};
-
-export const patchData = async ({ params, endpoint, data }) => {
-  const baseUrl = `${BASE_API_URL}/${endpoint}`;
-
-  let fullUrl = baseUrl;
-
-  if (params) {
-    const queryString = convertQueryString(params);
-    fullUrl += `?${queryString}`;
-  }
-
-  const token = getToken().token;
-  const headers = {
-    Authorization: `Bearer ${token}`,
-    Accept: "application/json",
-    "Content-Type": "application/json",
-  };
-
-  const response = await fetch(fullUrl, {
-    method: "PATCH",
-    headers,
-    body: JSON.stringify(data),
-  });
-
-  const result = await response.json();
-
-  return result.code === 200 ? result : null;
+export const downloadFile = (url, fileName) => {
+  const aTag = document.createElement("a");
+  aTag.href = url;
+  aTag.setAttribute("download", fileName);
+  aTag.setAttribute("target", "_blank");
+  document.body.appendChild(aTag);
+  aTag.click();
+  aTag.remove();
 };

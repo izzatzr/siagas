@@ -3,6 +3,18 @@
 *::-webkit-scrollbar {
   display: none;
 }
+@layer base {
+  ul,
+  ol {
+    list-style: revert;
+  }
+
+  ul li,
+  ol li {
+    margin-left: 24px;
+  }
+}
+
 @tailwind components;
 @tailwind utilities;
 
@@ -10,10 +22,8 @@
   min-height: 188px;
 }
 
-@layer base {
-  ul,
-  ol {
-    list-style: revert;
-    margin-left: 2em;
-  }
+.ql-editor ol > li,
+.ql-editor ul > li {
+  list-style-type: none;
+  margin-left: -8px;
 }

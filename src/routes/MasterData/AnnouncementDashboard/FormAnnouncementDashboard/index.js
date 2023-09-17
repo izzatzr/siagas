@@ -12,8 +12,11 @@ import {
   submitAnnouncement,
 } from "../../../../services/MasterData/announcement";
 import { useUtilContexts } from "../../../../context/Utils";
-import { GET_ANNOUNCEMENT } from "../../../../constans/constans";
-import { isHTML } from "../../../../helpers/isHtml";
+import {
+  GET_ANNOUNCEMENT,
+  formats,
+  modules,
+} from "../../../../constans/constans";
 
 const initialPayload = {
   title: "",
@@ -22,66 +25,40 @@ const initialPayload = {
   document: null,
 };
 
-const modules = {
-  toolbar: [
-    [{ header: [1, 2, false] }],
-    ["bold", "italic", "underline", "strike", "blockquote"],
-    [
-      { list: "ordered" },
-      { list: "bullet" },
-      { indent: "-1" },
-      { indent: "+1" },
-    ],
-    ["link", "image"],
-    ["clean"],
-  ],
-};
-
-const formats = [
-  "header",
-  "bold",
-  "italic",
-  "underline",
-  "strike",
-  "blockquote",
-  "list",
-  "bullet",
-  "indent",
-  "link",
-  "image",
-];
-
-
 const FormAnnouncementDashboard = () => {
-  const [payload, setPayload] = React.useState(initialPayload);
   const params = useParams();
   const currentId = params.id;
+
   const { snackbar, setLoadingUtil } = useUtilContexts();
   const navigate = useNavigate();
 
-  const { refetch: refetchAnnouncement } = useQuery(
-    [GET_ANNOUNCEMENT],
-    findAnnouncement(currentId),
-    {
-      enabled: false,
-      onSuccess: (res) => {
-        const { data } = res;
-        setPayload({
-          title: data?.title.toString(),
-          slug: data?.slug.toString(),
-          document: data?.document,
-          content: isHTML(data?.content)
-            ? data?.content
-            : `<p>${data?.content}</p>`,
-        });
-        setLoadingUtil(false);
-      },
-    }
-  );
+  const [payload, setPayload] = React.useState(initialPayload);
+  const [error, setError] = React.useState({});
+
+  useQuery([GET_ANNOUNCEMENT], findAnnouncement(currentId), {
+    enabled: !!currentId,
+    onSuccess: async (res) => {
+      const { data } = res;
+      setPayload({
+        title: data?.title,
+        slug: data?.slug,
+        content: data?.content,
+      });
+    },
+    onError: () => {
+      snackbar("Terjadi Kesalahan", () => {}, { type: "error" });
+    },
+  });
 
   const submitAnnouncementMutation = useMutation(submitAnnouncement);
 
   const onHandleChange = (name, value) => {
+    if (value.length > 0) {
+      setError({
+        ...error,
+        [name]: "",
+      });
+    }
     setPayload({
       ...payload,
       [name]: value,
@@ -98,33 +75,65 @@ const FormAnnouncementDashboard = () => {
   };
 
   const onHandleSubmit = () => {
-    setLoadingUtil(true);
-    submitAnnouncementMutation.mutate(
-      {
+    let isValidPayload = true,
+      errorMessage = {};
+
+    Object.keys(payload)?.forEach((key, index) => {
+      switch (true) {
+        case !payload?.document && !currentId && key === "document":
+          errorMessage[key] = "Harus diisi";
+        case !payload?.[key] && key !== "document":
+          errorMessage[key] = "Harus diisi";
+
+          if (index === Object.keys(payload).length - 1) {
+            return (isValidPayload = false);
+          }
+      }
+    });
+
+    if (Object.keys(errorMessage).length === 0) {
+      setLoadingUtil(true);
+
+      let newPayload = {
         title: payload?.title,
         slug: payload?.slug,
         content: payload?.content,
         document: payload?.document,
-      },
-      {
-        onSuccess: (res) => {
-          if (res.code === 200) {
-            setLoadingUtil(false);
-            snackbar("Berhasil disimpan", () => {
-              navigate("/master/pengumuman");
-            });
-          }
-        },
-      }
-    );
-  };
+      };
 
-  React.useEffect(() => {
-    if (currentId) {
-      setLoadingUtil(true);
-      refetchAnnouncement();
+      for (var key in newPayload) {
+        if (newPayload[key] === "" || newPayload[key] === null) {
+          delete newPayload[key];
+        }
+      }
+
+      submitAnnouncementMutation.mutate(
+        {
+          id: currentId,
+          ...newPayload,
+        },
+        {
+          onSuccess: (res) => {
+            if (res.code === 200) {
+              setLoadingUtil(false);
+              snackbar(
+                currentId ? "Berhasil diubah" : "Berhasil disimpan",
+                () => {
+                  navigate("/master/pengumuman");
+                }
+              );
+            }
+          },
+          onError: () => {
+            setLoadingUtil(false);
+            snackbar("Terjadi kesalahan", () => {}, "error");
+          },
+        }
+      );
+    } else {
+      setError(errorMessage);
     }
-  }, [currentId]);
+  };
 
   return (
     <div className="w-full flex flex-col gap-6 py-6">
@@ -148,6 +157,7 @@ const FormAnnouncementDashboard = () => {
                 onHandleChange("title", e.target.value);
               }}
               value={payload?.title}
+              errorMessage={error?.title}
             />
           </div>
           <div className="flex-1">
@@ -158,10 +168,11 @@ const FormAnnouncementDashboard = () => {
                 onHandleChange("slug", e.target.value);
               }}
               value={payload.slug}
+              errorMessage={error?.slug}
             />
           </div>
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 relative">
           <label
             htmlFor={"content"}
             className="text-[#333333] text-sm font-normal"
@@ -175,13 +186,19 @@ const FormAnnouncementDashboard = () => {
             modules={modules}
             formats={formats}
             placeholder="Tulis disini"
+            className={error?.content ? "border border-red-500" : ""}
           />
+
+          <span className="text-xs text-red-600 absolute -bottom-4">
+            {error?.content}
+          </span>
         </div>
         <Upload
           label="File Dokumen"
           description={"Dokumen PDF, Maksimal 2MB"}
           onChange={onHandleChangeImage}
           value={payload.document}
+          errorMessage={error?.document}
         />
         <div className="flex items-center gap-4 w-60">
           <div className="flex-1">
