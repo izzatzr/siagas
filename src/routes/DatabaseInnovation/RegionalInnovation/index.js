@@ -77,24 +77,20 @@ const RegionalInnovation = () => {
 
   const [listFilter, setListFilter] = React.useState([
     {
-      label: "Semua",
+      name: "Semua",
       value: "all",
-      active: true,
     },
     {
-      label: "Inisiatif",
+      name: "Inisiatif",
       value: "inisiatif",
-      active: false,
     },
     {
-      label: "Uji Coba",
+      name: "Uji Coba",
       value: "uji coba",
-      active: false,
     },
     {
-      label: "Penerapan",
+      name: "Penerapan",
       value: "penerapan",
-      active: false,
     },
   ]);
 
@@ -194,6 +190,7 @@ const RegionalInnovation = () => {
       <div className="mt-4">
         <FilterOption
           items={listFilter}
+          defaultValue="all"
           onFilterChange={(value) => {
             onHandleChangeFilter(value);
           }}
