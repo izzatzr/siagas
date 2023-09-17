@@ -394,3 +394,7 @@ export const GET_ALL_INNOVATION_TYPE = "get_all_innovation_type";
 export const GET_ALL_INNOVATION_FORM = "get_all_innovation_form";
 export const GET_ALL_GOVERNMENT_AFFAIRS = "get_all_government_affairs";
 export const GET_ALL_INNOVATION_INITIATOR = "get_all_innovation_initiator";
+
+export const GET_ALL_REVIEW_RANKING = "get_all_review_ranking";
+export const GET_ALL_ACHIEVMENT_RESULT = "get_all_achievment_result";
+export const GET_ALL_SIAGAS_RANKING = "get_all_siagas_ranking";
