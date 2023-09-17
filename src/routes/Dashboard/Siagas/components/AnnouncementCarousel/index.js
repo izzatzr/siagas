@@ -61,7 +61,7 @@ const AnnouncementCarousel = () => {
 
   return (
     <Slider {...settings} className="mb-8">
-      {announcements?.data.map((announcement) => (
+      {announcements?.data?.map((announcement) => (
         <CarouselItem
           key={announcement.id}
           title={announcement.title}

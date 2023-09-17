@@ -33,6 +33,8 @@ import Login from "./Login";
 import RegencyInnovate from "./Report/RegencyInnovate";
 import InnovationType from "./Report/InnovationType";
 import InnovationForm from "./Report/InnovationForm";
+import GovernmentAffairs from "./Report/GovernmentAffairs";
+import InnovationInitiator from "./Report/InnovationInitiator";
 
 // Guest
 import GuesLayout from "../components/Layout/Guest";
@@ -63,10 +65,6 @@ import OPDList from "./Configuration/OPDList";
 import Setting from "./Configuration/Setting";
 import Tuxedo from "./Configuration/Tuxedo";
 import UPTDList from "./Configuration/UPTDList";
-import RegionalInnovationReviewDetail from "./IndexRating/RegionalInnovationReview/RegionalInnovationReviewDetail";
-import RegionalInnovationReviewInnovationProfile from "./IndexRating/RegionalInnovationReview/RegioanlInnovationReviewInnovationProfile";
-import RegionalInnovationReviewIndicator from "./IndexRating/RegionalInnovationReview/RegionalInnovationReviewIndicator";
-import RegioanlInnovationReviewInnovationEvaluation from "./IndexRating/RegionalInnovationReview/RegionalInnovationReviewEvaluation";
 import UserAccountEdit from "./Configuration/UserAccount/UserAccountEdit";
 import UserAccountCreate from "./Configuration/UserAccount/UserAccountCreate";
 import OPDCreate from "./Configuration/OPDList/OPDCreate";
@@ -77,8 +75,12 @@ import TuxedoCreate from "./Configuration/Tuxedo/TuxedoCreate";
 import TuxedoEdit from "./Configuration/Tuxedo/TuxedoEdit";
 import SettingCreate from "./Configuration/Setting/SettingCreate";
 import SettingEdit from "./Configuration/Setting/SettingEdit";
-import GovernmentAffairs from "./Report/GovernmentAffairs";
-import InnovationInitiator from "./Report/InnovationInitiator";
+
+// Index Rating
+import RegionalInnovationReviewDetail from "./IndexRating/RegionalInnovationReview/RegionalInnovationReviewDetail";
+import RegionalInnovationReviewInnovationProfile from "./IndexRating/RegionalInnovationReview/RegioanlInnovationReviewInnovationProfile";
+import RegionalInnovationReviewIndicator from "./IndexRating/RegionalInnovationReview/RegionalInnovationReviewIndicator";
+import RegioanlInnovationReviewInnovationEvaluation from "./IndexRating/RegionalInnovationReview/RegionalInnovationReviewEvaluation";
 
 const Routes = () => {
   const router = createBrowserRouter([

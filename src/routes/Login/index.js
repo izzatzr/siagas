@@ -83,9 +83,11 @@ const Login = () => {
 
           setLoading(false);
 
-          setTimeout(() => {
-            window.location.reload();
-          }, 1500);
+          window.location.reload();
+
+          // setTimeout(() => {
+          //   window.location.reload();
+          // }, 1500);
         },
         onError: (error) => {
           alert(error);
