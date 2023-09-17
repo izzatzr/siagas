@@ -1,5 +1,10 @@
 import React from "react";
-import { BiChevronLeft, BiChevronRight, BiPlus, BiSearch } from "react-icons/bi";
+import {
+  BiChevronLeft,
+  BiChevronRight,
+  BiPlus,
+  BiSearch,
+} from "react-icons/bi";
 import ReactPaginate from "react-paginate";
 import { useQuery } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
@@ -73,9 +78,9 @@ const Regional = () => {
     }
   };
   return (
-    <div className="w-full flex flex-col gap-6 py-6">
+    <div className="flex flex-col w-full gap-6 py-6">
       <div className="text-[#333333] font-medium text-2xl">Daerah</div>
-      <div className="flex justify-end items-center gap-2">
+      <div className="flex items-center justify-end gap-2">
         <Link
           to="/master/opd-daerah/tambah"
           className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
@@ -84,7 +89,7 @@ const Regional = () => {
           Tambah Daerah
         </Link>
       </div>
-      <div className="w-full rounded-lg bg-white py-4 px-6">
+      <div className="w-full px-6 py-4 bg-white rounded-lg">
         <div className="flex items-center gap-3 text-sm border border-[#333333] placeholder:text-[#828282] rounded px-3 py-2 w-[30%]">
           <BiSearch />
           <input
@@ -95,7 +100,7 @@ const Regional = () => {
           />
         </div>
       </div>
-      <div className="w-full rounded-lg bg-white py-4 px-6">
+      <div className="w-full px-6 py-4 bg-white rounded-lg">
         <Table showNum={true} data={data?.data || []} columns={tableHeader} />
         <div className="flex justify-between items-center py-[20px]">
           <span className="trext-[#828282] text-xs">
@@ -109,7 +114,7 @@ const Regional = () => {
             pageCount={data?.pagination?.pages}
             previousLabel={<BiChevronLeft />}
             renderOnZeroPageCount={null}
-            className="flex gap-3 items-center text-xs"
+            className="flex items-center gap-3 text-xs"
             pageClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
             previousClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
             nextClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"

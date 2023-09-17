@@ -163,8 +163,8 @@ const AchievmentResult = () => {
         <div className="flex w-[60%] gap-4 items-end">
           <div className="w-[60%]">
             <SelectOption
-              label="Klaster"
-              placeholder="Pilih Klaster"
+              label="Pemda"
+              placeholder="Pilih Pemda"
               options={loadOptionOPD}
               onChange={(e) => onHandleOPDChange(e)}
               value={selectedOPD}

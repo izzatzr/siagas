@@ -244,8 +244,8 @@ const ReviewRanking = () => {
         <div className="flex w-[60%] gap-4 items-end">
           <div className="w-[60%]">
             <SelectOption
-              label="OPD & Distrik"
-              placeholder="Pilih OPD & Distrik"
+              label="Pemda"
+              placeholder="Pilih Pemda"
               options={loadOptionOPD}
               onChange={(e) => onHandleOPDChange(e)}
               value={selectedOPD}
