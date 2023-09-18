@@ -1,17 +1,18 @@
 import React from "react";
 
 import { MdLogout } from "react-icons/md";
-import {useDispatch} from 'react-redux'
-import  secureLocalStorage  from  "react-secure-storage";
+import { useDispatch } from "react-redux";
+import secureLocalStorage from "react-secure-storage";
 
 import { sidebarDataDummy } from "../../constans/constans";
 import logo from "../../assets/images/logo.svg";
 import SidebarItem from "../SidebarItem";
 import { signOut } from "../../redux/actions/auth";
-
+import { getUser } from "../../utils";
 
 const Sidebar = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const user = getUser();
   const [sidebarData, setSidebarData] = React.useState(sidebarDataDummy);
 
   const handleOpenAccordion = (label, active) => {
@@ -48,8 +49,8 @@ const Sidebar = () => {
       </div>
       <div className="w-full h-px bg-[#EBEFF2]"></div>
       {/* Body sidebar */}
-      <div className="flex-1 flex flex-col overflow-scroll">
-        <div className="w-full p-6 flex flex-col gap-6">
+      <div className="flex flex-col flex-1 overflow-scroll">
+        <div className="flex flex-col w-full gap-6 p-6">
           {sidebarData.map((item, key) => {
             return (
               <SidebarItem
@@ -58,14 +59,18 @@ const Sidebar = () => {
                 icon={item.icon}
                 children={item.children}
                 active={item.active}
+                show={item.roles.includes(user.name)}
                 handleOpenAccordion={handleOpenAccordion}
               />
             );
           })}
         </div>
         <div className="w-full h-px bg-[#EBEFF2]"></div>
-        <div className="w-full p-6 flex flex-col gap-6">
-          <div className="flex gap-2 items-center text-[#BDBDBD] cursor-pointer hover:text-[#069DD9]" onClick={handleSignOut}>
+        <div className="flex flex-col w-full gap-6 p-6">
+          <div
+            className="flex gap-2 items-center text-[#BDBDBD] cursor-pointer hover:text-[#069DD9]"
+            onClick={handleSignOut}
+          >
             <MdLogout />
             <div className="flex-1">
               <span className="font-medium">Keluar</span>

@@ -77,6 +77,7 @@ const Login = () => {
             token: res.token,
             token_expired_at: res.token_expired_at,
           };
+          console.log(res.role);
           secureLocalStorage.setItem("isLoggedIn", true);
           secureLocalStorage.setItem("token", token);
           secureLocalStorage.setItem("user", res.role);
