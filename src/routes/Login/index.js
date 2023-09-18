@@ -19,9 +19,6 @@ import Slider from "react-slick";
 import imageOne from "../../assets/images/slider/1.jpeg";
 import imageTwo from "../../assets/images/slider/2.jpeg";
 import imageThree from "../../assets/images/slider/3.jpeg";
-import imageFour from "../../assets/images/slider/4.jpeg";
-import imageFive from "../../assets/images/slider/5.jpeg";
-import imageSix from "../../assets/images/slider/6.jpeg";
 
 const settings = {
   infinite: true,
@@ -126,22 +123,25 @@ const Login = () => {
       <div className="w-full">
         <Slider {...settings}>
           <div className="w-full bg-red-400">
-            <img src={imageOne} className="w-full object-cover h-[900px]" />
+            <img
+              src={imageOne}
+              className="w-full object-cover h-[900px]"
+              alt="Kabupaten Sorong"
+            />
           </div>
           <div className="w-full bg-red-400">
-            <img src={imageTwo} className="w-full object-cover h-[900px]" />
+            <img
+              src={imageTwo}
+              className="w-full object-cover h-[900px]"
+              alt="Kabupaten Sorong"
+            />
           </div>
           <div className="w-full bg-red-400">
-            <img src={imageThree} className="w-full object-cover h-[900px]" />
-          </div>
-          <div className="w-full bg-red-400">
-            <img src={imageFour} className="w-full object-cover h-[900px]" />
-          </div>
-          <div className="w-full bg-red-400">
-            <img src={imageFive} className="w-full object-cover h-[900px]" />
-          </div>
-          <div className="w-full bg-red-400">
-            <img src={imageSix} className="w-full object-cover h-[900px]" />
+            <img
+              src={imageThree}
+              className="w-full object-cover h-[900px]"
+              alt="Kabupaten Sorong"
+            />
           </div>
         </Slider>
       </div>

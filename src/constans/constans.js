@@ -13,7 +13,7 @@ export const sidebarDataDummy = [
     label: "Dashboard",
     icon: dashboardIcon,
     active: true,
-    roles: ["Super Admin"],
+    roles: ["Super Admin", "User"],
     children: [
       {
         label: "Dashboard SIAGAS",
@@ -79,7 +79,7 @@ export const sidebarDataDummy = [
     label: "Database Inovasi Daerah",
     icon: databaseInovationIcon,
     active: false,
-    roles: ["Super Admin"],
+    roles: ["Super Admin", "User"],
     children: [
       {
         label: "Profil Pemda",
@@ -221,7 +221,7 @@ export const sidebarDataDummy = [
     label: "Konfigurasi",
     icon: configurationIcon,
     active: false,
-    roles: ["Super Admin"],
+    roles: ["Super Admin", "User"],
     children: [
       {
         label: "User Account",

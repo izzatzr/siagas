@@ -4,7 +4,10 @@ import FilterOption from "../../../components/FilterOption";
 import { AiFillInfoCircle } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { GET_ALL_REGIONAL_GOVERNMENT_INNOVATION } from "../../../constans/constans";
+import {
+  GET_ALL_REGIONAL_GOVERNMENT_INNOVATION,
+  GET_ALL_REGIONAL_INNOVATION_QUERY_KEY,
+} from "../../../constans/constans";
 import {
   deleteRegionalGovernmentInnovation,
   getAllRegionalGovernmentInnovation,
@@ -18,14 +21,16 @@ import {
   EDIT_ACTION_TABLE,
   EXCEL_ACTION_TABLE,
   PDF_ACTION_TABLE,
+  TRANSFER_ACTION_TABLE,
 } from "../../../constants";
 import TableAction from "../../../components/TableAction";
 import ModalConfirmation from "../../../components/ModalConfirmation";
+import { getAllRegionalInnovation } from "../../../services/DatabaseInnovation/regional";
 
 const phases = [
   {
     name: "Semua",
-    value: "semua",
+    value: "",
   },
   {
     name: "Inisiatif",
@@ -53,9 +58,9 @@ const PublicInnovation = () => {
   const [currentItem, setCurrentItem] = React.useState(null);
   const [showDelete, setShowDelete] = React.useState(false);
 
-  const { isLoading, isFetched, data } = useQuery(
-    [GET_ALL_REGIONAL_GOVERNMENT_INNOVATION, filterParams],
-    getAllRegionalGovernmentInnovation(filterParams)
+  const { isLoading, isFetched, data, isFetching } = useQuery(
+    [filterParams, GET_ALL_REGIONAL_INNOVATION_QUERY_KEY, filterParams],
+    getAllRegionalInnovation(filterParams)
   );
 
   const deleteMutation = useMutation(deleteRegionalGovernmentInnovation);
@@ -67,27 +72,26 @@ const PublicInnovation = () => {
   const actionTableData = [
     {
       code: PDF_ACTION_TABLE,
-      onClick: (value) => {},
-    },
-    {
-      code: DOCUMENT_ACTION_TABLE,
-      onClick: (value) => {},
-    },
-    {
-      code: EXCEL_ACTION_TABLE,
-      onClick: (value) => {},
-    },
-    {
-      code: EDIT_ACTION_TABLE,
-      onClick: (value) => {
-        navigate(`/lomba/inovasi-masyarakat/edit/${value.id}`);
+      onClick: () => {
+        console.log(PDF_ACTION_TABLE);
       },
     },
     {
-      code: DELETE_ACTION_TABLE,
+      code: EXCEL_ACTION_TABLE,
+      onClick: () => {
+        console.log(EXCEL_ACTION_TABLE);
+      },
+    },
+    {
+      code: TRANSFER_ACTION_TABLE,
       onClick: (item) => {
-        setCurrentItem(item);
-        setShowDelete(true);
+        navigate(`/inovasi-daerah/${item.id}/indicator`);
+      },
+    },
+    {
+      code: EDIT_ACTION_TABLE,
+      onClick: (item) => {
+        navigate(`/inovasi-daerah/edit/${item.id}`);
       },
     },
   ];
@@ -104,6 +108,9 @@ const PublicInnovation = () => {
     {
       key: "innovation_phase",
       title: "Tahapan Inovasi",
+      render: (item) => {
+        return item.innovation_phase.toUpperCase();
+      },
     },
     {
       key: "innovation_initiator",
@@ -150,7 +157,7 @@ const PublicInnovation = () => {
   const onHandlePhaseChange = (newPhase) => {
     setFilterParams({
       ...filterParams,
-      tahapan: newPhase,
+      tahap: newPhase,
     });
   };
 
@@ -181,7 +188,7 @@ const PublicInnovation = () => {
       );
     }
     return [];
-  }, [isFetched]);
+  }, [data]);
 
   React.useEffect(() => {
     if (isLoading) {
@@ -206,11 +213,7 @@ const PublicInnovation = () => {
 
       <div className="flex items-center justify-between mt-4">
         <div className="mr-3">Filter</div>
-        <FilterOption
-          defaultValue="semua"
-          items={phases}
-          onFilterChange={onHandlePhaseChange}
-        />
+        <FilterOption items={phases} onFilterChange={onHandlePhaseChange} />
       </div>
       <div className="w-full rounded-lg text-[#333333] bg-white p-6 flex flex-col gap-4">
         <div className="">

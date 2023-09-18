@@ -4,7 +4,10 @@ import FilterOption from "../../../components/FilterOption";
 import { AiFillInfoCircle } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { GET_ALL_REGIONAL_GOVERNMENT_INNOVATION } from "../../../constans/constans";
+import {
+  GET_ALL_REGIONAL_GOVERNMENT_INNOVATION,
+  GET_ALL_REGIONAL_INNOVATION_QUERY_KEY,
+} from "../../../constans/constans";
 import {
   deleteRegionalGovernmentInnovation,
   getAllRegionalGovernmentInnovation,
@@ -18,28 +21,11 @@ import {
   EDIT_ACTION_TABLE,
   EXCEL_ACTION_TABLE,
   PDF_ACTION_TABLE,
+  TRANSFER_ACTION_TABLE,
 } from "../../../constants";
 import TableAction from "../../../components/TableAction";
 import ModalConfirmation from "../../../components/ModalConfirmation";
-
-const phases = [
-  {
-    name: "Semua",
-    value: "semua",
-  },
-  {
-    name: "Inisiatif",
-    value: "inisiatif",
-  },
-  {
-    name: "Uji Coba",
-    value: "uji coba",
-  },
-  {
-    name: "Penerapan",
-    value: "penerapan",
-  },
-];
+import { getAllRegionalInnovation } from "../../../services/DatabaseInnovation/regional";
 
 const initialFilter = {
   limit: 20,
@@ -52,10 +38,28 @@ const RegionalGovernmentInnovation = () => {
   const [filterParams, setFilterParams] = React.useState(initialFilter);
   const [currentItem, setCurrentItem] = React.useState(null);
   const [showDelete, setShowDelete] = React.useState(false);
+  const [listFilter, setListFilter] = React.useState([
+    {
+      name: "Semua",
+      value: "",
+    },
+    {
+      name: "Inisiatif",
+      value: "inisiatif",
+    },
+    {
+      name: "Uji Coba",
+      value: "uji coba",
+    },
+    {
+      name: "Penerapan",
+      value: "penerapan",
+    },
+  ]);
 
   const { isLoading, isFetched, data } = useQuery(
-    [GET_ALL_REGIONAL_GOVERNMENT_INNOVATION, filterParams],
-    getAllRegionalGovernmentInnovation(filterParams)
+    [filterParams, GET_ALL_REGIONAL_INNOVATION_QUERY_KEY, filterParams],
+    getAllRegionalInnovation(filterParams)
   );
 
   const deleteMutation = useMutation(deleteRegionalGovernmentInnovation);
@@ -67,27 +71,26 @@ const RegionalGovernmentInnovation = () => {
   const actionTableData = [
     {
       code: PDF_ACTION_TABLE,
-      onClick: (value) => {},
-    },
-    {
-      code: DOCUMENT_ACTION_TABLE,
-      onClick: (value) => {},
-    },
-    {
-      code: EXCEL_ACTION_TABLE,
-      onClick: (value) => {},
-    },
-    {
-      code: EDIT_ACTION_TABLE,
-      onClick: (value) => {
-        navigate(`/lomba/inovasi-masyarakat/edit/${value.id}`);
+      onClick: () => {
+        console.log(PDF_ACTION_TABLE);
       },
     },
     {
-      code: DELETE_ACTION_TABLE,
+      code: EXCEL_ACTION_TABLE,
+      onClick: () => {
+        console.log(EXCEL_ACTION_TABLE);
+      },
+    },
+    {
+      code: TRANSFER_ACTION_TABLE,
       onClick: (item) => {
-        setCurrentItem(item);
-        setShowDelete(true);
+        navigate(`/inovasi-daerah/${item.id}/indicator`);
+      },
+    },
+    {
+      code: EDIT_ACTION_TABLE,
+      onClick: (item) => {
+        navigate(`/inovasi-daerah/edit/${item.id}`);
       },
     },
   ];
@@ -104,6 +107,9 @@ const RegionalGovernmentInnovation = () => {
     {
       key: "innovation_phase",
       title: "Tahapan Inovasi",
+      render: (item) => {
+        return item.innovation_phase.toUpperCase();
+      },
     },
     {
       key: "innovation_initiator",
@@ -150,7 +156,7 @@ const RegionalGovernmentInnovation = () => {
   const onHandlePhaseChange = (newPhase) => {
     setFilterParams({
       ...filterParams,
-      tahapan: newPhase,
+      tahap: newPhase,
     });
   };
 
@@ -181,7 +187,7 @@ const RegionalGovernmentInnovation = () => {
       );
     }
     return [];
-  }, [isFetched]);
+  }, [data]);
 
   React.useEffect(() => {
     if (isLoading) {
@@ -218,14 +224,10 @@ const RegionalGovernmentInnovation = () => {
       </div>
       <div className="flex items-center justify-between mt-4">
         <div className="mr-3">Filter</div>
-        <FilterOption
-          defaultValue="semua"
-          items={phases}
-          onFilterChange={onHandlePhaseChange}
-        />
+        <FilterOption items={listFilter} onFilterChange={onHandlePhaseChange} />
 
         <Link
-          to="/lomba/inovasi-masyarakat/tambah"
+          to="/inovasi-daerah/tambah"
           className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px]"
         >
           <div>

@@ -217,79 +217,8 @@ const Routes = () => {
           element: <InnovationInitiator />,
         },
         //Master Data
-        {
-          path: "/master/tim-penilaian",
-          element: <AssessmentTeam />,
-        },
-        {
-          path: "/master/urusan-pemerintah",
-          element: <GovernmentBusiness />,
-        },
-        {
-          path: "/master/urusan-pemerintah/:action/:id?",
-          element: <FormGovernmentBusiness />,
-        },
-        {
-          path: "/master/opd-daerah",
-          element: <Regional />,
-        },
-        {
-          path: "/master/opd-daerah/:action/:id?",
-          element: <FormRegional />,
-        },
-        {
-          path: "/master/indikator",
-          element: <Indicator />,
-        },
-        {
-          path: "/master/indikator/:action/:id?",
-          element: <FormIndicator />,
-        },
-        {
-          path: "/master/indikator/:indicator_id/scale-indicator",
-          element: <FormIndicator />,
-        },
-        {
-          path: "/master/opd-daerah/:action/:id?",
-          element: <FormRegional />,
-        },
-        {
-          path: "/master/wilayah",
-          element: <Wilayah />,
-        },
-        {
-          path: "/master/wilayah/:action/:id?",
-          element: <FormWilayah />,
-        },
-
-        {
-          path: "/master/kategori-dokumen",
-          element: <DocumentCategory />,
-        },
-        {
-          path: "/master/pengumuman",
-          element: <AnnouncementDashboard />,
-        },
-        {
-          path: "/master/pengumuman/:action/:id?",
-          element: <FormAnnouncementDashboard />,
-        },
-        {
-          path: "/master/faq",
-          element: <FAQDashboard />,
-        },
-        {
-          path: "/master/faq/:action/:id?",
-          element: <FormFAQDashboard />,
-        },
-        {
-          path: "/master/dokumen",
-          element: <DocumentDashboard />,
-        },
-        {
-          path: "/master/dokumen/:action/:id?",
-          element: <FormDocumentDashboard />,
-        },
+        ...masterDataRoutes,
+        // Configuration
         ...configurationRoutes,
       ],
     },
@@ -388,6 +317,120 @@ const configurationRoutes = [
   //   path: "/konfigurasi/akses-api",
   //   element: <APIAccess />,
   // },
+];
+
+const innovationDatabaseRoutes = [
+  {
+    path: "/profil-pemda",
+    element: <PemdaProfile />,
+  },
+  {
+    path: "/profil-pemda/:action/:id?",
+    element: <PemdaProfileForm />,
+  },
+  {
+    path: "/profil-pemda/:id/input-indikator",
+    element: <IndicatorInputSPD />,
+  },
+  {
+    path: "profil-pemda/:id/detail",
+    element: <Detail />,
+  },
+  {
+    path: "profil-pemda/:id/detail/:indicator/dokumen-pendukung",
+    element: <SupportDocument />,
+  },
+  {
+    path: "/inovasi-daerah",
+    element: <RegionalInnovation />,
+  },
+  {
+    path: "/inovasi-daerah/:action/:id?",
+    element: <RegionalInnovationForm />,
+  },
+  {
+    path: "inovasi-daerah/:id/indicator",
+    element: <IndicatorRegionalInnovation />,
+  },
+  {
+    path: "/peringkat-hasil-review",
+    element: <ReviewRanking />,
+  },
+  {
+    path: "/prestasi-hasil-lapangan",
+    element: <AchievmentResult />,
+  },
+  {
+    path: "/ranking-siagas",
+    element: <SiagasRanking />,
+  },
+];
+
+const masterDataRoutes = [
+  {
+    path: "/master/tim-penilaian",
+    element: <AssessmentTeam />,
+  },
+  {
+    path: "/master/tim-penilaian/:action",
+    element: <AssessmentTeamForm />,
+  },
+  {
+    path: "/master/urusan-pemerintah",
+    element: <GovernmentBusiness />,
+  },
+  {
+    path: "/master/urusan-pemerintah/:action/:id?",
+    element: <FormGovernmentBusiness />,
+  },
+  {
+    path: "/master/indikator",
+    element: <Indicator />,
+  },
+  {
+    path: "/master/indikator/:action/:id?",
+    element: <FormIndicator />,
+  },
+  {
+    path: "/master/indikator/:indicator_id/scale-indicator",
+    element: <FormIndicator />,
+  },
+  {
+    path: "/master/kategori-dokumen",
+    element: <DocumentCategory />,
+  },
+  {
+    path: "/master/kategori-dokumen/:action/:id?",
+    element: <DocumentCategoryForm />,
+  },
+  {
+    path: "/master/pengumuman",
+    element: <AnnouncementDashboard />,
+  },
+  {
+    path: "/master/pengumuman/:action/:id?",
+    element: <FormAnnouncementDashboard />,
+  },
+  {
+    path: "/master/faq",
+    element: <FAQDashboard />,
+  },
+  {
+    path: "/master/faq/:action/:id?",
+    element: <FormFAQDashboard />,
+  },
+  {
+    path: "/master/dokumen",
+    element: <DocumentDashboard />,
+  },
+  {
+    path: "/master/dokumen/:action/:id?",
+    element: <FormDocumentDashboard />,
+  },
+  {
+    path: "/master/rawlog/:id?",
+    element: <Rawlog />,
+  },
 ];
 
 export default Routes;

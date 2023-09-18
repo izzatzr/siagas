@@ -9,9 +9,11 @@ import logo from "../../assets/images/logo.svg";
 import SidebarItem from "../SidebarItem";
 import { signOut } from "../../redux/actions/auth";
 import { getUser } from "../../utils";
+import { useLocation } from "react-router-dom";
 
 const Sidebar = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const user = getUser();
   const [sidebarData, setSidebarData] = React.useState(sidebarDataDummy);
   const [sidebarActive, setSidebarActive] = React.useState(0);
@@ -71,6 +73,7 @@ const Sidebar = () => {
       <div className="flex flex-col flex-1 overflow-scroll">
         <div className="flex flex-col w-full gap-6 p-6">
           {sidebarData.map((item, key) => {
+            console.log(item.roles.includes(user.name));
             return (
               <SidebarItem
                 indexSidebar={key}

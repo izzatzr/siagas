@@ -13,7 +13,12 @@ const SidebarItem = (props) => {
     handleOpenAccordion,
     sidebarActive,
     indexSidebar,
+    show,
   } = props;
+
+  if (!show) {
+    return null;
+  }
 
   return (
     <div className="w-full">
