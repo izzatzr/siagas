@@ -8,11 +8,11 @@ import { sidebarDataDummy } from "../../constans/constans";
 import logo from "../../assets/images/logo.svg";
 import SidebarItem from "../SidebarItem";
 import { signOut } from "../../redux/actions/auth";
-import { useLocation } from "react-router-dom";
+import { getUser } from "../../utils";
 
 const Sidebar = () => {
-  const location = useLocation();
   const dispatch = useDispatch();
+  const user = getUser();
   const [sidebarData, setSidebarData] = React.useState(sidebarDataDummy);
   const [sidebarActive, setSidebarActive] = React.useState(0);
 
@@ -47,14 +47,13 @@ const Sidebar = () => {
         location.pathname.includes(item.link)
       );
 
-      
       if (childIndex > 0) {
-        sidebar.active = true
+        sidebar.active = true;
         setSidebarActive(index);
       }
     });
 
-    setSidebarData(sidebarTemp)
+    setSidebarData(sidebarTemp);
   }, []);
 
   return (
@@ -69,8 +68,8 @@ const Sidebar = () => {
       </div>
       <div className="w-full h-px bg-[#EBEFF2]"></div>
       {/* Body sidebar */}
-      <div className="flex-1 flex flex-col overflow-scroll">
-        <div className="w-full p-6 flex flex-col gap-6">
+      <div className="flex flex-col flex-1 overflow-scroll">
+        <div className="flex flex-col w-full gap-6 p-6">
           {sidebarData.map((item, key) => {
             return (
               <SidebarItem
@@ -81,13 +80,14 @@ const Sidebar = () => {
                 icon={item.icon}
                 children={item.children}
                 active={item.active}
+                show={item.roles.includes(user.name)}
                 handleOpenAccordion={handleOpenAccordion}
               />
             );
           })}
         </div>
         <div className="w-full h-px bg-[#EBEFF2]"></div>
-        <div className="w-full p-6 flex flex-col gap-6">
+        <div className="flex flex-col w-full gap-6 p-6">
           <div
             className="flex gap-2 items-center text-[#BDBDBD] cursor-pointer hover:text-[#069DD9]"
             onClick={handleSignOut}

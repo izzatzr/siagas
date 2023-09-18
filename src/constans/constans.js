@@ -6,12 +6,14 @@ import governmentInovateIcon from "../assets/icons/government-inovate-icon.svg";
 import reportIcon from "../assets/icons/report-icon.svg";
 import masterDataIcon from "../assets/icons/master-data-icon.svg";
 import configurationIcon from "../assets/icons/configuration-icon.svg";
+import { getToken, getUser } from "../utils";
 
 export const sidebarDataDummy = [
   {
     label: "Dashboard",
     icon: dashboardIcon,
     active: true,
+    roles: ["Super Admin"],
     children: [
       {
         label: "Dashboard SIAGAS",
@@ -44,6 +46,7 @@ export const sidebarDataDummy = [
     label: "Verifikasi Indeks",
     icon: ratingIndexIcon,
     active: false,
+    roles: ["Super Admin"],
     children: [
       {
         label: "Review Inovasi Daerah",
@@ -76,6 +79,7 @@ export const sidebarDataDummy = [
     label: "Database Inovasi Daerah",
     icon: databaseInovationIcon,
     active: false,
+    roles: ["Super Admin"],
     children: [
       {
         label: "Profil Pemda",
@@ -93,6 +97,7 @@ export const sidebarDataDummy = [
     label: "Innovative Government Award",
     icon: governmentInovateIcon,
     active: false,
+    roles: ["Super Admin"],
     children: [
       {
         label: "Peringkat Hasil Review",
@@ -115,6 +120,7 @@ export const sidebarDataDummy = [
     label: "Laporan",
     icon: reportIcon,
     active: false,
+    roles: ["Super Admin"],
     children: [
       {
         label: "Indeks Rata-Rata OPD",
@@ -167,6 +173,7 @@ export const sidebarDataDummy = [
     label: "Master Data",
     icon: masterDataIcon,
     active: false,
+    roles: ["Super Admin"],
     children: [
       {
         label: "Tim Penilaian",
@@ -214,6 +221,7 @@ export const sidebarDataDummy = [
     label: "Konfigurasi",
     icon: configurationIcon,
     active: false,
+    roles: ["Super Admin"],
     children: [
       {
         label: "User Account",
@@ -245,6 +253,24 @@ export const sidebarDataDummy = [
       //   link: "/konfigurasi/akses-api",
       //   active: false,
       // },
+    ],
+  },
+  {
+    label: "Lomba Inovasi Daerah",
+    icon: configurationIcon,
+    active: false,
+    roles: ["User"],
+    children: [
+      {
+        label: "Inovasi Pemerintah Daerah",
+        link: "/lomba/inovasi-pemerintah-daerah",
+        active: false,
+      },
+      {
+        label: "Inovasi Masyarakat",
+        link: "/lomba/inovasi-masyarakat",
+        active: false,
+      },
     ],
   },
 ];
@@ -442,3 +468,6 @@ export const GET_ALL_INNOVATION_INITIATOR = "get_all_innovation_initiator";
 export const GET_ALL_REVIEW_RANKING = "get_all_review_ranking";
 export const GET_ALL_ACHIEVMENT_RESULT = "get_all_achievment_result";
 export const GET_ALL_SIAGAS_RANKING = "get_all_siagas_ranking";
+
+export const GET_ALL_REGIONAL_GOVERNMENT_INNOVATION =
+  "get_all_regional_government_innovation";

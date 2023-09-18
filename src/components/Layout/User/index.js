@@ -3,13 +3,9 @@ import Header from "../../Header";
 import Sidebar from "../../Sidebar";
 import { Outlet } from "react-router-dom";
 import Footer from "../../Footer";
-import Loading from "../../Loading";
-import { getToken } from "../../../utils";
 import { UtilProvider } from "../../../context/Utils";
 
-const AdminLayout = () => {
-  console.log(JSON.stringify(getToken()));
-
+const UserLayout = () => {
   return (
     <UtilProvider>
       <div className="box-border flex w-screen h-screen">
@@ -29,4 +25,4 @@ const AdminLayout = () => {
   );
 };
 
-export default AdminLayout;
+export default UserLayout;

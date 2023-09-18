@@ -86,13 +86,45 @@ import RegionalInnovationReviewDetail from "./IndexRating/RegionalInnovationRevi
 import RegionalInnovationReviewInnovationProfile from "./IndexRating/RegionalInnovationReview/RegioanlInnovationReviewInnovationProfile";
 import RegionalInnovationReviewIndicator from "./IndexRating/RegionalInnovationReview/RegionalInnovationReviewIndicator";
 import RegioanlInnovationReviewInnovationEvaluation from "./IndexRating/RegionalInnovationReview/RegionalInnovationReviewEvaluation";
+import RegionalGovernmentInnovation from "./InnovationCompetition/RegionalGovernmentInnovation";
+import PublicInnovation from "./InnovationCompetition/PublicInnovation";
+import PublicInnovationEdit from "./InnovationCompetition/PublicInnovation/PublicInnovationEdit";
+import RegionalGovernmentInnovationCreate from "./InnovationCompetition/RegionalGovernmentInnovation/RegionalGovernmentInnovationCreate";
 
 const Routes = () => {
   const router = createBrowserRouter([
+    // Public Routes
+    {
+      path: "/login",
+      element: <Login />,
+    },
+    // {
+    //   path: "/",
+    //   element: <GuesLayout />,
+    //   children: [
+    //     {
+    //       path: "/pengumuman",
+    //       element: <Announcement />,
+    //     },
+    //     {
+    //       path: "/panduan",
+    //       element: <Guide />,
+    //     },
+    //     {
+    //       path: "/laporan-tahunan",
+    //       element: <YearReport />,
+    //     },
+    //     {
+    //       path: "/dokumen",
+    //       element: <Document />,
+    //     },
+    //   ],
+    // },
+
     {
       path: "/",
       element: (
-        <ProtectedRoute>
+        <ProtectedRoute roles={["Super Admin"]}>
           <AdminLayout />
         </ProtectedRoute>
       ),
@@ -184,163 +216,112 @@ const Routes = () => {
           path: "/rekap-berdasarkan-inisiator",
           element: <InnovationInitiator />,
         },
-        // {
-        //   path: "/rekap-inovasi-urusan",
-        //   element: <BusinessInnovate />,
-        // },
-        // {
-        //   path: "/rekap-inovasi-inisiator",
-        //   element: <InitiatorInnovate />,
-        // },
         //Master Data
-        ...masterDataRoutes,
-        // Configuration
+        {
+          path: "/master/tim-penilaian",
+          element: <AssessmentTeam />,
+        },
+        {
+          path: "/master/urusan-pemerintah",
+          element: <GovernmentBusiness />,
+        },
+        {
+          path: "/master/urusan-pemerintah/:action/:id?",
+          element: <FormGovernmentBusiness />,
+        },
+        {
+          path: "/master/opd-daerah",
+          element: <Regional />,
+        },
+        {
+          path: "/master/opd-daerah/:action/:id?",
+          element: <FormRegional />,
+        },
+        {
+          path: "/master/indikator",
+          element: <Indicator />,
+        },
+        {
+          path: "/master/indikator/:action/:id?",
+          element: <FormIndicator />,
+        },
+        {
+          path: "/master/indikator/:indicator_id/scale-indicator",
+          element: <FormIndicator />,
+        },
+        {
+          path: "/master/opd-daerah/:action/:id?",
+          element: <FormRegional />,
+        },
+        {
+          path: "/master/wilayah",
+          element: <Wilayah />,
+        },
+        {
+          path: "/master/wilayah/:action/:id?",
+          element: <FormWilayah />,
+        },
+
+        {
+          path: "/master/kategori-dokumen",
+          element: <DocumentCategory />,
+        },
+        {
+          path: "/master/pengumuman",
+          element: <AnnouncementDashboard />,
+        },
+        {
+          path: "/master/pengumuman/:action/:id?",
+          element: <FormAnnouncementDashboard />,
+        },
+        {
+          path: "/master/faq",
+          element: <FAQDashboard />,
+        },
+        {
+          path: "/master/faq/:action/:id?",
+          element: <FormFAQDashboard />,
+        },
+        {
+          path: "/master/dokumen",
+          element: <DocumentDashboard />,
+        },
+        {
+          path: "/master/dokumen/:action/:id?",
+          element: <FormDocumentDashboard />,
+        },
         ...configurationRoutes,
       ],
     },
     {
-      path: "/login",
-      element: <Login />,
-    },
-    {
       path: "/",
-      element: <GuesLayout />,
+      element: (
+        <ProtectedRoute roles={["User"]}>
+          <AdminLayout />
+        </ProtectedRoute>
+      ),
       children: [
         {
-          path: "/pengumuman",
-          element: <Announcement />,
+          path: "/lomba/inovasi-pemerintah-daerah",
+          element: <RegionalGovernmentInnovation />,
         },
         {
-          path: "/panduan",
-          element: <Guide />,
+          path: "/lomba/inovasi-pemerintah-daerah/:action/:id?",
+          element: <RegionalGovernmentInnovationCreate />,
         },
         {
-          path: "/laporan-tahunan",
-          element: <YearReport />,
+          path: "/lomba/inovasi-masyarakat",
+          element: <PublicInnovation />,
         },
         {
-          path: "/dokumen",
-          element: <Document />,
+          path: "/lomba/inovasi-masyarakat/:action/:id?",
+          element: <PublicInnovationEdit />,
         },
       ],
     },
   ]);
   return <RouterProvider router={router} />;
 };
-
-const masterDataRoutes = [
-  {
-    path: "/master/tim-penilaian",
-    element: <AssessmentTeam />,
-  },
-  {
-    path: "/master/tim-penilaian/:action",
-    element: <AssessmentTeamForm />,
-  },
-  {
-    path: "/master/urusan-pemerintah",
-    element: <GovernmentBusiness />,
-  },
-  {
-    path: "/master/urusan-pemerintah/:action/:id?",
-    element: <FormGovernmentBusiness />,
-  },
-  {
-    path: "/master/indikator",
-    element: <Indicator />,
-  },
-  {
-    path: "/master/indikator/:action/:id?",
-    element: <FormIndicator />,
-  },
-  {
-    path: "/master/indikator/:indicator_id/scale-indicator",
-    element: <FormIndicator />,
-  },
-  {
-    path: "/master/kategori-dokumen",
-    element: <DocumentCategory />,
-  },
-  {
-    path: "/master/kategori-dokumen/:action/:id?",
-    element: <DocumentCategoryForm />,
-  },
-  {
-    path: "/master/pengumuman",
-    element: <AnnouncementDashboard />,
-  },
-  {
-    path: "/master/pengumuman/:action/:id?",
-    element: <FormAnnouncementDashboard />,
-  },
-  {
-    path: "/master/faq",
-    element: <FAQDashboard />,
-  },
-  {
-    path: "/master/faq/:action/:id?",
-    element: <FormFAQDashboard />,
-  },
-  {
-    path: "/master/dokumen",
-    element: <DocumentDashboard />,
-  },
-  {
-    path: "/master/dokumen/:action/:id?",
-    element: <FormDocumentDashboard />,
-  },
-  {
-    path: "/master/rawlog/:id?",
-    element: <Rawlog />,
-  },
-];
-
-const innovationDatabaseRoutes = [
-  {
-    path: "/profil-pemda",
-    element: <PemdaProfile />,
-  },
-  {
-    path: "/profil-pemda/:action/:id?",
-    element: <PemdaProfileForm />,
-  },
-  {
-    path: "/profil-pemda/:id/input-indikator",
-    element: <IndicatorInputSPD />,
-  },
-  {
-    path: "profil-pemda/:id/detail",
-    element: <Detail />,
-  },
-  {
-    path: "profil-pemda/:id/detail/:indicator/dokumen-pendukung",
-    element: <SupportDocument />,
-  },
-  {
-    path: "/inovasi-daerah",
-    element: <RegionalInnovation />,
-  },
-  {
-    path: "/inovasi-daerah/:action/:id?",
-    element: <RegionalInnovationForm />,
-  },
-  {
-    path: "inovasi-daerah/:id/indicator",
-    element: <IndicatorRegionalInnovation />,
-  },
-  {
-    path: "/peringkat-hasil-review",
-    element: <ReviewRanking />,
-  },
-  {
-    path: "/prestasi-hasil-lapangan",
-    element: <AchievmentResult />,
-  },
-  {
-    path: "/ranking-siagas",
-    element: <SiagasRanking />,
-  },
-];
 
 const configurationRoutes = [
   {
