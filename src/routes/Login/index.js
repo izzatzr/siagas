@@ -100,15 +100,15 @@ const Login = () => {
   ) : (
     <div className="box-border flex flex-col w-screen h-screen">
       {loading && <Loading />}
-      <div className="z-10 flex items-center justify-between w-full px-24 py-6 bg-white shadow-lg">
+      <div className="z-10 flex items-center justify-between w-full px-24 py-6 bg-[#063a69] text-white shadow-lg">
         <div className="flex gap-4">
           <img src={logo} alt="logo" className="w-[53px] h-[56px]" />
           <div className="flex flex-col">
-            <span className="font-bold text-[#333333] text-base">SIAGAS</span>
-            <span className="text-[#333333] text-base">KABUPATEN SORONG</span>
+            <span className="text-base font-bold">SIAGAS</span>
+            <span className="text-base">KABUPATEN SORONG</span>
           </div>
         </div>
-        <div className="flex items-center gap-4 justify-end flex-1 text-[#131313]">
+        <div className="flex items-center justify-end flex-1 gap-4">
           <Link to="/pengumuman">
             <CardLogin label="Pengumuman" image={announcementLogo} />
           </Link>

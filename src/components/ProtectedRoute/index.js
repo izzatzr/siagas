@@ -4,9 +4,8 @@ import { useSelector } from "react-redux";
 import { getToken, getUser } from "../../utils";
 import Unauthorized from "../../routes/Unauthorized";
 
-const ProtectedRoute = ({ children, roles }) => {
+const ProtectedRoute = ({ children }) => {
   const { auth } = useSelector((state) => state);
-  const user = getUser();
 
   const isTokenExpired = () => {
     const token = getToken();
@@ -15,15 +14,9 @@ const ProtectedRoute = ({ children, roles }) => {
     return token.token_expired_at * 1000 < currentTime;
   };
 
-  const userHasRequiredRole = user && roles.includes(user.name) ? true : false;
-
   if (!auth.isLoggedIn || isTokenExpired()) {
     return <Navigate to="/login" />;
   }
-
-  // if (auth.isLoggedIn && !userHasRequiredRole) {
-  //   return <Unauthorized />;
-  // }
 
   return children;
 };
