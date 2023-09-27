@@ -2,7 +2,7 @@ import React from "react";
 import { Navigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { FaEye } from "react-icons/fa";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import secureLocalStorage from "react-secure-storage";
 
 import Button from "../../components/Button";
@@ -10,7 +10,7 @@ import CardLogin from "../../components/CardLogin";
 import Checkbox from "../../components/Checkbox";
 import TextInput from "../../components/TextInput";
 
-import logo from "../../assets/images/logo.svg";
+import logo from "../../assets/images/logo.png";
 import announcementLogo from "../../assets/images/announcement.svg";
 import { doLogin } from "../../services/Auth/login";
 import Loading from "../../components/Loading";
@@ -19,6 +19,9 @@ import Slider from "react-slick";
 import imageOne from "../../assets/images/slider/1.jpeg";
 import imageTwo from "../../assets/images/slider/2.jpeg";
 import imageThree from "../../assets/images/slider/3.jpeg";
+import Innovation from "./Components/Innovation";
+import { GET_ALL_INNOVATION_STATISTIC } from "../../constans/constans";
+import { getInnovationStatistic } from "../../services/Dashboard/InnovationStatistic/innovationStatistic";
 
 const settings = {
   infinite: true,
@@ -112,10 +115,10 @@ const Login = () => {
           <Link to="/pengumuman">
             <CardLogin label="Pengumuman" image={announcementLogo} />
           </Link>
-          <Link to="/panduan">
+          <Link to="/manual-book">
             <CardLogin label="Manual Book" image={announcementLogo} />
           </Link>
-          <Link to="/dokumen">
+          <Link to="/petunjuk-teknis">
             <CardLogin label="Petunjuk Teknis" image={announcementLogo} />
           </Link>
         </div>
@@ -145,8 +148,8 @@ const Login = () => {
           </div>
         </Slider>
       </div>
-      <div className="flex items-center justify-center pb-6 bg-cover">
-        <div className="flex mt-[54px] flex-col gap-4 ml-28 bg-black/5 p-10 w-[484px] items-center shadow-lg rounded-lg">
+      <div className="flex items-center justify-center pb-24 bg-cover">
+        <div className="flex mt-[54px] flex-col gap-4 bg-black/5 p-10 w-[484px] items-center shadow-lg rounded-lg">
           <div className="flex flex-col gap-2 text-center">
             <span className="font-bold text-2xl text-[#333333]">
               Selamat datang
@@ -182,7 +185,7 @@ const Login = () => {
             <Checkbox
               checked={payload.rememberMe}
               onChange={() => handleChange("rememberMe", !payload.rememberMe)}
-              label="ingatkan saya"
+              label="Ingatkan Saya"
             />
           </div>
           {/* ini buat reChapta nunggu GOOGLE SITE KEY */}
@@ -191,6 +194,8 @@ const Login = () => {
           </div>
         </div>
       </div>
+
+      <Innovation />
     </div>
   );
 };

@@ -277,20 +277,16 @@ export const sidebarDataDummy = [
 
 export const navbarDataDummy = [
   {
-    label: "Panduan",
-    link: "/panduan",
+    label: "Pengumuman",
+    link: "/pengumuman",
   },
   {
-    label: "Laporan Tahunan",
-    link: "/laporan-tahunan",
+    label: "Manual Book",
+    link: "/manual-book",
   },
   {
-    label: "Dokumen",
-    link: "/dokumen",
-  },
-  {
-    label: "Survey Kepuasan Masyarakat",
-    link: "/survey",
+    label: "Petunjuk Teknis",
+    link: "/petunjuk-teknis",
   },
 ];
 
@@ -437,10 +433,9 @@ export const GET_ALL_ASSESSMENT_TEAM_QUERY_KEY = "get_all_assessment_team";
 export const GET_SETTING = "get_setting";
 
 export const GET_ALL_ARCHIVE = "get_all_archive";
-
 export const GET_INDICATOR_STATISTIC = "get_indicator_statistic";
-
 export const GET_FINAL_INDEX = "get_final_index";
+export const GET_OPD_STATISTIC = "get_opd_statistic";
 
 export const GET_ALL_REGIONAL_INNOVATION_REVIEW =
   "get_all_regional_innovation_review";

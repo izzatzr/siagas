@@ -4,7 +4,6 @@ import parse from "html-react-parser";
 
 import announcementImage from "../../../../../assets/images/announcement.svg";
 import { BiDownload } from "react-icons/bi";
-import pdfFile from "../../../../../assets/test-mb.pdf";
 import { useQuery } from "react-query";
 import { GET_ALL_ANNOUNCEMENT } from "../../../../../constans/constans";
 import { getAllAnnouncement } from "../../../../../services/MasterData/announcement";

@@ -100,28 +100,6 @@ const Routes = () => {
     },
     {
       path: "/",
-      element: <GuesLayout />,
-      children: [
-        {
-          path: "/pengumuman",
-          element: <Announcement />,
-        },
-        {
-          path: "/panduan",
-          element: <Guide />,
-        },
-        {
-          path: "/laporan-tahunan",
-          element: <YearReport />,
-        },
-        {
-          path: "/dokumen",
-          element: <Document />,
-        },
-      ],
-    },
-    {
-      path: "/",
       element: (
         <ProtectedRoute>
           <AdminLayout />
@@ -231,6 +209,24 @@ const Routes = () => {
         ...masterDataRoutesWithAuthorization,
         // Configuration
         ...configurationRoutesWithAuthorization,
+      ],
+    },
+    {
+      path: "/",
+      element: <GuesLayout />,
+      children: [
+        {
+          path: "/pengumuman",
+          element: <Announcement />,
+        },
+        {
+          path: "/petunjuk-teknis",
+          element: <Guide title="Petunjuk Teknis Siagas 2023" />,
+        },
+        {
+          path: "/manual-book",
+          element: <Guide title="Manual Book Siagas 2023" />,
+        },
       ],
     },
   ]);

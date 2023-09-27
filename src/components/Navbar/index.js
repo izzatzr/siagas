@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../../assets/images/logo.svg";
+import logo from "../../assets/images/logo.png";
 import { navbarDataDummy } from "../../constans/constans";
 import { Link, useLocation } from "react-router-dom";
 import Button from "../Button";

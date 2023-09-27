@@ -18,6 +18,8 @@ import { getAllInnovationType } from "../../../../../services/Report/InnovationT
 import { getAllInnovationInitiator } from "../../../../../services/Report/InnovationInitiator/innovationInitiator";
 import { getIndicatorStatistic } from "../../../../../services/Dashboard/InnovationIndicator/innovationIndicator";
 import ScoreItem from "../ScoreItem";
+import { getOpdStatistic } from "../../../../../services/Dashboard/OpdStatistic/opdStatistic";
+import { removeUnderscore } from "../../../../../helpers/removeUnderscore";
 
 const initialFilter = {
   limit: 20,
@@ -62,12 +64,9 @@ const StatisticData = ({ pemda, pemdaOptions, onHandleOPDChange }) => {
       enabled: !!filterParams.pemda_id,
     }
   );
-  const innovationIndicatorQuery = useQuery(
-    [GET_INDICATOR_STATISTIC, filterParamsInnovationIndicator],
-    getIndicatorStatistic(filterParamsInnovationIndicator),
-    {
-      enabled: !!filterParamsInnovationIndicator.pemda_id,
-    }
+  const opdStatisticQuery = useQuery(
+    [GET_INDICATOR_STATISTIC],
+    getOpdStatistic()
   );
 
   const innovationFormChart = useMemo(() => {
@@ -111,6 +110,20 @@ const StatisticData = ({ pemda, pemdaOptions, onHandleOPDChange }) => {
       values,
     };
   }, [innovationInitiatorQuery.data]);
+
+  const opdStatisticChart = useMemo(() => {
+    const data = opdStatisticQuery.data?.data;
+
+    if (!data) return null;
+
+    const labels = Object.keys(data).map((o) => removeUnderscore(o));
+    const values = Object.values(data);
+
+    return {
+      labels,
+      values,
+    };
+  }, [opdStatisticQuery.data]);
 
   React.useEffect(() => {
     if (pemdaId) {
@@ -157,7 +170,11 @@ const StatisticData = ({ pemda, pemdaOptions, onHandleOPDChange }) => {
           label="Total Inovasi yang Dilaporkan"
           total={`${innovationStatisticQuery.data?.data.total_inovasi} Inovasi`}
         />
-        <CardGradient type="primary" label="Inisiatif" total="26.900 Inovasi" />
+        <CardGradient
+          type="primary"
+          label="Inisiatif"
+          total={`${innovationStatisticQuery.data?.data.total_inisiatif} Inovasi`}
+        />
         <CardGradient
           type="primary"
           label="Uji Coba"
@@ -190,8 +207,8 @@ const StatisticData = ({ pemda, pemdaOptions, onHandleOPDChange }) => {
         />
         <CardChart
           label="OPD Yang Menangani"
-          labels={innovationTypeChart?.labels || ""}
-          data={innovationTypeChart?.values || []}
+          labels={opdStatisticChart?.labels || ""}
+          data={opdStatisticChart?.values || []}
         />
       </div>
 

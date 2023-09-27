@@ -4,9 +4,9 @@ import Navbar from "../../Navbar";
 
 const GuesLayout = () => {
   return (
-    <div className="box-border w-screen h-screen flex flex-col">
+    <div className="box-border flex flex-col w-screen h-screen">
       <Navbar />
-      <div className="bg-[url('../src/assets/images/side-image.png')] bg-cover px-24 w-full py-8 flex-1">
+      <div className="bg-[#063a69] [flex-1 w-full px-24 py-12 bg-cover h-full">
         <Outlet />
       </div>
     </div>

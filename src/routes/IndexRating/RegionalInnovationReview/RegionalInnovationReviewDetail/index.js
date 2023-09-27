@@ -7,7 +7,16 @@ import React from "react";
 import { BiLeftArrowAlt } from "react-icons/bi";
 import FilterOption from "../../../../components/FilterOption";
 
-const filters = ["Profil Inovasi", "Indikator"];
+const filters = [
+  {
+    name: "Profil Inovasi",
+    value: "Profil Inovasi",
+  },
+  {
+    name: "Indikator",
+    value: "Indikator",
+  },
+];
 
 const RegionalInnovationReviewDetail = () => {
   const params = useParams();
@@ -32,9 +41,9 @@ const RegionalInnovationReviewDetail = () => {
   }, [isLoading]);
 
   const onHandleFilterChange = (phase) => {
-    if (phase === filters[0]) {
+    if (phase === filters[0].value) {
       navigate("");
-    } else if (phase === filters[1]) {
+    } else if (phase === filters[1].value) {
       navigate("indicator");
     }
   };
@@ -58,9 +67,9 @@ const RegionalInnovationReviewDetail = () => {
 
           {!location.pathname.includes("evaluation") && (
             <FilterOption
-              defaultValue={filters[0]}
+              defaultValue={filters[0].value}
               items={filters}
-              onChange={onHandleFilterChange}
+              onFilterChange={onHandleFilterChange}
             />
           )}
 
