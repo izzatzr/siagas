@@ -1,4 +1,4 @@
-import { convertQueryString, getToken } from "../../../utils";
+import { getToken } from "../../../utils";
 import { BASE_API_URL } from "../../../constans/constans";
 
 export const getInnovationStatistic = () => async () => {
@@ -7,7 +7,7 @@ export const getInnovationStatistic = () => async () => {
       `${BASE_API_URL}/dashboard/statistik_inovasi`,
       {
         headers: {
-          Authorization: `Bearer ${getToken().token}`,
+          Authorization: `Bearer ${getToken() ? getToken().token : "creator"}`,
         },
       }
     );

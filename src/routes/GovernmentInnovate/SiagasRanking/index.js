@@ -12,30 +12,139 @@ import {
   jsonHeaderSiagasRanking,
   jsonRowSiagasRanking,
 } from "../../../dummies/IGA";
+import {
+  BASE_API_URL,
+  GET_ALL_SIAGAS_RANKING,
+} from "../../../constans/constans";
+import { getAllSiagasRanking } from "../../../services/GovermentInnovate/SiagasRanking/siagasRanking";
+import { useQuery } from "react-query";
+import { useNavigate } from "react-router-dom";
+import { useUtilContexts } from "../../../context/Utils";
+import { convertQueryString, getToken } from "../../../utils";
+import Pagination from "../../../components/Pagination";
+
+const initialFilter = {
+  limit: 20,
+  page: 1,
+  q: "",
+  pemda_id: null,
+};
+
+const initialParamsOPD = {
+  limit: 20,
+  page: 1,
+  q: "",
+};
 
 const SiagasRanking = () => {
-  const regions = [
+  const [filterParams, setFilterParams] = React.useState(initialFilter);
+  const [selectedOPD, setSelectedOPD] = React.useState(null);
+
+  const { isLoading, data } = useQuery(
+    [GET_ALL_SIAGAS_RANKING, filterParams],
+    getAllSiagasRanking(filterParams)
+  );
+
+  const { setLoadingUtil, snackbar } = useUtilContexts();
+
+  const tableHeader = [
     {
-      value: "wilayah 1",
-      label: "Wilayah 1",
+      key: "skor_indeks",
+      title: "Skor Indeks",
     },
     {
-      value: "wilayah 2",
-      label: "Wilayah 2",
+      key: "skor_penilaian",
+      title: "Skor Penilaian",
     },
     {
-      value: "wilayah 3",
-      label: "Wilayah 3",
+      key: "skor_akhir",
+      title: "Skor Akhir",
     },
     {
-      value: "wilayah 4",
-      label: "Wilayah 4",
+      key: "predikat",
+      title: "Predikat",
     },
   ];
+
+  const getOPD = async (search = "") => {
+    const paramsQueryString = convertQueryString({
+      ...initialParamsOPD,
+      q: search,
+    });
+    const response = await fetch(`${BASE_API_URL}/opd?${paramsQueryString}`, {
+      headers: {
+        Authorization: `Bearer ${getToken().token}`,
+      },
+    });
+
+    const responseJSON = await response.json();
+
+    return responseJSON;
+  };
+
+  const loadOptionOPD = async (search, loadedOptions, { page }) => {
+    const res = await getOPD(search);
+
+    const data = {
+      options: res?.data,
+      hasMore: res.has_more,
+      additional: {
+        page: page + 1,
+      },
+    };
+
+    return data;
+  };
+
+  React.useEffect(() => {
+    getOPD().then((data) => {
+      setSelectedOPD(data.data[0]);
+      setFilterParams({
+        ...filterParams,
+        pemda_id: data.data[0].id,
+      });
+    });
+  }, []);
+
+  React.useEffect(() => {
+    if (isLoading) {
+      setLoadingUtil(true);
+    } else {
+      setLoadingUtil(false);
+    }
+  }, [isLoading]);
+
+  const onHandleSearch = (value) => {
+    if (value.length > 3) {
+      setFilterParams({
+        q: value,
+      });
+    } else if (value.length === 0) {
+      setFilterParams({
+        q: "",
+      });
+    }
+  };
+
+  const onHandlePagination = (page) => {
+    setFilterParams({
+      ...filterParams,
+      page: page + 1,
+    });
+  };
+
+  const onHandleOPDChange = (opd) => {
+    setSelectedOPD(opd);
+    setFilterParams({
+      ...filterParams,
+      pemda_id: opd.id,
+    });
+  };
+
   return (
-    <div className="w-full flex flex-col gap-6 py-6">
+    <div className="flex flex-col w-full gap-6 py-6">
       <div className="text-[#333333] text-2xl">Rangking SIAGAS</div>
-      <div className="flex justify-end items-center gap-2">
+      <div className="flex items-center justify-end gap-2">
         <button className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5">
           <BiDownload className="text-base" />
           Unduh Data (PDF)
@@ -49,43 +158,33 @@ const SiagasRanking = () => {
         <div className="flex w-[60%] gap-4 items-end">
           <div className="w-[60%]">
             <SelectOption
-              label="Klaster"
-              placeholder="Pilih Klaster"
-              options={regions}
+              label="Pemda"
+              placeholder="Pilih Pemda"
+              options={loadOptionOPD}
+              onChange={(e) => onHandleOPDChange(e)}
+              value={selectedOPD}
+              paginate
             />
           </div>
         </div>
         <div className="flex items-center gap-3 text-sm border border-[#333333] placeholder:text-[#828282] rounded px-3 py-2 w-[30%]">
           <BiSearch />
-          <input type="text" className="outline-none" placeholder="Pencarian" />
+          <input
+            type="text"
+            className="outline-none"
+            placeholder="Pencarian"
+            onChange={(e) => onHandleSearch(e.target.value)}
+          />
         </div>
       </div>
-      <div className="w-full rounded-lg text-[#333333] bg-white p-6">
-        <Table
-          showNum={true}
-          data={jsonRowSiagasRanking}
-          columns={jsonHeaderSiagasRanking}
+      <div className="w-full px-6 py-4 bg-white rounded-lg">
+        <Table showNum={true} data={data?.data || []} columns={tableHeader} />
+        <Pagination
+          pageCount={data?.pagination?.pages}
+          onHandlePagination={onHandlePagination}
+          totalData={data?.pagination?.total}
+          size={filterParams.limit}
         />
-        <div className="flex justify-between items-center py-[20px] pl-6">
-        <span className="trext-[#828282] text-xs">
-          Menampilkan 1 sampai 10 dari 48 entri
-        </span>
-        <ReactPaginate
-          breakLabel="..."
-          nextLabel={<BiChevronRight />}
-          onPageChange={(page) => console.log(page)}
-          pageRangeDisplayed={3}
-          pageCount={10}
-          previousLabel={<BiChevronLeft />}
-          renderOnZeroPageCount={null}
-          className="flex gap-3 items-center text-xs"
-          pageClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
-          previousClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
-          nextClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
-          disabledClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center bg-[#828282] text-white"
-          activeClassName="w-[28px] h-[28px] rounded-md border border-[#069DD9] flex justify-center items-center bg-[#069DD9] text-white"
-        />
-      </div>
       </div>
     </div>
   );

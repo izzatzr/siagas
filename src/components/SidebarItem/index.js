@@ -13,18 +13,23 @@ const SidebarItem = (props) => {
     handleOpenAccordion,
     sidebarActive,
     indexSidebar,
+    show,
   } = props;
+
+  if (!show) {
+    return null;
+  }
 
   return (
     <div className="w-full">
-      <div className="flex gap-2 items-center">
+      <div className="flex items-center gap-2">
         <img src={icon} alt="" />
         <div className="flex-1">
           <span className="font-medium">{label}</span>
         </div>
-        {children.length > 0  && (
+        {children.length > 0 && (
           <div
-            className="cursor-pointer hover:bg-blue-200 rounded-full p-2"
+            className="p-2 rounded-full cursor-pointer hover:bg-blue-200"
             onClick={() => handleOpenAccordion(label, !active)}
           >
             {active && sidebarActive === indexSidebar ? (

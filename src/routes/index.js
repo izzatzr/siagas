@@ -34,6 +34,8 @@ import Login from "./Login";
 import RegencyInnovate from "./Report/RegencyInnovate";
 import InnovationType from "./Report/InnovationType";
 import InnovationForm from "./Report/InnovationForm";
+import GovernmentAffairs from "./Report/GovernmentAffairs";
+import InnovationInitiator from "./Report/InnovationInitiator";
 
 // Guest
 import GuesLayout from "../components/Layout/Guest";
@@ -68,10 +70,6 @@ import IndicatorRegionalInnovation from "./DatabaseInnovation/RegionalInnovation
 import AssessmentTeamForm from "./MasterData/AssessmentTeam/Form";
 import DocumentCategoryForm from "./MasterData/DocumentCategory/Form";
 import Rawlog from "./MasterData/Rawlog";
-import RegionalInnovationReviewDetail from "./IndexRating/RegionalInnovationReview/RegionalInnovationReviewDetail";
-import RegionalInnovationReviewInnovationProfile from "./IndexRating/RegionalInnovationReview/RegioanlInnovationReviewInnovationProfile";
-import RegionalInnovationReviewIndicator from "./IndexRating/RegionalInnovationReview/RegionalInnovationReviewIndicator";
-import RegioanlInnovationReviewInnovationEvaluation from "./IndexRating/RegionalInnovationReview/RegionalInnovationReviewEvaluation";
 import UserAccountEdit from "./Configuration/UserAccount/UserAccountEdit";
 import UserAccountCreate from "./Configuration/UserAccount/UserAccountCreate";
 import OPDCreate from "./Configuration/OPDList/OPDCreate";
@@ -82,11 +80,24 @@ import TuxedoCreate from "./Configuration/Tuxedo/TuxedoCreate";
 import TuxedoEdit from "./Configuration/Tuxedo/TuxedoEdit";
 import SettingCreate from "./Configuration/Setting/SettingCreate";
 import SettingEdit from "./Configuration/Setting/SettingEdit";
-import GovernmentAffairs from "./Report/GovernmentAffairs";
-import InnovationInitiator from "./Report/InnovationInitiator";
+
+// Index Rating
+import RegionalInnovationReviewDetail from "./IndexRating/RegionalInnovationReview/RegionalInnovationReviewDetail";
+import RegionalInnovationReviewInnovationProfile from "./IndexRating/RegionalInnovationReview/RegioanlInnovationReviewInnovationProfile";
+import RegionalInnovationReviewIndicator from "./IndexRating/RegionalInnovationReview/RegionalInnovationReviewIndicator";
+import RegioanlInnovationReviewInnovationEvaluation from "./IndexRating/RegionalInnovationReview/RegionalInnovationReviewEvaluation";
+import RegionalGovernmentInnovation from "./InnovationCompetition/RegionalGovernmentInnovation";
+import PublicInnovation from "./InnovationCompetition/PublicInnovation";
+import PublicInnovationEdit from "./InnovationCompetition/PublicInnovation/PublicInnovationEdit";
+import RegionalGovernmentInnovationCreate from "./InnovationCompetition/RegionalGovernmentInnovation/RegionalGovernmentInnovationCreate";
+import Authorization from "../components/Authorization";
 
 const Routes = () => {
   const router = createBrowserRouter([
+    {
+      path: "/login",
+      element: <Login />,
+    },
     {
       path: "/",
       element: (
@@ -97,33 +108,61 @@ const Routes = () => {
       children: [
         {
           path: "/",
-          element: <Siagas />,
+          element: (
+            <Authorization roles={["Super Admin", "User"]}>
+              <Siagas />
+            </Authorization>
+          ),
         },
         {
           path: "/statistik-inovasi",
-          element: <InovationStatistic />,
+          element: (
+            <Authorization roles={["Super Admin", "User"]}>
+              <InovationStatistic />
+            </Authorization>
+          ),
         },
         {
           path: "/statistik-indikator-inovasi",
-          element: <InnovationIndicator />,
+          element: (
+            <Authorization roles={["Super Admin", "User"]}>
+              <InnovationIndicator />
+            </Authorization>
+          ),
         },
         {
           path: "/arsip",
-          element: <Archive />,
+          element: (
+            <Authorization roles={["Super Admin", "User"]}>
+              <Archive />
+            </Authorization>
+          ),
         },
         {
           path: "/faq",
-          element: <FAQ />,
+          element: (
+            <Authorization roles={["Super Admin", "User"]}>
+              <FAQ />
+            </Authorization>
+          ),
         },
 
         //Penilaian Indeks
         {
           path: "/review-inovasi-daerah",
-          element: <RegionalInnovationReview />,
+          element: (
+            <Authorization roles={["Super Admin"]}>
+              <RegionalInnovationReview />
+            </Authorization>
+          ),
         },
         {
           path: "/review-inovasi-daerah/detail/:id?",
-          element: <RegionalInnovationReviewDetail />,
+          element: (
+            <Authorization roles={["Super Admin"]}>
+              <RegionalInnovationReviewDetail />
+            </Authorization>
+          ),
           children: [
             {
               path: "",
@@ -159,46 +198,18 @@ const Routes = () => {
           path: "/rekap-indeks-akhir",
           element: <FinalIndex />,
         },
-        // Database Inovasi Daerah
-        ...innovationDatabaseRoutes,
+
         //Report
-        {
-          path: "/inovasi-kabupaten",
-          element: <RegencyInnovate />,
-        },
-        {
-          path: "/rekap-jenis-inovasi",
-          element: <InnovationType />,
-        },
-        {
-          path: "/rekap-bentuk-inovasi",
-          element: <InnovationForm />,
-        },
-        {
-          path: "/rekap-urusan-pemerintah",
-          element: <GovernmentAffairs />,
-        },
-        {
-          path: "/rekap-berdasarkan-inisiator",
-          element: <InnovationInitiator />,
-        },
-        // {
-        //   path: "/rekap-inovasi-urusan",
-        //   element: <BusinessInnovate />,
-        // },
-        // {
-        //   path: "/rekap-inovasi-inisiator",
-        //   element: <InitiatorInnovate />,
-        // },
+        ...reportRoutesWithAuthorization,
+        // Database Inovasi Daerah
+        ...innovationDatabaseRoutesWithAuthorization,
+        // Innovation Competition
+        ...innovationCompetitionWithAuthorization,
         //Master Data
-        ...masterDataRoutes,
+        ...masterDataRoutesWithAuthorization,
         // Configuration
-        ...configurationRoutes,
+        ...configurationRoutesWithAuthorization,
       ],
-    },
-    {
-      path: "/login",
-      element: <Login />,
     },
     {
       path: "/",
@@ -209,16 +220,12 @@ const Routes = () => {
           element: <Announcement />,
         },
         {
-          path: "/panduan",
-          element: <Guide />,
+          path: "/petunjuk-teknis",
+          element: <Guide title="Petunjuk Teknis Siagas 2023" />,
         },
         {
-          path: "/laporan-tahunan",
-          element: <YearReport />,
-        },
-        {
-          path: "/dokumen",
-          element: <Document />,
+          path: "/manual-book",
+          element: <Guide title="Manual Book Siagas 2023" />,
         },
       ],
     },
@@ -226,117 +233,54 @@ const Routes = () => {
   return <RouterProvider router={router} />;
 };
 
-const masterDataRoutes = [
+const reportRoutes = [
   {
-    path: "/master/tim-penilaian",
-    element: <AssessmentTeam />,
+    path: "/inovasi-kabupaten",
+    element: <RegencyInnovate />,
+    roles: ["Super Admin"],
   },
   {
-    path: "/master/tim-penilaian/:action",
-    element: <AssessmentTeamForm />,
+    path: "/rekap-jenis-inovasi",
+    element: <InnovationType />,
+    roles: ["Super Admin"],
   },
   {
-    path: "/master/urusan-pemerintah",
-    element: <GovernmentBusiness />,
+    path: "/rekap-bentuk-inovasi",
+    element: <InnovationForm />,
+    roles: ["Super Admin"],
   },
   {
-    path: "/master/urusan-pemerintah/:action/:id?",
-    element: <FormGovernmentBusiness />,
+    path: "/rekap-urusan-pemerintah",
+    element: <GovernmentAffairs />,
+    roles: ["Super Admin"],
   },
   {
-    path: "/master/indikator",
-    element: <Indicator />,
+    path: "/rekap-berdasarkan-inisiator",
+    element: <InnovationInitiator />,
+    roles: ["Super Admin"],
   },
-  {
-    path: "/master/indikator/:action/:id?",
-    element: <FormIndicator />,
-  },
-  {
-    path: "/master/indikator/:indicator_id/scale-indicator",
-    element: <FormIndicator />,
-  },
-  {
-    path: "/master/kategori-dokumen",
-    element: <DocumentCategory />,
-  },
-  {
-    path: "/master/kategori-dokumen/:action/:id?",
-    element: <DocumentCategoryForm />,
-  },
-  {
-    path: "/master/pengumuman",
-    element: <AnnouncementDashboard />,
-  },
-  {
-    path: "/master/pengumuman/:action/:id?",
-    element: <FormAnnouncementDashboard />,
-  },
-  {
-    path: "/master/faq",
-    element: <FAQDashboard />,
-  },
-  {
-    path: "/master/faq/:action/:id?",
-    element: <FormFAQDashboard />,
-  },
-  {
-    path: "/master/dokumen",
-    element: <DocumentDashboard />,
-  },
-  {
-    path: "/master/dokumen/:action/:id?",
-    element: <FormDocumentDashboard />,
-  },
-  {
-    path : '/master/rawlog/:id?',
-    element : <Rawlog />
-  }
 ];
 
-const innovationDatabaseRoutes = [
+const innovationCompetition = [
   {
-    path: "/profil-pemda",
-    element: <PemdaProfile />,
+    path: "/lomba/inovasi-pemerintah-daerah",
+    element: <RegionalGovernmentInnovation />,
+    roles: ["User"],
   },
   {
-    path: "/profil-pemda/:action/:id?",
-    element: <PemdaProfileForm />,
+    path: "/lomba/inovasi-pemerintah-daerah/:action/:id?",
+    element: <RegionalGovernmentInnovationCreate />,
+    roles: ["User"],
   },
   {
-    path: "/profil-pemda/:id/input-indikator",
-    element: <IndicatorInputSPD />,
+    path: "/lomba/inovasi-masyarakat",
+    element: <PublicInnovation />,
+    roles: ["User"],
   },
   {
-    path: "profil-pemda/:id/detail",
-    element: <Detail />,
-  },
-  {
-    path: "profil-pemda/:id/detail/:indicator/dokumen-pendukung",
-    element: <SupportDocument />,
-  },
-  {
-    path: "/inovasi-daerah",
-    element: <RegionalInnovation />,
-  },
-  {
-    path: "/inovasi-daerah/:action/:id?",
-    element: <RegionalInnovationForm />,
-  },
-  {
-    path: "inovasi-daerah/:id/indicator",
-    element: <IndicatorRegionalInnovation />,
-  },
-  {
-    path: "/peringkat-hasil-review",
-    element: <ReviewRanking />,
-  },
-  {
-    path: "/prestasi-hasil-lapangan",
-    element: <AchievmentResult />,
-  },
-  {
-    path: "/ranking-siagas",
-    element: <SiagasRanking />,
+    path: "/lomba/inovasi-masyarakat/:action/:id?",
+    element: <PublicInnovationEdit />,
+    roles: ["User"],
   },
 ];
 
@@ -344,67 +288,250 @@ const configurationRoutes = [
   {
     path: "/konfigurasi/user-account",
     element: <UserAccount />,
+    roles: ["Super Admin", "User"],
   },
   {
     path: "/konfigurasi/user-account/:action",
     element: <UserAccountCreate />,
+    roles: ["Super Admin", "User"],
   },
   {
     path: "/konfigurasi/user-account/:action/:id?",
     element: <UserAccountEdit />,
+    roles: ["Super Admin", "User"],
   },
   {
     path: "/konfigurasi/daftar-opd",
     element: <OPDList />,
+    roles: ["Super Admin", "User"],
   },
   {
     path: "/konfigurasi/daftar-opd/:action",
     element: <OPDCreate />,
+    roles: ["Super Admin", "User"],
   },
   {
     path: "/konfigurasi/daftar-opd/:action/:id?",
     element: <OPDEdit />,
+    roles: ["Super Admin", "User"],
   },
   {
     path: "/konfigurasi/daftar-uptd",
     element: <UPTDList />,
+    roles: ["Super Admin", "User"],
   },
   {
     path: "/konfigurasi/daftar-uptd/:action",
     element: <UPTDListCreate />,
+    roles: ["Super Admin", "User"],
   },
   {
     path: "/konfigurasi/daftar-uptd/:action/:id?",
     element: <UPTDListEdit />,
+    roles: ["Super Admin", "User"],
   },
   {
     path: "/konfigurasi/tuxedo",
     element: <Tuxedo />,
+    roles: ["Super Admin", "User"],
   },
   {
     path: "/konfigurasi/tuxedo/:action",
     element: <TuxedoCreate />,
+    roles: ["Super Admin", "User"],
   },
   {
     path: "/konfigurasi/tuxedo/:action/:id?",
     element: <TuxedoEdit />,
+    roles: ["Super Admin", "User"],
   },
   {
     path: "/konfigurasi/setting",
     element: <Setting />,
+    roles: ["Super Admin", "User"],
   },
   {
     path: "/konfigurasi/setting/:action",
     element: <SettingCreate />,
+    roles: ["Super Admin", "User"],
   },
   {
     path: "/konfigurasi/setting/:action/:id?",
     element: <SettingEdit />,
+    roles: ["Super Admin", "User"],
   },
-  // {
-  //   path: "/konfigurasi/akses-api",
-  //   element: <APIAccess />,
-  // },
 ];
+
+const innovationDatabaseRoutes = [
+  {
+    path: "/profil-pemda",
+    element: <PemdaProfile />,
+    roles: ["Super Admin", "User"],
+  },
+  {
+    path: "/profil-pemda/:action/:id?",
+    element: <PemdaProfileForm />,
+    roles: ["Super Admin", "User"],
+  },
+  {
+    path: "/profil-pemda/:id/input-indikator",
+    element: <IndicatorInputSPD />,
+    roles: ["Super Admin", "User"],
+  },
+  {
+    path: "profil-pemda/:id/detail",
+    element: <Detail />,
+    roles: ["Super Admin", "User"],
+  },
+  {
+    path: "profil-pemda/:id/detail/:indicator/dokumen-pendukung",
+    element: <SupportDocument />,
+    roles: ["Super Admin", "User"],
+  },
+  {
+    path: "/inovasi-daerah",
+    element: <RegionalInnovation />,
+    roles: ["Super Admin", "User"],
+  },
+  {
+    path: "/inovasi-daerah/:action/:id?",
+    element: <RegionalInnovationForm />,
+    roles: ["Super Admin", "User"],
+  },
+  {
+    path: "inovasi-daerah/:id/indicator",
+    element: <IndicatorRegionalInnovation />,
+    roles: ["Super Admin", "User"],
+  },
+  {
+    path: "/peringkat-hasil-review",
+    element: <ReviewRanking />,
+    roles: ["Super Admin", "User"],
+  },
+  {
+    path: "/prestasi-hasil-lapangan",
+    element: <AchievmentResult />,
+    roles: ["Super Admin", "User"],
+  },
+  {
+    path: "/ranking-siagas",
+    element: <SiagasRanking />,
+    roles: ["Super Admin", "User"],
+  },
+];
+
+const masterDataRoutes = [
+  {
+    path: "/master/tim-penilaian",
+    element: <AssessmentTeam />,
+    roles: ["Super Admin"],
+  },
+  {
+    path: "/master/tim-penilaian/:action",
+    element: <AssessmentTeamForm />,
+    roles: ["Super Admin"],
+  },
+  {
+    path: "/master/urusan-pemerintah",
+    element: <GovernmentBusiness />,
+    roles: ["Super Admin"],
+  },
+  {
+    path: "/master/urusan-pemerintah/:action/:id?",
+    element: <FormGovernmentBusiness />,
+    roles: ["Super Admin"],
+  },
+  {
+    path: "/master/indikator",
+    element: <Indicator />,
+    roles: ["Super Admin"],
+  },
+  {
+    path: "/master/indikator/:action/:id?",
+    element: <FormIndicator />,
+    roles: ["Super Admin"],
+  },
+  {
+    path: "/master/indikator/:indicator_id/scale-indicator",
+    element: <FormIndicator />,
+    roles: ["Super Admin"],
+  },
+  {
+    path: "/master/kategori-dokumen",
+    element: <DocumentCategory />,
+    roles: ["Super Admin"],
+  },
+  {
+    path: "/master/kategori-dokumen/:action/:id?",
+    element: <DocumentCategoryForm />,
+    roles: ["Super Admin"],
+  },
+  {
+    path: "/master/pengumuman",
+    element: <AnnouncementDashboard />,
+    roles: ["Super Admin"],
+  },
+  {
+    path: "/master/pengumuman/:action/:id?",
+    element: <FormAnnouncementDashboard />,
+    roles: ["Super Admin"],
+  },
+  {
+    path: "/master/faq",
+    element: <FAQDashboard />,
+    roles: ["Super Admin"],
+  },
+  {
+    path: "/master/faq/:action/:id?",
+    element: <FormFAQDashboard />,
+    roles: ["Super Admin"],
+  },
+  {
+    path: "/master/dokumen",
+    element: <DocumentDashboard />,
+    roles: ["Super Admin"],
+  },
+  {
+    path: "/master/dokumen/:action/:id?",
+    element: <FormDocumentDashboard />,
+    roles: ["Super Admin"],
+  },
+  {
+    path: "/master/rawlog/:id?",
+    element: <Rawlog />,
+    roles: ["Super Admin"],
+  },
+];
+
+const reportRoutesWithAuthorization = reportRoutes.map((route) => ({
+  ...route,
+  element: <Authorization roles={route.roles}>{route.element}</Authorization>,
+}));
+
+const innovationCompetitionWithAuthorization = innovationCompetition.map(
+  (route) => ({
+    ...route,
+    element: <Authorization roles={route.roles}>{route.element}</Authorization>,
+  })
+);
+
+const configurationRoutesWithAuthorization = configurationRoutes.map(
+  (route) => ({
+    ...route,
+    element: <Authorization roles={route.roles}>{route.element}</Authorization>,
+  })
+);
+
+const innovationDatabaseRoutesWithAuthorization = innovationDatabaseRoutes.map(
+  (route) => ({
+    ...route,
+    element: <Authorization roles={route.roles}>{route.element}</Authorization>,
+  })
+);
+
+const masterDataRoutesWithAuthorization = masterDataRoutes.map((route) => ({
+  ...route,
+  element: <Authorization roles={route.roles}>{route.element}</Authorization>,
+}));
 
 export default Routes;

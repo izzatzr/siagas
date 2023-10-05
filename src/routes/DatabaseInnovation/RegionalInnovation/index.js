@@ -9,7 +9,6 @@ import {
   PDF_ACTION_TABLE,
   TRANSFER_ACTION_TABLE,
 } from "../../../constants";
-import FilterArsip from "../../Dashboard/Archive/components/FilterArsip";
 import { useQuery } from "react-query";
 import { GET_ALL_REGIONAL_INNOVATION_QUERY_KEY } from "../../../constans/constans";
 import { getAllRegionalInnovation } from "../../../services/DatabaseInnovation/regional";
@@ -17,6 +16,7 @@ import { useUtilContexts } from "../../../context/Utils";
 import Pagination from "../../../components/Pagination";
 import Button from "../../../components/Button";
 import { useNavigate } from "react-router-dom";
+import FilterOption from "../../../components/FilterOption";
 
 const initialParams = {
   page: 0,
@@ -77,24 +77,20 @@ const RegionalInnovation = () => {
 
   const [listFilter, setListFilter] = React.useState([
     {
-      label: "Semua",
+      name: "Semua",
       value: "all",
-      active: true,
     },
     {
-      label: "Inisiatif",
+      name: "Inisiatif",
       value: "inisiatif",
-      active: false,
     },
     {
-      label: "Uji Coba",
+      name: "Uji Coba",
       value: "uji coba",
-      active: false,
     },
     {
-      label: "Penerapan",
+      name: "Penerapan",
       value: "penerapan",
-      active: false,
     },
   ]);
 
@@ -166,7 +162,7 @@ const RegionalInnovation = () => {
     {
       code: EDIT_ACTION_TABLE,
       onClick: (item) => {
-        navigate(`/inovasi-daerah/edit/${item.id}`)
+        navigate(`/inovasi-daerah/edit/${item.id}`);
       },
     },
   ];
@@ -176,7 +172,7 @@ const RegionalInnovation = () => {
   }, [isFetching]);
 
   return (
-    <div className="w-full flex flex-col gap-6 py-6">
+    <div className="flex flex-col w-full gap-6 py-6">
       <div className="text-[#333333] text-2xl font-bold">Inovasi Daerah</div>
       <div className="w-full rounded-lg text-[#333333] bg-[#FFC90C4D] p-6 flex flex-col gap-2">
         <div className="flex items-center gap-2">
@@ -192,9 +188,10 @@ const RegionalInnovation = () => {
         </p>
       </div>
       <div className="mt-4">
-        <FilterArsip
-          data={listFilter}
-          onChangeFilter={(value) => {
+        <FilterOption
+          items={listFilter}
+          defaultValue="all"
+          onFilterChange={(value) => {
             onHandleChangeFilter(value);
           }}
         />

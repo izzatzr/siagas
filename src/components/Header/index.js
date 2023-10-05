@@ -3,8 +3,11 @@ import { FiMenu } from "react-icons/fi";
 import fullscreenIcon from "../../assets/icons/fullscreen-icon.svg";
 import faqIcon from "../../assets/icons/faq-icon.svg";
 import { AiFillCaretDown } from "react-icons/ai";
+import { getUser } from "../../utils";
 
 const Header = () => {
+  const user = getUser();
+
   return (
     <div className="h-[80px] max-h-[80px] w-full flex justify-between items-center py-5 px-6 shadow-lg">
       <div className="">
@@ -25,9 +28,9 @@ const Header = () => {
             className="rounded-full"
           />
           <div className="flex flex-col">
-            <span className="font-bold text-base">Kepala.badan</span>
+            <span className="text-base font-bold">Kepala.badan</span>
             <span className="text-[11px] text-[#828282] font-medium">
-              Super Admin
+              {user?.name}
             </span>
           </div>
           <AiFillCaretDown size={16} />

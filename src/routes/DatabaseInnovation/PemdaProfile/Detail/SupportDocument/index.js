@@ -17,8 +17,8 @@ import TableAction from "../../../../../components/TableAction";
 import { GET_ALL_DOCUMENT_PEMDA_PROFILE } from "../../../../../constans/constans";
 import Table from "../../../../../components/Table";
 import { downloadFile } from "../../../../../utils";
-import ModalDelete from "../../../../../components/ModalDelete";
 import Pagination from "../../../../../components/Pagination";
+import ModalConfirmation from "../../../../../components/ModalConfirmation";
 
 const initialParams = {
   page: 0,
@@ -174,12 +174,12 @@ const SupportDocument = () => {
   return (
     <>
       {openForm && (
-        <div className="flex items-center justify-center fixed left-0 top-0 bottom-0 right-0 ">
+        <div className="fixed top-0 bottom-0 left-0 right-0 flex items-center justify-center ">
           <div
-            className="w-full h-full absolute bg-black/20"
+            className="absolute w-full h-full bg-black/20"
             onClick={onHandleCloseForm}
           ></div>
-          <div className="flex flex-col p-6 gap-6 bg-white rounded-lg z-10">
+          <div className="z-10 flex flex-col gap-6 p-6 bg-white rounded-lg">
             <div className="flex items-center justify-between w-[607px]">
               <div className="text-[#333333] text-xl font-bold">
                 Upload Dokumen Pendukung
@@ -225,7 +225,7 @@ const SupportDocument = () => {
               value={payload.dokumen}
             />
 
-            <div className="flex items-center gap-4 w-60 ml-auto">
+            <div className="flex items-center gap-4 ml-auto w-60">
               <div className="flex-1">
                 <Button
                   onClick={onHandleCloseForm}
@@ -247,20 +247,22 @@ const SupportDocument = () => {
           </div>
         </div>
       )}
-      <div className="w-full flex flex-col gap-6 py-6">
+      <div className="flex flex-col w-full gap-6 py-6">
         {showDelete && (
-          <ModalDelete
-            cancelDelete={() => setShowDelete(false)}
-            doDelete={onHandleDeleteDocumentPemdaProfile}
+          <ModalConfirmation
+            variant="delete"
+            message="Apakah Anda yakin ingin menghapus ?"
+            onCancel={() => setShowDelete(false)}
+            onConfirm={onHandleDeleteDocumentPemdaProfile}
           />
         )}
         <div className="text-[#333333] text-2xl">Profile Pemda</div>
-        <div className="w-full bg-white rounded-lg p-8 flex flex-col gap-6">
+        <div className="flex flex-col w-full gap-6 p-8 bg-white rounded-lg">
           <div className="flex items-center gap-2">
             <Link to={location?.state?.urlBefore}>
               <BiArrowBack />
             </Link>
-            <span className="font-medium text-lg">Dokumen Pendukung</span>
+            <span className="text-lg font-medium">Dokumen Pendukung</span>
           </div>
           <div className="flex flex-col gap-3 text-[#333333]">
             <div className="text-lg font-bold">

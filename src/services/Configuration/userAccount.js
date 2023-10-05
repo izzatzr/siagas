@@ -1,10 +1,24 @@
 import { BASE_API_URL } from "../../constans/constans";
-import { fetchData, getToken } from "../../utils";
+import { convertQueryString, getToken } from "../../utils";
 
 export const getAllUserAccounts = (params) => async () => {
   try {
-    const response = await fetchData({ params, endpoint: "user" });
-    return response;
+    const paramsQuery = convertQueryString(params);
+    const response = await fetch(`${BASE_API_URL}/user?${paramsQuery}`, {
+      headers: {
+        Authorization: `Bearer ${getToken().token}`,
+      },
+    });
+
+    const result = await response.json();
+
+    const isSuccess = result.code === 200;
+
+    if (isSuccess) {
+      return result;
+    }
+
+    return null;
   } catch (error) {
     console.error(error);
   }
