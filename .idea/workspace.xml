@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="d628bb44-c634-471f-b55b-e074e2df9b1d" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/components/Modal/ModalWrapper/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Modal/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/routes/IndexRating/RegionalInnovationReview/RegionalInnovationReviewDetail/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/services/IndexRating/IndexRanking/indexRanking.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/services/IndexRating/RegionalInnovationReview/regionalInnovationReview.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/services/IndexRating/RejectedInnovation/rejectedInnovation.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/services/IndexRating/ReviewResult/reviewResult.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/prettier.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/siagas.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Accordion/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Accordion/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Button/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Button/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ModalDelete/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ModalConfirmation/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/SelectOption/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SelectOption/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/TableRow/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TableRow/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/constans/constans.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/constans/constans.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dummies/indexRatings.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/dummies/indexRatings.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/helpers/formatDate.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/helpers/formatDate.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/Dashboard/Archive/components/FilterArsip/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/Dashboard/Archive/components/FilterArsip/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/Dashboard/Archive/components/TablePemda/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/Dashboard/Archive/components/TablePemda/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/Dashboard/Archive/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/Dashboard/Archive/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/Dashboard/FAQ/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/Dashboard/FAQ/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/Dashboard/InnovationIndicator/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/Dashboard/InnovationIndicator/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/IndexRating/FinalIndex/components/TableFinalIndex/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/IndexRating/FinalIndex/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/IndexRating/FinalIndex/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/IndexRating/IndexRanking/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/IndexRating/IndexRanking/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/IndexRating/RegionalInnovationReview/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/IndexRating/RegionalInnovationReview/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/IndexRating/RejectedInnovation/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/IndexRating/RejectedInnovation/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/IndexRating/ReviewResult/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/IndexRating/ReviewResult/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/MasterData/AnnouncementDashboard/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/MasterData/AnnouncementDashboard/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/MasterData/FAQDashboard/FormFAQDashboard/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/MasterData/FAQDashboard/FormFAQDashboard/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/MasterData/FAQDashboard/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/MasterData/FAQDashboard/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/Dashboard/Archive/archive.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/Dashboard/Archive/archive.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/Dashboard/InnovationIndicator/innovationIndicator.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/Dashboard/InnovationIndicator/innovationIndicator.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/IndexRating/FinalIndex/finalIndex.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/IndexRating/FinalIndex/finalIndex.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 6
+}]]></component>
+  <component name="ProjectId" id="2V5yYNH5hc4ccevkLTUOjSvVbXX" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d628bb44-c634-471f-b55b-e074e2df9b1d" name="Changes" comment="" />
+      <created>1694140285230</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1694140285230</updated>
+      <workItem from="1694140286845" duration="25000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

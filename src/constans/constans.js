@@ -117,35 +117,50 @@ export const sidebarDataDummy = [
     active: false,
     children: [
       {
-        label: "Indeks Rata-Rata Kabupaten",
+        label: "Indeks Rata-Rata OPD",
         link: "/inovasi-kabupaten",
         active: false,
       },
-      {
-        label: "Indeks Rata-Rata OPD",
-        link: "/inovasi-opd",
-        active: false,
-      },
-      {
-        label: "Indeks Rata-Rata Distrik",
-        link: "/inovasi-distrik",
-        active: false,
-      },
+      // {
+      //   label: "Indeks Rata-Rata OPD",
+      //   link: "/inovasi-opd",
+      //   active: false,
+      // },
+      // {
+      //   label: "Indeks Rata-Rata Distrik",
+      //   link: "/inovasi-distrik",
+      //   active: false,
+      // },
       {
         label: "Rekap Jenis Inovasi",
         link: "/rekap-jenis-inovasi",
         active: false,
       },
       {
-        label: "Rekap Inovasi berdasarkan urusan",
-        link: "/rekap-inovasi-urusan",
+        label: "Rekap Bentuk Inovasi",
+        link: "/rekap-bentuk-inovasi",
         active: false,
       },
       {
-        label: "Rekap Inovasi berdasarkan inisiator",
-        link: "/rekap-inovasi-inisiator",
+        label: "Rekap Urusan Pemerintah",
+        link: "/rekap-urusan-pemerintah",
         active: false,
       },
+      {
+        label: "Rekap Berdasarkan Inisiator",
+        link: "/rekap-berdasarkan-inisiator",
+        active: false,
+      },
+      // {
+      //   label: "Rekap Inovasi berdasarkan urusan",
+      //   link: "/rekap-inovasi-urusan",
+      //   active: false,
+      // },
+      // {
+      //   label: "Rekap Inovasi berdasarkan inisiator",
+      //   link: "/rekap-inovasi-inisiator",
+      //   active: false,
+      // },
     ],
   },
   {
@@ -225,11 +240,11 @@ export const sidebarDataDummy = [
         link: "/konfigurasi/setting",
         active: false,
       },
-      {
-        label: "Akses API",
-        link: "/konfigurasi/akses-api",
-        active: false,
-      },
+      // {
+      //   label: "Akses API",
+      //   link: "/konfigurasi/akses-api",
+      //   active: false,
+      // },
     ],
   },
 ];
@@ -332,6 +347,8 @@ export const typeList = [
 export const BASE_API_URL = "https://siagas.api.sorong.koneksiku.my.id";
 
 //Contants for useQuery
+export const GET_ALL_INNOVATION_STATISTIC = "get_all_innovation_statistic";
+
 export const GET_ALL_GOVERNMENT_BUSINESS = "get_all_government_business";
 export const GET_GOVERNMENT_BUSINESS = "get_government_business";
 
@@ -375,8 +392,14 @@ export const GET_ALL_USER_ACCOUNT = "get_all_user_account";
 export const GET_USER_ACCOUNT = "get_user_account";
 
 export const GET_ALL_OPD = "get_all_opd";
+export const GET_OPD = "get_opd";
+
 export const GET_ALL_UPDT = "get_all_updt";
+export const GET_UPDT = "get_updt";
+
 export const GET_ALL_TUXEDO = "get_all_tuxedo";
+export const GET_TUXEDO = "get_tuxedo";
+
 export const GET_ALL_SETTING = "get_all_setting";
 
 export const CHECK_USER = "check_user";
@@ -388,3 +411,33 @@ export const GET_INDICATOR_REGIONAL_INNOVATION_QUERY_KEY =
   "get_indicator_regional_innovation";
 
 export const GET_ALL_ASSESSMENT_TEAM_QUERY_KEY = "get_all_assessment_team";
+export const GET_SETTING = "get_setting";
+
+export const GET_ALL_ARCHIVE = "get_all_archive";
+
+export const GET_INDICATOR_STATISTIC = "get_indicator_statistic";
+
+export const GET_FINAL_INDEX = "get_final_index";
+
+export const GET_ALL_REGIONAL_INNOVATION_REVIEW =
+  "get_all_regional_innovation_review";
+export const GET_ALL_REGIONAL_INNOVATION_REVIEW_BY_ID =
+  "get_all_regional_innovation_review_by_id";
+export const GET_REGIONAL_INNOVATION_REVIEW_BY_INNOVATION_PROFILE =
+  "get_regional_innovation_review_by_innovation_profile";
+export const GET_REGIONAL_INNOVATION_REVIEW_BY_INDICATOR =
+  "get_regional_innovation_review_by_indicator";
+export const GET_REGIONAL_INNOVATION_REVIEW_EVALUATION =
+  "get_regional_innovation_review_evaluation";
+
+export const GET_ALL_REVIEW_RESULT = "get_all_review_result";
+
+export const GET_ALL_REJECTED_INNOVATION = "get_all_rejected_innovation";
+
+export const GET_ALL_INDEX_RANKING = "get_all_index_ranking";
+
+export const GET_ALL_REGENCY_INNOVATE = "get_all_regency_innovate";
+export const GET_ALL_INNOVATION_TYPE = "get_all_innovation_type";
+export const GET_ALL_INNOVATION_FORM = "get_all_innovation_form";
+export const GET_ALL_GOVERNMENT_AFFAIRS = "get_all_government_affairs";
+export const GET_ALL_INNOVATION_INITIATOR = "get_all_innovation_initiator";

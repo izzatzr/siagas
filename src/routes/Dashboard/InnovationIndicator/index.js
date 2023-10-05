@@ -3,6 +3,14 @@ import { BiDownload } from "react-icons/bi";
 import Button from "../../../components/Button";
 import ProgressBar from "../../../components/ProgressBar";
 import SelectOption from "../../../components/SelectOption";
+import { useQuery } from "react-query";
+import {
+  BASE_API_URL,
+  GET_INDICATOR_STATISTIC,
+} from "../../../constans/constans";
+import { getIndicatorStatistic } from "../../../services/Dashboard/InnovationIndicator/innovationIndicator";
+import { useUtilContexts } from "../../../context/Utils";
+import { convertQueryString, getToken } from "../../../utils";
 
 const categories = [
   {
@@ -42,34 +50,91 @@ const regions = [
   },
 ];
 
-const pemdas = [
-  {
-    value: "pemda 1",
-    label: "Pemda 1",
-  },
-  {
-    value: "pemda 2",
-    label: "Pemda 2",
-  },
-  {
-    value: "pemda 3",
-    label: "Pemda 3",
-  },
-  {
-    value: "pemda 4",
-    label: "Pemda 4",
-  },
-];
+const initialFilter = {
+  pemda_id: 0,
+};
+
+const initialParamsOPD = {
+  limit: 20,
+  page: 1,
+  q: "",
+};
 
 const InnovationIndicator = () => {
+  const [filterParams, setFilterParams] = React.useState(initialFilter);
+  const [selectedOPD, setSelectedOPD] = React.useState(null);
+
+  const { isLoading, data: indicatorData } = useQuery(
+    [GET_INDICATOR_STATISTIC, filterParams],
+    getIndicatorStatistic(filterParams)
+  );
+
+  const { setLoadingUtil } = useUtilContexts();
+
+  const getOPD = async (search = "") => {
+    const paramsQueryString = convertQueryString({
+      ...initialParamsOPD,
+      q: search,
+    });
+    const response = await fetch(`${BASE_API_URL}/opd?${paramsQueryString}`, {
+      headers: {
+        Authorization: `Bearer ${getToken().token}`,
+      },
+    });
+
+    const responseJSON = await response.json();
+
+    return responseJSON;
+  };
+
+  const loadOptionOPD = async (search, loadedOptions, { page }) => {
+    const res = await getOPD(search);
+
+    const data = {
+      options: res?.data,
+      hasMore: res.has_more,
+      additional: {
+        page: page + 1,
+      },
+    };
+
+    return data;
+  };
+
+  React.useEffect(() => {
+    getOPD().then((data) => {
+      setSelectedOPD(data.data[0]);
+      setFilterParams({
+        ...filterParams,
+        pemda_id: data.data[0].id,
+      });
+    });
+  }, []);
+
+  React.useEffect(() => {
+    if (isLoading) {
+      setLoadingUtil(true);
+    } else {
+      setLoadingUtil(false);
+    }
+  }, [isLoading]);
+
+  const onHandleOPDChange = (opd) => {
+    setSelectedOPD(opd);
+    setFilterParams({
+      ...filterParams,
+      pemda_id: opd.id,
+    });
+  };
+
   return (
-    <div className="w-full flex flex-col gap-6 py-6">
+    <div className="flex flex-col w-full gap-6 py-6">
       <div className="text-[#333333] text-2xl font-bold">
         Statistik Indikator Inovasi
       </div>
       <div className="flex flex-col gap-6">
         <div className="">
-          <div className="w-40 float-right">
+          <div className="float-right w-40">
             <Button
               text="Unduh semua"
               icon={<BiDownload size="16" />}
@@ -78,7 +143,7 @@ const InnovationIndicator = () => {
           </div>
         </div>
         <div className="grid grid-cols-4 gap-6 p-6 bg-white rounded-lg">
-          <SelectOption
+          {/* <SelectOption
             label="Kategori"
             placholder="Pilih Kategori"
             options={categories}
@@ -87,28 +152,29 @@ const InnovationIndicator = () => {
             label="Wilayah"
             placholder="Pilih Wilayah"
             options={regions}
-          />
+          /> */}
           <SelectOption
             label="Pemda"
-            placholder="Pilih Pemda"
-            options={pemdas}
+            placeholder="Pilih Pemda"
+            options={loadOptionOPD}
+            onChange={(e) => onHandleOPDChange(e)}
+            value={selectedOPD}
+            paginate
           />
         </div>
         <div className="w-full rounded-lg flex flex-col gap-[20px] text-[#333333] bg-white p-4">
           <div className="text-[#333333] text-xl font-bold">
             Indikator Daerah
           </div>
-          <ProgressBar label="Regulasi Inovasi Daerah" total="80%" completed={80} filledValue="26" />
-          <ProgressBar label="Regulasi Inovasi Daerah" total="80%" completed={65} filledValue="26" />
-          <ProgressBar label="Regulasi Inovasi Daerah" total="80%" completed={73} filledValue="26" />
-          <ProgressBar label="Regulasi Inovasi Daerah" total="80%" completed={45} filledValue="26" />
-          <ProgressBar label="Regulasi Inovasi Daerah" total="80%" completed={60} filledValue="26" />
-          <ProgressBar label="Regulasi Inovasi Daerah" total="80%" completed={90} filledValue="26" />
-          <ProgressBar label="Regulasi Inovasi Daerah" total="80%" completed={40} filledValue="26" />
-          <ProgressBar label="Regulasi Inovasi Daerah" total="80%" completed={65} filledValue="26" />
-          <ProgressBar label="Regulasi Inovasi Daerah" total="80%" completed={89} filledValue="26" />
-          <ProgressBar label="Regulasi Inovasi Daerah" total="80%" completed={62} filledValue="26" />
-          <ProgressBar label="Regulasi Inovasi Daerah" total="80%" completed={80} filledValue="26" />
+          {indicatorData?.data.map((indicator) => (
+            <ProgressBar
+              key={indicator.id}
+              label={indicator.nama_indikator}
+              total={indicator.total_indikator}
+              completed={indicator.total_indikator}
+              filledValue={indicator.jumlah_upload}
+            />
+          ))}
         </div>
       </div>
     </div>

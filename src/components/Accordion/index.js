@@ -1,17 +1,17 @@
 import React from "react";
 import { BiCaretDown, BiCaretUp } from "react-icons/bi";
 
-const Accordion = (props) => {
-  const { label, isOpen, setIsOpen, children, index } = props;
+const Accordion = ({ label, children, isOpen, toggleAccordion }) => {
   return (
-    <div className="w-full p-6 bg-white">
+    <div
+      className="w-full p-6 bg-white cursor-pointer"
+      onClick={toggleAccordion}
+    >
       <div className="flex justify-between items-center text-[#069DD9]">
         <span className="text-base font-bold ">{label}</span>
-        <div className="cursor-pointer" onClick={() => setIsOpen(index)}>
-          {isOpen ? <BiCaretUp /> : <BiCaretDown />}
-        </div>
+        <div>{isOpen ? <BiCaretUp /> : <BiCaretDown />}</div>
       </div>
-      <div className="mt-2">{isOpen && children}</div>
+      {isOpen && <div className="mt-2">{children}</div>}
     </div>
   );
 };

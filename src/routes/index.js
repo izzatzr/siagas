@@ -32,11 +32,8 @@ import Login from "./Login";
 
 //Report
 import RegencyInnovate from "./Report/RegencyInnovate";
-import OPDInnovation from "./Report/OPDInnovation";
-import DistrictInnovate from "./Report/DistrictInnovate";
 import InnovationType from "./Report/InnovationType";
-import BusinessInnovate from "./Report/BusinessInnovate";
-import InitiatorInnovate from "./Report/InitiatorInnovate";
+import InnovationForm from "./Report/InnovationForm";
 
 // Guest
 import GuesLayout from "../components/Layout/Guest";
@@ -56,9 +53,10 @@ import FormFAQDashboard from "./MasterData/FAQDashboard/FormFAQDashboard";
 import DocumentDashboard from "./MasterData/DocumentDashboard";
 import FormDocumentDashboard from "./MasterData/DocumentDashboard/FormDocumentDashboard";
 import AssessmentTeam from "./MasterData/AssessmentTeam";
+
+// Configuration
 import UserAccount from "./Configuration/UserAccount";
 import OPDList from "./Configuration/OPDList";
-import APIAccess from "./Configuration/APIAccess";
 import Setting from "./Configuration/Setting";
 import Tuxedo from "./Configuration/Tuxedo";
 import UPTDList from "./Configuration/UPTDList";
@@ -70,6 +68,22 @@ import IndicatorRegionalInnovation from "./DatabaseInnovation/RegionalInnovation
 import AssessmentTeamForm from "./MasterData/AssessmentTeam/Form";
 import DocumentCategoryForm from "./MasterData/DocumentCategory/Form";
 import Rawlog from "./MasterData/Rawlog";
+import RegionalInnovationReviewDetail from "./IndexRating/RegionalInnovationReview/RegionalInnovationReviewDetail";
+import RegionalInnovationReviewInnovationProfile from "./IndexRating/RegionalInnovationReview/RegioanlInnovationReviewInnovationProfile";
+import RegionalInnovationReviewIndicator from "./IndexRating/RegionalInnovationReview/RegionalInnovationReviewIndicator";
+import RegioanlInnovationReviewInnovationEvaluation from "./IndexRating/RegionalInnovationReview/RegionalInnovationReviewEvaluation";
+import UserAccountEdit from "./Configuration/UserAccount/UserAccountEdit";
+import UserAccountCreate from "./Configuration/UserAccount/UserAccountCreate";
+import OPDCreate from "./Configuration/OPDList/OPDCreate";
+import OPDEdit from "./Configuration/OPDList/OPDEdit";
+import UPTDListCreate from "./Configuration/UPTDList/UPTDListCreate";
+import UPTDListEdit from "./Configuration/UPTDList/UPTDListEdit";
+import TuxedoCreate from "./Configuration/Tuxedo/TuxedoCreate";
+import TuxedoEdit from "./Configuration/Tuxedo/TuxedoEdit";
+import SettingCreate from "./Configuration/Setting/SettingCreate";
+import SettingEdit from "./Configuration/Setting/SettingEdit";
+import GovernmentAffairs from "./Report/GovernmentAffairs";
+import InnovationInitiator from "./Report/InnovationInitiator";
 
 const Routes = () => {
   const router = createBrowserRouter([
@@ -108,6 +122,24 @@ const Routes = () => {
           element: <RegionalInnovationReview />,
         },
         {
+          path: "/review-inovasi-daerah/detail/:id?",
+          element: <RegionalInnovationReviewDetail />,
+          children: [
+            {
+              path: "",
+              element: <RegionalInnovationReviewInnovationProfile />,
+            },
+            {
+              path: "indicator",
+              element: <RegionalInnovationReviewIndicator />,
+            },
+            {
+              path: "evaluation/:evaluationId?",
+              element: <RegioanlInnovationReviewInnovationEvaluation />,
+            },
+          ],
+        },
+        {
           path: "/hasil-review",
           element: <ReviewResult />,
         },
@@ -135,25 +167,29 @@ const Routes = () => {
           element: <RegencyInnovate />,
         },
         {
-          path: "/inovasi-opd",
-          element: <OPDInnovation />,
-        },
-        {
-          path: "/inovasi-distrik",
-          element: <DistrictInnovate />,
-        },
-        {
           path: "/rekap-jenis-inovasi",
           element: <InnovationType />,
         },
         {
-          path: "/rekap-inovasi-urusan",
-          element: <BusinessInnovate />,
+          path: "/rekap-bentuk-inovasi",
+          element: <InnovationForm />,
         },
         {
-          path: "/rekap-inovasi-inisiator",
-          element: <InitiatorInnovate />,
+          path: "/rekap-urusan-pemerintah",
+          element: <GovernmentAffairs />,
         },
+        {
+          path: "/rekap-berdasarkan-inisiator",
+          element: <InnovationInitiator />,
+        },
+        // {
+        //   path: "/rekap-inovasi-urusan",
+        //   element: <BusinessInnovate />,
+        // },
+        // {
+        //   path: "/rekap-inovasi-inisiator",
+        //   element: <InitiatorInnovate />,
+        // },
         //Master Data
         ...masterDataRoutes,
         // Configuration
@@ -310,25 +346,65 @@ const configurationRoutes = [
     element: <UserAccount />,
   },
   {
+    path: "/konfigurasi/user-account/:action",
+    element: <UserAccountCreate />,
+  },
+  {
+    path: "/konfigurasi/user-account/:action/:id?",
+    element: <UserAccountEdit />,
+  },
+  {
     path: "/konfigurasi/daftar-opd",
     element: <OPDList />,
+  },
+  {
+    path: "/konfigurasi/daftar-opd/:action",
+    element: <OPDCreate />,
+  },
+  {
+    path: "/konfigurasi/daftar-opd/:action/:id?",
+    element: <OPDEdit />,
   },
   {
     path: "/konfigurasi/daftar-uptd",
     element: <UPTDList />,
   },
   {
+    path: "/konfigurasi/daftar-uptd/:action",
+    element: <UPTDListCreate />,
+  },
+  {
+    path: "/konfigurasi/daftar-uptd/:action/:id?",
+    element: <UPTDListEdit />,
+  },
+  {
     path: "/konfigurasi/tuxedo",
     element: <Tuxedo />,
+  },
+  {
+    path: "/konfigurasi/tuxedo/:action",
+    element: <TuxedoCreate />,
+  },
+  {
+    path: "/konfigurasi/tuxedo/:action/:id?",
+    element: <TuxedoEdit />,
   },
   {
     path: "/konfigurasi/setting",
     element: <Setting />,
   },
   {
-    path: "/konfigurasi/akses-api",
-    element: <APIAccess />,
+    path: "/konfigurasi/setting/:action",
+    element: <SettingCreate />,
   },
+  {
+    path: "/konfigurasi/setting/:action/:id?",
+    element: <SettingEdit />,
+  },
+  // {
+  //   path: "/konfigurasi/akses-api",
+  //   element: <APIAccess />,
+  // },
 ];
 
 export default Routes;

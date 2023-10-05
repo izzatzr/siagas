@@ -157,7 +157,7 @@ const FormAnnouncementDashboard = () => {
                 onHandleChange("title", e.target.value);
               }}
               value={payload?.title}
-              errorMessage={error?.title}
+              errorMessage={"HALOO"}
             />
           </div>
           <div className="flex-1">

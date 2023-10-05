@@ -2,11 +2,14 @@ import React from "react";
 import TableAction from "../../../components/TableAction";
 import { DELETE_ACTION_TABLE, EDIT_ACTION_TABLE } from "../../../constants";
 import { GET_ALL_UPDT } from "../../../constans/constans";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import Toolbar from "../../../components/Toolbar";
 import Table from "../../../components/Table";
 import Pagination from "../../../components/Pagination";
-import { getAllUPTD } from "../../../services/Configuration/updt";
+import { deleteUPTD, getAllUPTD } from "../../../services/Configuration/updt";
+import { useUtilContexts } from "../../../context/Utils";
+import { useNavigate } from "react-router-dom";
+import ModalConfirmation from "../../../components/ModalConfirmation";
 
 const initialFilterParams = {
   limit: 20,
@@ -16,14 +19,21 @@ const initialFilterParams = {
 
 const UPTDList = () => {
   const [filterParams, setFilterParams] = React.useState(initialFilterParams);
+  const [showDelete, setShowDelete] = React.useState(false);
+  const [currentItem, setCurrentItem] = React.useState(null);
+
+  const navigate = useNavigate();
+  const { setLoadingUtil, snackbar } = useUtilContexts();
+  const queryClient = useQueryClient();
+
   const tableHeader = [
     {
       key: "regionalApparatus.name",
       title: "OPD",
     },
     {
-      key : 'name',
-      title : "Nama UPDT"
+      key: "name",
+      title: "Nama UPDT",
     },
     {
       key: "form-action",
@@ -36,21 +46,32 @@ const UPTDList = () => {
     {
       code: EDIT_ACTION_TABLE,
       onClick: (value) => {
-        alert("Not yet implemented");
+        navigate(`/konfigurasi/daftar-uptd/edit/${value.id}`);
       },
     },
     {
       code: DELETE_ACTION_TABLE,
-      onClick: (value) => {
-        alert("Not yet implemented");
+      onClick: (item) => {
+        setCurrentItem(item);
+        setShowDelete(true);
       },
     },
   ];
 
-  const { data } = useQuery(
+  const { isLoading, data } = useQuery(
     [GET_ALL_UPDT, filterParams],
     getAllUPTD(filterParams)
   );
+
+  const deleteUPTDMutation = useMutation(deleteUPTD);
+
+  React.useEffect(() => {
+    if (isLoading) {
+      setLoadingUtil(true);
+    } else {
+      setLoadingUtil(false);
+    }
+  }, [isLoading]);
 
   const onHandlePagination = (page) => {
     setFilterParams({
@@ -59,17 +80,57 @@ const UPTDList = () => {
     });
   };
 
+  const onHandleSearch = (value) => {
+    console.log(value);
+    if (value.length > 3) {
+      setFilterParams({
+        q: value,
+      });
+    } else if (value.length === 0) {
+      setFilterParams({
+        q: "",
+      });
+    }
+  };
+
+  const onHandleDelete = () => {
+    setShowDelete(false);
+    setLoadingUtil(true);
+    deleteUPTDMutation.mutate(currentItem?.id, {
+      onSuccess: (res) => {
+        setLoadingUtil(false);
+        setCurrentItem(null);
+        if (res.code) {
+          queryClient.invalidateQueries([GET_ALL_UPDT]);
+
+          snackbar("Berhasil menghapus UPTD", () => {
+            navigate("/konfigurasi/daftar-uptd");
+          });
+        }
+      },
+    });
+  };
+
   return (
-    <div className="w-full flex flex-col gap-6 py-6">
+    <div className="flex flex-col w-full gap-6 py-6">
+      {showDelete && (
+        <ModalConfirmation
+          variant="delete"
+          message="Apakah Anda yakin ingin menghapus UPTD"
+          onCancel={() => setShowDelete(false)}
+          onConfirm={onHandleDelete}
+        />
+      )}
+
       <Toolbar
         title="Daftar UPDT"
-        linkButton="/konfigurasi/updt"
+        linkButton="/konfigurasi/daftar-uptd/tambah"
         linkButtonText="Tambah UPTD"
         search={true}
-        onSearch={(e) => console.log(e.target.value)}
+        onSearch={(e) => onHandleSearch(e.target.value)}
       />
 
-      <div className="w-full rounded-lg bg-white py-4 px-6">
+      <div className="w-full px-6 py-4 bg-white rounded-lg">
         <Table showNum={true} data={data?.data || []} columns={tableHeader} />
         <Pagination
           pageCount={data?.pagination?.pages}
