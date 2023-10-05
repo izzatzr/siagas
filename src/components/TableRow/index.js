@@ -1,24 +1,27 @@
 import React from "react";
 import get from "lodash.get";
+import parser from "html-react-parser";
 
 const TableRowCell = ({ item, column, action, align }) => {
   const value = get(item, column.key !== "action" && column.key);
 
-  return column.key !== "action" ? (
-    <td
-      className={`text-[13px] px-4 py-3 ${
-        column.key === "title"
-          ? "w-40"
-          : column?.width
-          ? `w-[${column?.width}]`
-          : ""
-      } ${align && align}`}
-    >
-      {column?.render ? column?.render(item) : value !== null ? value : "-"}
-    </td>
-  ) : (
-    action
-  );
+  if (column.key === "action") {
+    return action;
+  }
+
+  const cellClass = `text-[13px] px-2 py-3 ${
+    column.key === "title" ? "w-40" : ""
+  }`;
+
+  let cellContent = value;
+
+  if (column.parser === "html") {
+    cellContent = parser(value);
+  } else if (column.render) {
+    cellContent = column.render(item);
+  }
+
+  return <td className={cellClass}>{cellContent}</td>;
 };
 
 const TableRow = (props) => {

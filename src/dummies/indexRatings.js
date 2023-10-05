@@ -1,35 +1,49 @@
+import Button from "../components/Button";
+
 export const jsonHeaderInnovationRegionReview = [
   {
-    key: "code",
+    key: "nomor",
     title: "Nomor",
   },
   {
-    key: "title",
+    key: "judul",
     title: "Judul",
   },
   {
-    key: "pemda",
+    key: "pemda.nama_pemda",
     title: "Pemda",
   },
   {
-    key: "date",
+    key: "waktu_penerapan",
     title: "Waktu Penerapan",
   },
   {
-    key: "score",
+    key: "skor",
     title: "Skor",
   },
   {
-    key: "verification_score",
+    key: "skor_verifikasi",
     title: "Skor Verifikasi",
   },
   {
-    key: "quality_check",
+    key: "qc",
     title: "QC",
   },
   {
     key: "qc_result",
     title: "Hasil QC",
+    render: () => {
+      return (
+        <Button
+          text="Preview"
+          fontSize="text-xs"
+          background="bg-white"
+          fontColor="text-black"
+          border="border border-black"
+          padding="px-4 p-[8px]"
+        />
+      );
+    },
   },
   {
     key: "action",
@@ -150,41 +164,6 @@ export const jsonRowInnovationRegionReview = [
   },
 ];
 
-export const jsonHeaderReviewResults = [
-  {
-    key: "code",
-    title: "Nomor",
-  },
-  {
-    key: "title",
-    title: "Judul",
-  },
-  {
-    key: "pemda",
-    title: "Pemda",
-  },
-  {
-    key: "date",
-    title: "Waktu Penerapan",
-  },
-  {
-    key: "maturity",
-    title: "Kematangan",
-  },
-  {
-    key: "verification_score",
-    title: "Skor Verifikasi",
-  },
-  {
-    key: "quality_check",
-    title: "QC",
-  },
-  {
-    key: "action",
-    title: "Aksi",
-  },
-];
-
 export const jsonRowReviewResults = [
   {
     code: "020418072031",
@@ -275,41 +254,6 @@ export const jsonRowReviewResults = [
     maturity: 90.0,
     verification_score: 90.0,
     quality_check: "DISETUJUI",
-  },
-];
-
-export const jsonHeaderRejectedInnovation = [
-  {
-    key: "code",
-    title: "Nomor",
-  },
-  {
-    key: "title",
-    title: "Judul",
-  },
-  {
-    key: "pemda",
-    title: "Pemda",
-  },
-  {
-    key: "date",
-    title: "Waktu Penerapan",
-  },
-  {
-    key: "maturity",
-    title: "Kematangan",
-  },
-  {
-    key: "verification_score",
-    title: "Skor Verifikasi",
-  },
-  {
-    key: "description",
-    title: "Deskripsi",
-  },
-  {
-    key: "action",
-    title: "Aksi",
   },
 ];
 
@@ -530,33 +474,6 @@ export const jsonRowQualityControl = [
   },
 ];
 
-export const jsonHeaderIndexRanking = [
-  {
-    key: "region",
-    title: "OPD",
-  },
-  {
-    key: "value_index",
-    title: "Nilai Indeks (Pengukuran Mandiri)",
-  },
-  {
-    key: "ranking",
-    title: "Ranking",
-  },
-  {
-    key: "predicate",
-    title: "Predikat",
-  },
-  {
-    key: "siagas",
-    title: "Nominator",
-  },
-  {
-    key: "action",
-    title: "Aksi",
-  },
-];
-
 export const jsonRowIndexRanking = [
   {
     region: "Kabupaten Sampang",
@@ -630,117 +547,85 @@ export const jsonRowIndexRanking = [
   },
 ];
 
-export const jsonHeaderFinalIndex = [
+export const jsonRowFinalIndex = [
   {
-    key: "region",
-    title: "Daerah",
+    region: "Kabupaten Sampang",
+    innovation_total: "90.0",
+    value_index: "90.0",
+    value_index_verification: "90.0",
+    predicate: "Sangat Inovatif",
+    siagas: "YA",
   },
   {
-    key: "innovation_total",
-    title: "Jumlah Inovasi",
+    region: "Kabupaten Sampang",
+    innovation_total: "90.0",
+    value_index: "90.0",
+    value_index_verification: "90.0",
+    predicate: "Sangat Inovatif",
+    siagas: "YA",
   },
   {
-    key: "value_index",
-    title: "Nilai Indeks Mandiri",
+    region: "Kabupaten Sampang",
+    innovation_total: "90.0",
+    value_index: "90.0",
+    value_index_verification: "90.0",
+    predicate: "Sangat Inovatif",
+    siagas: "TIDAK",
   },
   {
-    key: "value_index_verification",
-    title: "Nilai Indeks Verifikasi",
+    region: "Kabupaten Sampang",
+    innovation_total: "90.0",
+    value_index: "90.0",
+    value_index_verification: "90.0",
+    predicate: "Sangat Inovatif",
+    siagas: "YA",
   },
   {
-    key: "predicate",
-    title: "Predikat",
+    region: "Kabupaten Sampang",
+    innovation_total: "90.0",
+    value_index: "90.0",
+    value_index_verification: "90.0",
+    predicate: "Sangat Inovatif",
+    siagas: "TIDAK",
   },
   {
-    key: "siagas",
-    title: "SIAGAS",
+    region: "Kabupaten Sampang",
+    innovation_total: "90.0",
+    value_index: "90.0",
+    value_index_verification: "90.0",
+    predicate: "Sangat Inovatif",
+    siagas: "TIDAK",
   },
   {
-    key: "action",
-    title: "Aksi",
+    region: "Kabupaten Sampang",
+    innovation_total: "90.0",
+    value_index: "90.0",
+    value_index_verification: "90.0",
+    predicate: "Sangat Inovatif",
+    siagas: "YA",
+  },
+  {
+    region: "Kabupaten Sampang",
+    innovation_total: "90.0",
+    value_index: "90.0",
+    value_index_verification: "90.0",
+    predicate: "Sangat Inovatif",
+    siagas: "YA",
+  },
+  {
+    region: "Kabupaten Sampang",
+    innovation_total: "90.0",
+    value_index: "90.0",
+    value_index_verification: "90.0",
+    predicate: "Sangat Inovatif",
+    siagas: "YA",
+  },
+  {
+    region: "Kabupaten Sampang",
+    innovation_total: "90.0",
+    value_index: "90.0",
+    value_index_verification: "90.0",
+    predicate: "Sangat Inovatif",
+    siagas: "YA",
   },
 ];
-
-export const jsonRowFinalIndex = [
-    {
-        region : "Kabupaten Sampang",
-        innovation_total : "90.0",
-        value_index : "90.0",
-        value_index_verification : "90.0",
-        predicate : "Sangat Inovatif",
-        siagas : "YA",
-    },
-    {
-        region : "Kabupaten Sampang",
-        innovation_total : "90.0",
-        value_index : "90.0",
-        value_index_verification : "90.0",
-        predicate : "Sangat Inovatif",
-        siagas : "YA",
-    },
-    {
-        region : "Kabupaten Sampang",
-        innovation_total : "90.0",
-        value_index : "90.0",
-        value_index_verification : "90.0",
-        predicate : "Sangat Inovatif",
-        siagas : "TIDAK",
-    },
-    {
-        region : "Kabupaten Sampang",
-        innovation_total : "90.0",
-        value_index : "90.0",
-        value_index_verification : "90.0",
-        predicate : "Sangat Inovatif",
-        siagas : "YA",
-    },
-    {
-        region : "Kabupaten Sampang",
-        innovation_total : "90.0",
-        value_index : "90.0",
-        value_index_verification : "90.0",
-        predicate : "Sangat Inovatif",
-        siagas : "TIDAK",
-    },
-    {
-        region : "Kabupaten Sampang",
-        innovation_total : "90.0",
-        value_index : "90.0",
-        value_index_verification : "90.0",
-        predicate : "Sangat Inovatif",
-        siagas : "TIDAK",
-    },
-    {
-        region : "Kabupaten Sampang",
-        innovation_total : "90.0",
-        value_index : "90.0",
-        value_index_verification : "90.0",
-        predicate : "Sangat Inovatif",
-        siagas : "YA",
-    },
-    {
-        region : "Kabupaten Sampang",
-        innovation_total : "90.0",
-        value_index : "90.0",
-        value_index_verification : "90.0",
-        predicate : "Sangat Inovatif",
-        siagas : "YA",
-    },
-    {
-        region : "Kabupaten Sampang",
-        innovation_total : "90.0",
-        value_index : "90.0",
-        value_index_verification : "90.0",
-        predicate : "Sangat Inovatif",
-        siagas : "YA",
-    },
-    {
-        region : "Kabupaten Sampang",
-        innovation_total : "90.0",
-        value_index : "90.0",
-        value_index_verification : "90.0",
-        predicate : "Sangat Inovatif",
-        siagas : "YA",
-    },
-
-]

@@ -11,12 +11,14 @@ const TextInput = (props) => {
     value,
     clickIcon,
     errorMessage,
+    required,
     disabled,
   } = props;
   return (
     <div className="flex gap-2 flex-col relative -mt-[7px]">
       {label && (
         <label htmlFor={name} className="text-[#333333] text-sm font-normal">
+          {required && <span className="mr-1 text-red-600">*</span>}
           {label}
         </label>
       )}

@@ -81,7 +81,6 @@ const Login = () => {
           secureLocalStorage.setItem("token", token);
           secureLocalStorage.setItem("user", res.role);
 
-          alert("Berhasil login");
           setLoading(false);
 
           setTimeout(() => {
@@ -99,9 +98,9 @@ const Login = () => {
   return auth.isLoggedIn ? (
     <Navigate to="/" />
   ) : (
-    <div className="box-border w-screen h-screen flex flex-col">
+    <div className="box-border flex flex-col w-screen h-screen">
       {loading && <Loading />}
-      <div className="py-6 px-24 w-full flex items-center justify-between shadow-lg z-10 bg-white">
+      <div className="z-10 flex items-center justify-between w-full px-24 py-6 bg-white shadow-lg">
         <div className="flex gap-4">
           <img src={logo} alt="logo" className="w-[53px] h-[56px]" />
           <div className="flex flex-col">
@@ -143,7 +142,7 @@ const Login = () => {
           </div>
         </Slider>
       </div>
-      <div className="bg-cover flex items-center justify-center pb-6">
+      <div className="flex items-center justify-center pb-6 bg-cover">
         <div className="flex mt-[54px] flex-col gap-4 ml-28 bg-black/5 p-10 w-[484px] items-center shadow-lg rounded-lg">
           <div className="flex flex-col gap-2 text-center">
             <span className="font-bold text-2xl text-[#333333]">
@@ -176,7 +175,7 @@ const Login = () => {
               errorMessage={errors?.password}
             />
           </div>
-          <div className="w-full flex justify-between">
+          <div className="flex justify-between w-full">
             <Checkbox
               checked={payload.rememberMe}
               onChange={() => handleChange("rememberMe", !payload.rememberMe)}
