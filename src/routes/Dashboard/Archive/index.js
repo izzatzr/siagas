@@ -12,8 +12,8 @@ const initialFilter = {
   limit: 20,
   page: 1,
   q: "",
-  tahapan: "",
-  pemda_id: "",
+  tahapan: "semua",
+  // pemda_id: "",
 };
 
 const phases = [

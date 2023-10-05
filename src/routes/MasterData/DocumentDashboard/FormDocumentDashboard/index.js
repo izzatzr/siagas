@@ -48,7 +48,9 @@ const FormDocumentDashboard = () => {
     const paramsQueryString = convertQueryString(initialDocumentCategoryParams);
 
     const response = await fetch(
-      `${BASE_API_URL}/kategori_dokumen${id ? `/${id}` : `?${paramsQueryString}`}`,
+      `${BASE_API_URL}/kategori_dokumen${
+        id ? `/${id}` : `?${paramsQueryString}`
+      }`,
       {
         headers: {
           Authorization: `Bearer ${getToken().token}`,
@@ -83,20 +85,20 @@ const FormDocumentDashboard = () => {
     enabled: !!currentId,
     onSuccess: async (res) => {
       const { data } = res;
-      const category = await loadDocumentCategory(data?.category_id)
+      const category = await loadDocumentCategory(data?.category_id);
       setPayload({
         title: data?.title,
-        category : {
-          id : category?.data?.id,
-          label : category?.data?.name,
-          value : category?.data?.name,
+        category: {
+          id: category?.data?.id,
+          label: category?.data?.name,
+          value: category?.data?.name,
         },
         content: data?.content,
-      })
+      });
     },
-    onError : () => {
-      snackbar("Terjadi Kesalahan", () => {}, {type : "error"})
-    }
+    onError: () => {
+      snackbar("Terjadi Kesalahan", () => {}, { type: "error" });
+    },
   });
 
   const submitDocumentMutation = useMutation(submitDocument);
@@ -129,9 +131,9 @@ const FormDocumentDashboard = () => {
 
     Object.keys(payload)?.forEach((key, index) => {
       switch (true) {
-        case !payload?.document && !currentId && key === 'document':
+        case !payload?.document && !currentId && key === "document":
           errorMessage[key] = "Harus diisi";
-        case !payload?.[key] && key !== 'document':
+        case !payload?.[key] && key !== "document":
           errorMessage[key] = "Harus diisi";
 
           if (index === Object.keys(payload).length - 1) {
@@ -221,7 +223,7 @@ const FormDocumentDashboard = () => {
             />
           </div>
         </div>
-        <div className="flex flex-col gap-2 relative">
+        <div className="relative flex flex-col gap-2">
           <label
             htmlFor={"content"}
             className="text-[#333333] text-sm font-normal"
@@ -238,7 +240,7 @@ const FormDocumentDashboard = () => {
             className={error?.content ? "border border-red-500" : ""}
           />
 
-          <span className="text-xs text-red-600 absolute -bottom-4">
+          <span className="absolute text-xs text-red-600 -bottom-4">
             {error?.content}
           </span>
         </div>

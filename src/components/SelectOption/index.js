@@ -15,7 +15,7 @@ const SelectOption = (props) => {
     errorMessage
   } = props;
   return (
-    <div className="flex flex-col w-full gap-1">
+    <div className="relative flex flex-col w-full gap-1">
       <label htmlFor="" className="text-xs text-[#333333] mb-2">
         {required && <span className="mr-1 text-red-600">*</span>}
         {label}
@@ -28,7 +28,7 @@ const SelectOption = (props) => {
               ...provided,
               boxShadow: "none",
               borderRadius: "0.5rem",
-              border: "1px solid #333333",
+              border: `1px solid ${errorMessage ? "red" : "#828282"}`,
             }),
             placeholder: (defaultStyles) => {
               return {
@@ -43,8 +43,11 @@ const SelectOption = (props) => {
           additional={{
             page: 1,
           }}
+          isMulti={false}
           getOptionValue={(value) => value.name || value.value}
-          getOptionLabel={(value) => value.name || value.value}
+          getOptionLabel={(value) =>
+            getOptionLabel ? getOptionLabel(value) : value.name || value.value
+          }
           placeholder={placeholder}
         />
       ) : (
@@ -56,7 +59,7 @@ const SelectOption = (props) => {
               boxShadow: "none",
               borderColor: "#333333",
               borderRadius: "0.5rem",
-              border: `1px solid ${ errorMessage ? "red" : "#828282"}`,
+              border: `1px solid ${errorMessage ? "red" : "#828282"}`,
             }),
             placeholder: (defaultStyles) => {
               return {
@@ -71,7 +74,9 @@ const SelectOption = (props) => {
           getOptionLabel={(value) => value.name || value.label}
         />
       )}
-      <span className="text-xs text-red-600 absolute -bottom-4">{errorMessage}</span>
+      <span className="absolute text-xs text-red-600 -bottom-4">
+        {errorMessage}
+      </span>
     </div>
   );
 };

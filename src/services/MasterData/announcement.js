@@ -5,11 +5,12 @@ import { processResult, throwErrorUtil } from "../../helpers/fetchingUtils";
 export const getAllAnnouncement = (params) => async () => {
   try {
     const paramsQueryString = convertQueryString(params);
+    const token = getToken();
     const response = await fetch(
       `${BASE_API_URL}/pengumuman?${paramsQueryString}`,
       {
         headers: {
-          Authorization: `Bearer ${getToken().token}`,
+          Authorization: `Bearer ${token ? token.token : "creator"}`,
         },
       }
     );

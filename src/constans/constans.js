@@ -6,12 +6,14 @@ import governmentInovateIcon from "../assets/icons/government-inovate-icon.svg";
 import reportIcon from "../assets/icons/report-icon.svg";
 import masterDataIcon from "../assets/icons/master-data-icon.svg";
 import configurationIcon from "../assets/icons/configuration-icon.svg";
+import { getToken, getUser } from "../utils";
 
 export const sidebarDataDummy = [
   {
     label: "Dashboard",
     icon: dashboardIcon,
     active: true,
+    roles: ["Super Admin", "User"],
     children: [
       {
         label: "Dashboard SIAGAS",
@@ -44,6 +46,7 @@ export const sidebarDataDummy = [
     label: "Verifikasi Indeks",
     icon: ratingIndexIcon,
     active: false,
+    roles: ["Super Admin"],
     children: [
       {
         label: "Review Inovasi Daerah",
@@ -76,6 +79,7 @@ export const sidebarDataDummy = [
     label: "Database Inovasi Daerah",
     icon: databaseInovationIcon,
     active: false,
+    roles: ["Super Admin", "User"],
     children: [
       {
         label: "Profil Pemda",
@@ -93,6 +97,7 @@ export const sidebarDataDummy = [
     label: "Innovative Government Award",
     icon: governmentInovateIcon,
     active: false,
+    roles: ["Super Admin"],
     children: [
       {
         label: "Peringkat Hasil Review",
@@ -115,6 +120,7 @@ export const sidebarDataDummy = [
     label: "Laporan",
     icon: reportIcon,
     active: false,
+    roles: ["Super Admin"],
     children: [
       {
         label: "Indeks Rata-Rata OPD",
@@ -167,6 +173,7 @@ export const sidebarDataDummy = [
     label: "Master Data",
     icon: masterDataIcon,
     active: false,
+    roles: ["Super Admin"],
     children: [
       {
         label: "Tim Penilaian",
@@ -214,6 +221,7 @@ export const sidebarDataDummy = [
     label: "Konfigurasi",
     icon: configurationIcon,
     active: false,
+    roles: ["Super Admin", "User"],
     children: [
       {
         label: "User Account",
@@ -247,24 +255,38 @@ export const sidebarDataDummy = [
       // },
     ],
   },
+  {
+    label: "Lomba Inovasi Daerah",
+    icon: configurationIcon,
+    active: false,
+    roles: ["User"],
+    children: [
+      {
+        label: "Inovasi Pemerintah Daerah",
+        link: "/lomba/inovasi-pemerintah-daerah",
+        active: false,
+      },
+      {
+        label: "Inovasi Masyarakat",
+        link: "/lomba/inovasi-masyarakat",
+        active: false,
+      },
+    ],
+  },
 ];
 
 export const navbarDataDummy = [
   {
-    label: "Panduan",
-    link: "/panduan",
+    label: "Pengumuman",
+    link: "/pengumuman",
   },
   {
-    label: "Laporan Tahunan",
-    link: "/laporan-tahunan",
+    label: "Manual Book",
+    link: "/manual-book",
   },
   {
-    label: "Dokumen",
-    link: "/dokumen",
-  },
-  {
-    label: "Survey Kepuasan Masyarakat",
-    link: "/survey",
+    label: "Petunjuk Teknis",
+    link: "/petunjuk-teknis",
   },
 ];
 
@@ -302,10 +324,7 @@ export const modules = {
   toolbar: [
     [{ header: [1, 2, false] }],
     ["bold", "italic", "underline", "strike", "blockquote"],
-    [
-      { list: "ordered" },
-      { list: "bullet" }
-    ],
+    [{ list: "ordered" }, { list: "bullet" }],
     ["link", "image"],
     ["clean"],
   ],
@@ -374,7 +393,7 @@ export const GET_ANNOUNCEMENT = "get_announcement";
 export const GET_ALL_FAQ = "get_all_faq";
 export const GET_FAQ = "get_faq";
 
-export const GET_ALL_RAWLOG_QUERY_KEY = 'get_all_rawlog'
+export const GET_ALL_RAWLOG_QUERY_KEY = "get_all_rawlog";
 
 export const GET_ALL_PEMDA_PROFILE = "get_all_pemda_profile";
 export const GET_PEMDA_PROFILE = "get_pemda_profile";
@@ -414,10 +433,9 @@ export const GET_ALL_ASSESSMENT_TEAM_QUERY_KEY = "get_all_assessment_team";
 export const GET_SETTING = "get_setting";
 
 export const GET_ALL_ARCHIVE = "get_all_archive";
-
 export const GET_INDICATOR_STATISTIC = "get_indicator_statistic";
-
 export const GET_FINAL_INDEX = "get_final_index";
+export const GET_OPD_STATISTIC = "get_opd_statistic";
 
 export const GET_ALL_REGIONAL_INNOVATION_REVIEW =
   "get_all_regional_innovation_review";
@@ -441,3 +459,10 @@ export const GET_ALL_INNOVATION_TYPE = "get_all_innovation_type";
 export const GET_ALL_INNOVATION_FORM = "get_all_innovation_form";
 export const GET_ALL_GOVERNMENT_AFFAIRS = "get_all_government_affairs";
 export const GET_ALL_INNOVATION_INITIATOR = "get_all_innovation_initiator";
+
+export const GET_ALL_REVIEW_RANKING = "get_all_review_ranking";
+export const GET_ALL_ACHIEVMENT_RESULT = "get_all_achievment_result";
+export const GET_ALL_SIAGAS_RANKING = "get_all_siagas_ranking";
+
+export const GET_ALL_REGIONAL_GOVERNMENT_INNOVATION =
+  "get_all_regional_government_innovation";

@@ -76,14 +76,14 @@ export const getToken = () => {
 };
 
 export const getUser = () => {
-  return secureLocalStorage.getItem("users");
+  return secureLocalStorage.getItem("user");
 };
 
 export const downloadFile = (url, fileName) => {
-  const aTag = document.createElement("a")
+  const aTag = document.createElement("a");
   aTag.href = url;
   aTag.setAttribute("download", fileName);
-  aTag.setAttribute("target", '_blank')
+  aTag.setAttribute("target", "_blank");
   document.body.appendChild(aTag);
   aTag.click();
   aTag.remove();

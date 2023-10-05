@@ -1,26 +1,27 @@
 import React from "react";
-import logo from "../../assets/images/logo.svg";
+import logo from "../../assets/images/logo.png";
 import { navbarDataDummy } from "../../constans/constans";
 import { Link, useLocation } from "react-router-dom";
 import Button from "../Button";
 
 const Navbar = () => {
   const location = useLocation();
+
   return (
-    <div className="py-6 px-24 w-full flex items-center justify-between shadow-lg z-10 bg-white">
+    <div className="z-10 flex items-center text-white justify-between w-full px-24 py-6 bg-[#063a69] shadow-lg">
       <div className="flex gap-4">
         <img src={logo} alt="logo" className="w-[53px] h-[56px]" />
         <div className="flex flex-col">
-          <span className="font-bold text-[#333333] text-base">SIAGAS</span>
-          <span className="text-[#333333] text-base">KABUPATEN SORONG</span>
+          <span className="text-base font-bold">SIAGAS</span>
+          <span className="text-base">KABUPATEN SORONG</span>
         </div>
       </div>
-      <div className="flex items-center gap-12 justify-center flex-1 text-[#131313]">
+      <div className="flex items-center justify-center flex-1 gap-12">
         {navbarDataDummy.map((navbar, key) => (
           <Link to={navbar.link} key={key}>
             <div
-              className={`text-base font-bold hover:text-[#2F80ED] ${
-                location.pathname === navbar.link && "text-[#2F80ED]"
+              className={`text-base font-bold hover:text-[#8ac9ff] ${
+                location.pathname === navbar.link && "text-[#8ac9ff]"
               }`}
             >
               {navbar.label}
@@ -30,7 +31,7 @@ const Navbar = () => {
       </div>
       <div className="">
         <Link to="/login">
-          <Button text="Login" />
+          <Button text="Login" background="#ffffff" fontColor="#063a69" />
         </Link>
       </div>
     </div>

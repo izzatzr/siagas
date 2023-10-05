@@ -34,7 +34,9 @@ const TableRow = (props) => {
           key={`table-body=${itemIndex}`}
         >
           {showNum && (
-            <td className={`text-[13px] px-3 py-3  ${align && align} w-4`}>{itemIndex + 1}</td>
+            <td className={`text-[13px] px-3 py-3  ${align && align} w-4`}>
+              {itemIndex + 1}
+            </td>
           )}
           {columns.map((column, columnIndex) => (
             <TableRowCell

@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "http://www.siagas.sorong.koneksiku.my.id/",
   "dependencies": {
+    "@permify/react-role": "^0.5.3",
     "@reduxjs/toolkit": "^1.9.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -20,6 +21,7 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.7.1",
     "react-paginate": "^8.1.4",
+    "react-permission-role": "^2.0.0",
     "react-query": "^3.39.3",
     "react-quill": "^2.0.0",
     "react-redux": "^8.0.5",

@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  BiChevronLeft,
-  BiChevronRight,
-  BiPlus,
-  BiSearch,
-} from "react-icons/bi";
+import { BiPlus, BiSearch } from "react-icons/bi";
 import { Link, useNavigate } from "react-router-dom";
 import Table from "../../../components/Table";
 import { useMutation, useQuery } from "react-query";
@@ -13,8 +8,6 @@ import { deleteFAQ, getAllFAQ } from "../../../services/MasterData/faq";
 import TableAction from "../../../components/TableAction";
 import { DELETE_ACTION_TABLE, EDIT_ACTION_TABLE } from "../../../constants";
 import { useUtilContexts } from "../../../context/Utils";
-import ReactPaginate from "react-paginate";
-import ModalDelete from "../../../components/ModalDelete";
 import Pagination from "../../../components/Pagination";
 import ModalConfirmation from "../../../components/ModalConfirmation";
 
@@ -52,7 +45,7 @@ const FAQDashboard = () => {
     {
       key: "question",
       title: "Question",
-      width : 300,
+      width: 300,
     },
     {
       title: "Answer",
@@ -171,7 +164,12 @@ const FAQDashboard = () => {
       </div>
       <div className="w-full px-6 py-4 bg-white rounded-lg">
         <div className="overflow-x-scroll">
-          <Table showNum={true} data={data?.data || []} columns={tableHeader} align={"align-top"} />
+          <Table
+            showNum={true}
+            data={data?.data || []}
+            columns={tableHeader}
+            align={"align-top"}
+          />
         </div>
         <Pagination
           pageCount={data?.pagination?.pages}
