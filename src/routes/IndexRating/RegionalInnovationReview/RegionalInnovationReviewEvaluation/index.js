@@ -54,6 +54,8 @@ const RegioanlInnovationReviewInnovationEvaluation = () => {
     getRegionalInnovationReviewEvaluation(currentId, currentEvaluationId)
   );
 
+  console.log("DATA", data);
+
   const actionTableData = [
     {
       code: DOWNLOAD_TABLE,
@@ -103,7 +105,24 @@ const RegioanlInnovationReviewInnovationEvaluation = () => {
     }));
   };
 
-  const onHandleSubmit = () => {};
+  const onHandleSubmit = () => {
+    const payload = {
+      evaluasi_id: data?.data?.evaluasi_id,
+      document_id: data?.data?.document
+        ? data?.data?.document?.id || data?.data?.document?.document_id
+        : null,
+      nomor_surat: data?.data?.nomor_surat,
+      nomor: "string",
+      tanggal_surat: "string",
+      tentang_surat: "string",
+      data_saat_ini: "string",
+      document_category_id: "string",
+      judul: "string",
+      keterangan: "string",
+    };
+
+    console.log("PAYLOAD", payload);
+  };
 
   return (
     <div className="mt-4">

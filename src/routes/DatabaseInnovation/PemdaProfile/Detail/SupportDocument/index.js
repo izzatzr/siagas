@@ -14,11 +14,15 @@ import {
 import { useUtilContexts } from "../../../../../context/Utils";
 import { DELETE_ACTION_TABLE, DOWNLOAD_TABLE } from "../../../../../constants";
 import TableAction from "../../../../../components/TableAction";
-import { GET_ALL_DOCUMENT_PEMDA_PROFILE } from "../../../../../constans/constans";
+import {
+  GET_ALL_DOCUMENT_PEMDA_PROFILE,
+  GET_INDICATOR,
+} from "../../../../../constans/constans";
 import Table from "../../../../../components/Table";
 import { downloadFile } from "../../../../../utils";
 import Pagination from "../../../../../components/Pagination";
 import ModalConfirmation from "../../../../../components/ModalConfirmation";
+import { findIndicator } from "../../../../../services/MasterData/indicator";
 
 const initialParams = {
   page: 0,
@@ -89,6 +93,14 @@ const SupportDocument = () => {
   const { data, isFetching, refetch } = useQuery(
     [GET_ALL_DOCUMENT_PEMDA_PROFILE, filterParams],
     getAllDocumentPemdaProfile(filterParams)
+  );
+
+  const { data: indicator } = useQuery(
+    [GET_INDICATOR],
+    findIndicator(params?.indicator),
+    {
+      enabled: !!params?.indicator,
+    }
   );
 
   const uploadSupportDocumentMutation = useMutation(uploadDocumentPemdaProfile);
@@ -266,11 +278,12 @@ const SupportDocument = () => {
           </div>
           <div className="flex flex-col gap-3 text-[#333333]">
             <div className="text-lg font-bold">
-              Visi dan Misi - Dokumen Pendukung
+              {indicator?.data?.nama_indikator}
             </div>
-            <div className="text-xs">
-              {"Rumusan umum dalam RPJMD (Dokumen Tahun Terakhir)"}
-            </div>
+            <div
+              className="text-xs"
+              dangerouslySetInnerHTML={{ __html: indicator?.data?.keterangan }}
+            ></div>
           </div>
 
           <button

@@ -18,6 +18,8 @@ import {
 } from "../../../services/IndexRating/RejectedInnovation/rejectedInnovation";
 import { useNavigate } from "react-router-dom";
 import ModalConfirmation from "../../../components/ModalConfirmation";
+import Button from "../../../components/Button";
+import Modal from "../../../components/Modal";
 
 const initialFilter = {
   limit: 20,
@@ -29,6 +31,7 @@ const RejectedInnovation = () => {
   const [filterParams, setFilterParams] = React.useState(initialFilter);
   const [currentItem, setCurrentItem] = React.useState(null);
   const [showConfirmation, setShowConfirmation] = React.useState(false);
+  const [showPreviewModal, setShowPreviewModal] = React.useState(false);
 
   const queryClient = useQueryClient();
 
@@ -98,11 +101,38 @@ const RejectedInnovation = () => {
       title: "QC",
     },
     {
+      key: "",
+      title: "Hasil QC",
+      render: (item) => {
+        return (
+          <Button
+            text="Preview"
+            fontSize="text-xs"
+            background="bg-white"
+            fontColor="text-black"
+            border="border border-black"
+            padding="px-4 p-[8px]"
+            onClick={() => openModal(item)}
+          />
+        );
+      },
+    },
+    {
       key: "form-action",
       title: "Aksi",
       render: (item) => <TableAction data={actionTableData} itemData={item} />,
     },
   ];
+
+  const openModal = (item) => {
+    console.log(item);
+    setCurrentItem(item);
+    setShowPreviewModal(true);
+  };
+
+  const closeModal = () => {
+    setShowPreviewModal(false);
+  };
 
   const onHandleAccept = () => {
     setShowConfirmation(false);
@@ -152,6 +182,24 @@ const RejectedInnovation = () => {
           onConfirm={onHandleAccept}
         />
       )}
+
+      <Modal isOpen={showPreviewModal} onClose={closeModal} width="w-2/5">
+        <div>
+          <h1 className="text-2xl font-semibold">Preview</h1>
+        </div>
+        <div className="w-full mt-8">
+          {currentItem ? (
+            <div className="grid grid-cols-2 text-sm gap-y-8">
+              <div className="font-medium">Nama Inovasi :</div>
+              <div>{currentItem?.judul}</div>
+              <div className="font-medium">Nama Pemda :</div>
+              <div>{currentItem?.pemda?.pemda_name || "-"}</div>
+            </div>
+          ) : (
+            <div className="text-center">Tidak Ada Data</div>
+          )}
+        </div>
+      </Modal>
 
       <div className="text-[#333333] text-2xl">
         Daftar Inovasi Daerah yang ditolak

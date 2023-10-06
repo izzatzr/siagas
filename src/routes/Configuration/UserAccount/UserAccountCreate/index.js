@@ -9,7 +9,7 @@ import { useUtilContexts } from "../../../../context/Utils";
 import { BASE_API_URL } from "../../../../constans/constans";
 import { createUserAccount } from "../../../../services/Configuration/userAccount";
 import SelectOption from "../../../../components/SelectOption";
-import { convertQueryString, getToken } from "../../../../utils";
+import { convertQueryString, getToken, getUser } from "../../../../utils";
 
 const initialPayload = {
   password: "",
@@ -29,6 +29,7 @@ const initialParamsRole = {
 
 const UserAccountCreate = () => {
   const params = useParams();
+  const user = getUser();
 
   const { snackbar, setLoadingUtil } = useUtilContexts();
   const navigate = useNavigate();
@@ -56,10 +57,18 @@ const UserAccountCreate = () => {
     });
 
     const responseJSON = await response.json();
+    const results = [];
+
+    responseJSON?.data?.forEach((item) => {
+      results.push({
+        ...item,
+        isDisabled: user?.is_super_admin === "t" && item?.name !== "User",
+      });
+    });
 
     return {
-      options: responseJSON?.data,
-      hasMore: responseJSON.has_more,
+      options: results,
+      hasMore: results.has_more,
       additional: {
         page: page + 1,
       },
@@ -159,7 +168,7 @@ const UserAccountCreate = () => {
               placeholder="Pilih Role"
               options={loadOptionRole}
               onChange={(e) => onHandleChange("roleId", e)}
-              value={payload?.role}
+              value={payload?.roleId}
               paginate
               required
             />

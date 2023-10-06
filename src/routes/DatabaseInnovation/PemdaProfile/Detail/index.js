@@ -3,9 +3,13 @@ import { BiArrowBack } from "react-icons/bi";
 import { Link, useParams } from "react-router-dom";
 import Chipper from "../../../../components/Chipper";
 import { useQuery } from "react-query";
-import { GET_PEMDA_PROFILE } from "../../../../constans/constans";
+import {
+  GET_ALL_INDICATOR,
+  GET_PEMDA_PROFILE,
+} from "../../../../constans/constans";
 import { getPemdaProfiles } from "../../../../services/DatabaseInnovation/pemdaProfile";
 import IndicatorList from "./IndicatorList";
+import { getAllIndicator } from "../../../../services/MasterData/indicator";
 
 const DetailItem = (props) => {
   const { label, value, download } = props;
@@ -31,11 +35,24 @@ const DetailItem = (props) => {
   );
 };
 
+const initialIndicatorFilterParams = {
+  page: 1,
+  limit: 10,
+};
+
 const Detail = () => {
+  const [indicatorFilterParams, setIndicatorFilterParams] = React.useState(
+    initialIndicatorFilterParams
+  );
   const params = useParams();
   const currentId = params.id;
 
   const [tabActive, setTabActive] = React.useState(0);
+
+  const { data: indicators } = useQuery(
+    [GET_ALL_INDICATOR, indicatorFilterParams],
+    getAllIndicator(indicatorFilterParams)
+  );
 
   const { data } = useQuery([GET_PEMDA_PROFILE], getPemdaProfiles(currentId), {
     enabled: !!currentId,
@@ -94,7 +111,13 @@ const Detail = () => {
           </div>
         )}
 
-        {tabActive === 1 && <IndicatorList data={data?.data?.indicators} />}
+        {tabActive === 1 && (
+          <IndicatorList
+            data={indicators}
+            params={indicatorFilterParams}
+            setIndicatorFilterParams={setIndicatorFilterParams}
+          />
+        )}
       </div>
     </div>
   );

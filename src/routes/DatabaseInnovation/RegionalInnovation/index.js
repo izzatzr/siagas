@@ -154,12 +154,6 @@ const RegionalInnovation = () => {
       },
     },
     {
-      code: TRANSFER_ACTION_TABLE,
-      onClick: (item) => {
-        navigate(`/inovasi-daerah/${item.id}/indicator`);
-      },
-    },
-    {
       code: EDIT_ACTION_TABLE,
       onClick: (item) => {
         navigate(`/inovasi-daerah/edit/${item.id}`);
@@ -174,19 +168,6 @@ const RegionalInnovation = () => {
   return (
     <div className="flex flex-col w-full gap-6 py-6">
       <div className="text-[#333333] text-2xl font-bold">Inovasi Daerah</div>
-      <div className="w-full rounded-lg text-[#333333] bg-[#FFC90C4D] p-6 flex flex-col gap-2">
-        <div className="flex items-center gap-2">
-          <AiFillInfoCircle color="#F2994A" />
-          <span className="text-base font-medium text-[#333333]">
-            Harap diperhatikan!
-          </span>
-        </div>
-        <p className="text-[#333333] text-sm">
-          Inovasi Daerah yang dinilai pada sistem indeks inovasi daerah adalah
-          inovasi yang telah dilakukan Penerapan dalam kurun waktu maksimal 2
-          tahun yaitu 1 Januari 2020 s.d. 31 Desember 2021
-        </p>
-      </div>
       <div className="mt-4">
         <FilterOption
           items={listFilter}

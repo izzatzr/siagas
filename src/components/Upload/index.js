@@ -9,7 +9,7 @@ const Upload = (props) => {
       <label htmlFor={name} className="text-[#333333] text-sm font-normal">
         {label}
       </label>
-      <div className={`w-full border rounded-lg py-6 flex gap-[10px] items-center flex-col ${errorMessage ? "border-red-500" : "border-[#E0E0E0]"}`}>
+      <div className={`w-full border rounded-lg py-6 flex gap-[10px] bg-white items-center flex-col ${errorMessage ? "border-red-500" : "border-[#E0E0E0]"}`}>
         <span className="text-sm text-[#828282]">{description}</span>
         <button
           className={`border border-[#069DD9] border-dotted flex gap-3 py-3 items-center justify-center w-[313px] rounded-lg text-[#069DD9] ${

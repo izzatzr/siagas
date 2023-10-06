@@ -21,7 +21,7 @@ const TableRowCell = ({ item, column, action, align }) => {
     cellContent = column.render(item);
   }
 
-  return <td className={cellClass}>{cellContent}</td>;
+  return <td className={cellClass}>{cellContent || "-"}</td>;
 };
 
 const TableRow = (props) => {

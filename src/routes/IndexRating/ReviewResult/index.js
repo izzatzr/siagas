@@ -28,6 +28,8 @@ import { useUtilContexts } from "../../../context/Utils";
 import ModalConfirmation from "../../../components/ModalConfirmation";
 import { convertQueryString, getToken } from "../../../utils";
 import { updateRegionalInnovationReview } from "../../../services/IndexRating/RegionalInnovationReview/regionalInnovationReview";
+import Button from "../../../components/Button";
+import Modal from "../../../components/Modal";
 
 const initialFilter = {
   limit: 20,
@@ -47,6 +49,7 @@ const ReviewResult = () => {
   const [showDelete, setShowDelete] = React.useState(false);
   const [currentItem, setCurrentItem] = React.useState(null);
   const [selectedRegion, setSelectedRegion] = React.useState(null);
+  const [showPreviewModal, setShowPreviewModal] = React.useState(false);
 
   const { setLoadingUtil, snackbar } = useUtilContexts();
   const navigate = useNavigate();
@@ -107,11 +110,38 @@ const ReviewResult = () => {
       title: "QC",
     },
     {
+      key: "",
+      title: "Hasil QC",
+      render: (item) => {
+        return (
+          <Button
+            text="Preview"
+            fontSize="text-xs"
+            background="bg-white"
+            fontColor="text-black"
+            border="border border-black"
+            padding="px-4 p-[8px]"
+            onClick={() => openModal(item)}
+          />
+        );
+      },
+    },
+    {
       key: "form-action",
       title: "Aksi",
       render: (item) => <TableAction data={actionTableData} itemData={item} />,
     },
   ];
+
+  const openModal = (item) => {
+    setCurrentItem(item);
+    setShowPreviewModal(true);
+  };
+
+  const closeModal = () => {
+    setCurrentItem(null);
+    setShowPreviewModal(false);
+  };
 
   const loadOptionRegions = async (search, loadedOptions, { page }) => {
     const paramsQueryString = convertQueryString({
@@ -220,6 +250,24 @@ const ReviewResult = () => {
           onConfirm={onHandleDelete}
         />
       )}
+
+      <Modal isOpen={showPreviewModal} onClose={closeModal} width="w-2/5">
+        <div>
+          <h1 className="text-2xl font-semibold">Preview</h1>
+        </div>
+        <div className="w-full mt-8">
+          {currentItem ? (
+            <div className="grid grid-cols-2 text-sm gap-y-8">
+              <div className="font-medium">Nama Inovasi :</div>
+              <div>{currentItem?.judul}</div>
+              <div className="font-medium">Nama Pemda :</div>
+              <div>{currentItem?.pemda?.pemda_name || "-"}</div>
+            </div>
+          ) : (
+            <div className="text-center">Tidak Ada Data</div>
+          )}
+        </div>
+      </Modal>
 
       <div className="text-[#333333] text-2xl">Hasil Review Inovasi Daerah</div>
       <div className="flex items-center justify-end gap-2">

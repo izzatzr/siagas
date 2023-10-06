@@ -49,6 +49,7 @@ const SelectOption = (props) => {
             getOptionLabel ? getOptionLabel(value) : value.name || value.value
           }
           placeholder={placeholder}
+          // isOptionDisabled={option => option?.isDisabled}
         />
       ) : (
         <Select

@@ -28,6 +28,10 @@ const UPTDList = () => {
 
   const tableHeader = [
     {
+      key: "created_by",
+      title: "Dibuat Oleh",
+    },
+    {
       key: "regionalApparatus.name",
       title: "OPD",
     },
@@ -81,7 +85,6 @@ const UPTDList = () => {
   };
 
   const onHandleSearch = (value) => {
-    console.log(value);
     if (value.length > 3) {
       setFilterParams({
         q: value,

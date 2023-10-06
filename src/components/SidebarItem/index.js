@@ -1,9 +1,11 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
+import { getUser } from "../../utils";
 
 const SidebarItem = (props) => {
   const location = useLocation();
+  const user = getUser();
 
   const {
     label,
@@ -42,17 +44,43 @@ const SidebarItem = (props) => {
       </div>
       {sidebarActive === indexSidebar && active && (
         <div className={`flex flex-col pt-1.5`}>
-          {children.map((child, key) => (
-            <Link to={child.link} key={key}>
-              <div
-                className={`mt-[11px] text-[13px] pl-[37px] rounded py-1.5 hover:text-[#069DD9] cursor-pointer ${
-                  location.pathname.includes(child.link) && "text-[#069DD9]"
-                }`}
-              >
-                {child.label}
-              </div>
-            </Link>
-          ))}
+          {children.map((child, key) => {
+            return user?.is_super_admin === "y" &&
+              child?.roles?.includes("Super Admin") ? (
+              <Link to={child.link} key={key}>
+                <div
+                  className={`mt-[11px] text-[13px] pl-[37px] rounded py-1.5 hover:text-[#069DD9] cursor-pointer ${
+                    location.pathname.includes(child.link) && "text-[#069DD9]"
+                  }`}
+                >
+                  {child.label}
+                </div>
+              </Link>
+            ) : user?.is_super_admin === "t" &&
+              child?.roles?.includes("User") ? (
+              <Link to={child.link} key={key}>
+                <div
+                  className={`mt-[11px] text-[13px] pl-[37px] rounded py-1.5 hover:text-[#069DD9] cursor-pointer ${
+                    location.pathname.includes(child.link) && "text-[#069DD9]"
+                  }`}
+                >
+                  {child.label}
+                </div>
+              </Link>
+            ) : null;
+            // if(user?.is_super_admin === "y")
+            // return (
+            //   <Link to={child.link} key={key}>
+            //     <div
+            //       className={`mt-[11px] text-[13px] pl-[37px] rounded py-1.5 hover:text-[#069DD9] cursor-pointer ${
+            //         location.pathname.includes(child.link) && "text-[#069DD9]"
+            //       }`}
+            //     >
+            //       {child.label}
+            //     </div>
+            //   </Link>
+            // );
+          })}
         </div>
       )}
     </div>

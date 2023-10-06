@@ -31,6 +31,10 @@ const UserAccount = () => {
 
   const tableHeader = [
     {
+      key: "created_by",
+      title: "Dibuat Oleh",
+    },
+    {
       key: "role.name",
       title: "Role",
     },
@@ -88,7 +92,6 @@ const UserAccount = () => {
   };
 
   const onHandleSearch = (value) => {
-    console.log(value);
     if (value.length > 3) {
       setFilterParams({
         q: value,

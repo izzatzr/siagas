@@ -26,6 +26,7 @@ import {
 import TableAction from "../../../components/TableAction";
 import ModalConfirmation from "../../../components/ModalConfirmation";
 import { getAllRegionalInnovation } from "../../../services/DatabaseInnovation/regional";
+import { getUser } from "../../../utils";
 
 const phases = [
   {
@@ -54,6 +55,7 @@ const initialFilter = {
 };
 
 const PublicInnovation = () => {
+  const user = getUser();
   const [filterParams, setFilterParams] = React.useState(initialFilter);
   const [currentItem, setCurrentItem] = React.useState(null);
   const [showDelete, setShowDelete] = React.useState(false);
@@ -84,12 +86,14 @@ const PublicInnovation = () => {
     },
     {
       code: TRANSFER_ACTION_TABLE,
+      show : user?.is_super_admin === "y",
       onClick: (item) => {
         navigate(`/inovasi-daerah/${item.id}/indicator`);
       },
     },
     {
       code: EDIT_ACTION_TABLE,
+      show : user?.is_super_admin === "y",
       onClick: (item) => {
         navigate(`/inovasi-daerah/edit/${item.id}`);
       },

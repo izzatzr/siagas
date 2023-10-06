@@ -1,17 +1,15 @@
 import React from "react";
-import {
-  BiPlus,
-  BiSearch,
-} from "react-icons/bi";
+import { BiPlus, BiSearch } from "react-icons/bi";
 import Table from "../../../components/Table";
 import TableAction from "../../../components/TableAction";
 import {
+  DOWNLOAD_TABLE,
   EDIT_ACTION_TABLE,
   EXCEL_ACTION_TABLE,
   PDF_ACTION_TABLE,
   PREVIEW_ACTION_TABLE,
 } from "../../../constants";
-import { convertQueryString, getToken } from "../../../utils";
+import { convertQueryString, getToken, getUser } from "../../../utils";
 import {
   BASE_API_URL,
   GET_ALL_PEMDA_PROFILE,
@@ -21,6 +19,7 @@ import { getAllPemdaProfiles } from "../../../services/DatabaseInnovation/pemdaP
 import { useUtilContexts } from "../../../context/Utils";
 import { Link, useNavigate } from "react-router-dom";
 import Pagination from "../../../components/Pagination";
+import Upload from "../../../components/Upload";
 
 const initialParamsRegion = {
   page: 1,
@@ -37,30 +36,45 @@ const initialParamsPemdaProfiles = {
 
 const PemdaProfile = () => {
   const navigate = useNavigate();
+  const user = getUser();
   const [params, setParams] = React.useState(initialParamsPemdaProfiles);
   const { setLoadingUtil, snackbar } = useUtilContexts();
+  const [payloadPaktaIntegritas, setPayloadPaktaIntegritas] = React.useState({
+    document: null,
+  });
 
   const actionTableData = [
     {
       code: PREVIEW_ACTION_TABLE,
+      label: "Preview",
       onClick: (item) => {
         navigate(`/profil-pemda/${item.id}/detail`);
       },
     },
     {
       code: PDF_ACTION_TABLE,
+      label: "PDF",
       onClick: () => {
         console.log(PDF_ACTION_TABLE);
       },
     },
     {
       code: EXCEL_ACTION_TABLE,
+      label: "Excel",
+      onClick: () => {
+        console.log(EDIT_ACTION_TABLE);
+      },
+    },
+    {
+      code: DOWNLOAD_TABLE,
+      label: "Download Fakta Integritas",
       onClick: () => {
         console.log(EDIT_ACTION_TABLE);
       },
     },
     {
       code: EDIT_ACTION_TABLE,
+      label: "Edit",
       onClick: (item) => {
         navigate(`/profil-pemda/edit/${item.id}`);
       },
@@ -69,9 +83,14 @@ const PemdaProfile = () => {
 
   const tableHeader = [
     {
+      key: "created_by",
+      title: "Dibuat Oleh",
+    },
+    {
       key: "nama_daerah",
       title: "Nama Pemda",
     },
+
     {
       key: "",
       title: "Input Indikator Spd",
@@ -145,6 +164,14 @@ const PemdaProfile = () => {
     }
   };
 
+  const onHandleUploadPaktaIntegritas = (e) => {
+    const { files } = e.target;
+    setPayloadPaktaIntegritas({
+      ...payloadPaktaIntegritas,
+      document: files[0],
+    });
+  };
+
   React.useEffect(() => {
     if (isLoadingPemdaProfile) {
       setLoadingUtil(true);
@@ -156,6 +183,14 @@ const PemdaProfile = () => {
   return (
     <div className="w-full flex flex-col gap-6 py-6">
       <div className="text-[#333333] text-2xl">Profile Pemda</div>
+      {user?.is_super_admin === "t" && (
+        <Upload
+          label="Pakta Integritas"
+          description={"Mohon mengirimkan Pakta Integritas."}
+          onChange={onHandleUploadPaktaIntegritas}
+          value={payloadPaktaIntegritas?.document}
+        />
+      )}
       <div className="flex justify-end items-center gap-2">
         <Link
           to="/profil-pemda/tambah"

@@ -73,7 +73,6 @@ const Sidebar = () => {
       <div className="flex flex-col flex-1 overflow-scroll">
         <div className="flex flex-col w-full gap-6 p-6">
           {sidebarData.map((item, key) => {
-            console.log(item.roles.includes(user.name));
             return (
               <SidebarItem
                 indexSidebar={key}
@@ -83,7 +82,7 @@ const Sidebar = () => {
                 icon={item.icon}
                 children={item.children}
                 active={item.active}
-                show={item.roles.includes(user.name)}
+                show={item?.roles.includes(user?.name)}
                 handleOpenAccordion={handleOpenAccordion}
               />
             );

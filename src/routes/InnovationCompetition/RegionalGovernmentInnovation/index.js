@@ -26,6 +26,7 @@ import {
 import TableAction from "../../../components/TableAction";
 import ModalConfirmation from "../../../components/ModalConfirmation";
 import { getAllRegionalInnovation } from "../../../services/DatabaseInnovation/regional";
+import { getUser } from "../../../utils";
 
 const initialFilter = {
   limit: 20,
@@ -35,6 +36,8 @@ const initialFilter = {
 };
 
 const RegionalGovernmentInnovation = () => {
+  const user = getUser();
+
   const [filterParams, setFilterParams] = React.useState(initialFilter);
   const [currentItem, setCurrentItem] = React.useState(null);
   const [showDelete, setShowDelete] = React.useState(false);
@@ -71,24 +74,28 @@ const RegionalGovernmentInnovation = () => {
   const actionTableData = [
     {
       code: PDF_ACTION_TABLE,
+      show : true,
       onClick: () => {
         console.log(PDF_ACTION_TABLE);
       },
     },
     {
       code: EXCEL_ACTION_TABLE,
+      show : true,
       onClick: () => {
         console.log(EXCEL_ACTION_TABLE);
       },
     },
     {
       code: TRANSFER_ACTION_TABLE,
+      show : user?.is_super_admin === "y",
       onClick: (item) => {
         navigate(`/inovasi-daerah/${item.id}/indicator`);
       },
     },
     {
       code: EDIT_ACTION_TABLE,
+      show : user?.is_super_admin === "y",
       onClick: (item) => {
         navigate(`/inovasi-daerah/edit/${item.id}`);
       },
@@ -209,34 +216,10 @@ const RegionalGovernmentInnovation = () => {
       )}
 
       <div className="text-[#333333] text-2xl">Inovasi Pemerintah Daerah</div>
-      <div className="w-full rounded-lg text-[#333333] bg-[#FFC90C4D] p-6 flex flex-col gap-2">
-        <div className="flex items-center gap-2">
-          <AiFillInfoCircle color="#F2994A" />
-          <span className="text-base font-medium text-[#333333]">
-            Harap diperhatikan!
-          </span>
-        </div>
-        <p className="text-[#333333] text-sm">
-          Inovasi Daerah yang dinilai pada sistem indeks inovasi daerah adalah
-          inovasi yang telah dilakukan Penerapan dalam kurun waktu maksimal 2
-          tahun yaitu 1 Januari 2020 s.d. 31 Desember 2021
-        </p>
-      </div>
+      
       <div className="flex items-center justify-between mt-4">
         <div className="mr-3">Filter</div>
         <FilterOption items={listFilter} onFilterChange={onHandlePhaseChange} />
-
-        <Link
-          to="/inovasi-daerah/tambah"
-          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px]"
-        >
-          <div>
-            <BiPlus className="text-base" />
-          </div>
-          <div style={{ whiteSpace: "nowrap" }}>
-            Tambah Inovasi Pemerintah Daerah
-          </div>
-        </Link>
       </div>
       <div className="w-full rounded-lg text-[#333333] bg-white p-6 flex flex-col gap-4">
         <div className="">

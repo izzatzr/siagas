@@ -293,20 +293,16 @@ const RegionalInnovationReview = () => {
           <h1 className="text-2xl font-semibold">Preview</h1>
         </div>
         <div className="w-full mt-8">
-          {currentItem && currentItem.preview ? (
-            <div className="grid grid-cols-2 text-sm gap-y-8">
+          {currentItem ? (
+            <div className="grid grid-cols-3 text-sm gap-y-6 grid-x-2">
               <div className="font-medium">Nama Pemda :</div>
-              <div>{currentItem.preview.pemda.nama_pemda}</div>
+              <div className="col-span-2">{currentItem?.pemda?.nama_pemda}</div>
 
-              <div className="font-semibold">Status :</div>
-              <div className="uppercase">{currentItem.preview.status}</div>
+              <div className="font-medium">Nama Inovasi :</div>
+              <div className="col-span-2">{currentItem?.judul}</div>
 
-              <div className="font-semibold">Alasan Ditolak :</div>
-              <div>
-                {currentItem.preview.alasan_ditolak !== ""
-                  ? currentItem.preview.alasan_ditolak
-                  : "-"}
-              </div>
+              <div className="font-medium">Status :</div>
+              <div className="col-span-2">{currentItem?.qc || "-"}</div>
             </div>
           ) : (
             <div className="text-center">Tidak Ada Data</div>

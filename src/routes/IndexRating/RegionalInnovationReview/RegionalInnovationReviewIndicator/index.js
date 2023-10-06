@@ -6,8 +6,6 @@ import React from "react";
 import { useUtilContexts } from "../../../../context/Utils";
 import { FaFileExport, IconName } from "react-icons/fa";
 import Table from "../../../../components/Table";
-import ReactPaginate from "react-paginate";
-import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 
 const RegionalInnovationReviewIndicator = () => {
   const params = useParams();
