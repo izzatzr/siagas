@@ -91,6 +91,8 @@ import PublicInnovation from "./InnovationCompetition/PublicInnovation";
 import PublicInnovationEdit from "./InnovationCompetition/PublicInnovation/PublicInnovationEdit";
 import RegionalGovernmentInnovationCreate from "./InnovationCompetition/RegionalGovernmentInnovation/RegionalGovernmentInnovationCreate";
 import Authorization from "../components/Authorization";
+import RegionalInnovationDetail from "./DatabaseInnovation/RegionalInnovation/Detail";
+import InnovationRegionalSupportDocument from "./DatabaseInnovation/RegionalInnovation/Detail/InnovationRegionalSupportDocument";
 
 const Routes = () => {
   const router = createBrowserRouter([
@@ -399,8 +401,13 @@ const innovationDatabaseRoutes = [
     roles: ["Super Admin", "User"],
   },
   {
-    path: "inovasi-daerah/:id/indicator",
-    element: <IndicatorRegionalInnovation />,
+    path: "/inovasi-daerah/:id/indikator",
+    element: <RegionalInnovationDetail />,
+    roles: ["Super Admin", "User"],
+  },
+  {
+    path: "inovasi-daerah/:id/indikator/:indicator/dokumen-pendukung",
+    element: <InnovationRegionalSupportDocument />,
     roles: ["Super Admin", "User"],
   },
   {

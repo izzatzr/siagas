@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import secureLocalStorage from "react-secure-storage";
 
 import { sidebarDataDummy } from "../../constans/constans";
-import logo from "../../assets/images/logo.svg";
+import logo from "../../assets/images/logo.png";
 import SidebarItem from "../SidebarItem";
 import { signOut } from "../../redux/actions/auth";
 import { getUser } from "../../utils";

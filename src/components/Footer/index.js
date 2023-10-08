@@ -1,8 +1,8 @@
 import React from "react";
 import Button from "../Button";
 
-import logo from "../../assets/images/logo.svg";
-import pdfFile from "../../assets/test-mb.pdf";
+import logo from "../../assets/images/logo.png";
+import pdfFile from "../../assets/manual-book.pdf";
 
 const Footer = () => {
   const downloadFileStatic = () => {

@@ -53,6 +53,7 @@ const FinalIndex = () => {
   const actionTableData = [
     {
       code: EDIT_ACTION_TABLE,
+      label : "Edit",
       onClick: (item) => {
         setCurrentItem(item);
         setShowConfirmation(true);

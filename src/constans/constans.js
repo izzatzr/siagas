@@ -464,6 +464,9 @@ export const GET_REGIONAL_INNOVATION_QUERY_KEY = "get_regional_innovation";
 export const GET_INDICATOR_REGIONAL_INNOVATION_QUERY_KEY =
   "get_indicator_regional_innovation";
 
+export const GET_ALL_DOCUMENT_REGIONAL_INNOVATION_QUERY_KEY =
+  "get_all_document_regional_innovation";
+
 export const GET_ALL_ASSESSMENT_TEAM_QUERY_KEY = "get_all_assessment_team";
 export const GET_SETTING = "get_setting";
 

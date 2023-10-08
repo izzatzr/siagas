@@ -48,12 +48,14 @@ const Setting = () => {
   const actionTableData = [
     {
       code: EDIT_ACTION_TABLE,
+      label : "Edit",
       onClick: (item) => {
         navigate(`/konfigurasi/setting/edit/${item.id}`);
       },
     },
     {
       code: DELETE_ACTION_TABLE,
+      label : "Hapus",
       onClick: (item) => {
         setCurrentItem(item);
         setShowDelete(true);

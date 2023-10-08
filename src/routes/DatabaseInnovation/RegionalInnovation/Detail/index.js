@@ -1,15 +1,21 @@
 import React from "react";
-import { BiArrowBack } from "react-icons/bi";
 import { Link, useParams } from "react-router-dom";
 import Chipper from "../../../../components/Chipper";
-import { useQuery } from "react-query";
 import {
   GET_ALL_INDICATOR,
-  GET_PEMDA_PROFILE,
+  GET_REGIONAL_INNOVATION_QUERY_KEY,
 } from "../../../../constans/constans";
-import { getPemdaProfiles } from "../../../../services/DatabaseInnovation/pemdaProfile";
-import IndicatorList from "./IndicatorList";
 import { getAllIndicator } from "../../../../services/MasterData/indicator";
+import { useQuery } from "react-query";
+import { BiArrowBack } from "react-icons/bi";
+import { getRegionalInnovation } from "../../../../services/DatabaseInnovation/regional";
+import IndicatorList from "./IndicatorList";
+
+const initialIndicatorFilterParams = {
+  page: 1,
+  limit: 10,
+  jenis_indikator: "si",
+};
 
 const DetailItem = (props) => {
   const { label, value, download } = props;
@@ -35,13 +41,7 @@ const DetailItem = (props) => {
   );
 };
 
-const initialIndicatorFilterParams = {
-  page: 1,
-  limit: 10,
-  jenis_indikator : "spd"
-};
-
-const Detail = () => {
+const RegionalInnovationDetail = () => {
   const [indicatorFilterParams, setIndicatorFilterParams] = React.useState(
     initialIndicatorFilterParams
   );
@@ -55,19 +55,23 @@ const Detail = () => {
     getAllIndicator(indicatorFilterParams)
   );
 
-  const { data } = useQuery([GET_PEMDA_PROFILE], getPemdaProfiles(currentId), {
-    enabled: !!currentId,
-  });
+  const { data } = useQuery(
+    [GET_REGIONAL_INNOVATION_QUERY_KEY],
+    getRegionalInnovation(currentId),
+    {
+      enabled: !!currentId,
+    }
+  );
 
   return (
     <div className="w-full flex flex-col gap-6 py-6">
-      <div className="text-[#333333] text-2xl">Profile Pemda</div>
+      <div className="text-[#333333] text-2xl">Inovasi Daerah</div>
       <div className="w-full bg-white rounded-lg p-8 flex flex-col gap-6">
         <div className="flex items-center gap-2">
-          <Link to="/profil-pemda">
+          <Link to="/inovasi-daerah">
             <BiArrowBack />
           </Link>
-          <span className="font-medium text-lg">Detail Profil Pemda</span>
+          <span className="font-medium text-lg">Detail Inovasi Daerah</span>
         </div>
         <div className="flex items-center w-full gap-3">
           <Chipper
@@ -85,29 +89,41 @@ const Detail = () => {
             }}
           />
         </div>
-
         {tabActive === 0 && (
           <div className="flex flex-col gap-6">
-            <DetailItem label={"Nama Daerah"} value={data?.data?.nama_daerah} />
             <DetailItem
               label={"Nama Pemda"}
-              value={data?.data?.user?.nama_pemda}
+              value={data?.data?.government_name}
             />
             <DetailItem
-              label={"OPD Yang Menangani"}
-              value={data?.data?.opd_yang_menangani}
+              label="Nama Inovasi"
+              value={data?.data?.innovation_name}
             />
             <DetailItem
-              label={"Alamat Pemda"}
-              value={data?.data?.alamat_pemda}
+              label="Inisiator Daerah"
+              value={data?.data?.innovation_initiator}
             />
-            <DetailItem label={"E-mail"} value={data?.data?.user?.email} />
-            <DetailItem label={"No. Tel"} value={data?.data?.no_telpon} />
-            <DetailItem label={"Nama Admin"} value={data?.data?.nama_admin} />
+
             <DetailItem
-              label={"Dokumen Penelitian"}
-              value={data?.data?.document?.name}
-              download={data?.data?.document}
+              label="Jenis Inovasi"
+              value={data?.data?.innovation_type}
+            />
+
+            <DetailItem
+              label="Bentuk Inovasi"
+              value={data?.data?.innovation_form}
+            />
+
+            <DetailItem label="Tematik" value={data?.data?.thematic} />
+
+            <DetailItem label="Waktu Uji Coba" value={data?.data?.trial_time} />
+            <DetailItem
+              label="Waktu Penerapan"
+              value={data?.data?.implementation_time}
+            />
+            <DetailItem
+              label="Nama Admin"
+              value={data?.data?.pemda?.full_name}
             />
           </div>
         )}
@@ -124,4 +140,4 @@ const Detail = () => {
   );
 };
 
-export default Detail;
+export default RegionalInnovationDetail;

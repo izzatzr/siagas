@@ -74,18 +74,21 @@ const PublicInnovation = () => {
   const actionTableData = [
     {
       code: PDF_ACTION_TABLE,
+      label : "PDF",
       onClick: () => {
         console.log(PDF_ACTION_TABLE);
       },
     },
     {
       code: EXCEL_ACTION_TABLE,
+      label : "Excel",
       onClick: () => {
         console.log(EXCEL_ACTION_TABLE);
       },
     },
     {
       code: TRANSFER_ACTION_TABLE,
+      label : "Indicator",
       show : user?.is_super_admin === "y",
       onClick: (item) => {
         navigate(`/inovasi-daerah/${item.id}/indicator`);
@@ -93,6 +96,7 @@ const PublicInnovation = () => {
     },
     {
       code: EDIT_ACTION_TABLE,
+      label : "Edit",
       show : user?.is_super_admin === "y",
       onClick: (item) => {
         navigate(`/inovasi-daerah/edit/${item.id}`);

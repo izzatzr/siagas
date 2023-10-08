@@ -17,6 +17,7 @@ import Pagination from "../../../components/Pagination";
 import Button from "../../../components/Button";
 import { useNavigate } from "react-router-dom";
 import FilterOption from "../../../components/FilterOption";
+import { convertEstimationScore } from "../../../utils";
 
 const initialParams = {
   page: 0,
@@ -47,11 +48,8 @@ const RegionalInnovation = () => {
       },
     },
     {
-      key: "",
-      title: "Urusan Pemerintahan",
-      render: () => {
-        return "Belum tau yang mana";
-      },
+      key: "innovation_initiator",
+      title: "Inisiator",
     },
     {
       key: "trial_time",
@@ -64,8 +62,8 @@ const RegionalInnovation = () => {
     {
       key: "",
       title: "Estimasi Skor Kematangan",
-      render: () => {
-        return "Belum tau yang mana";
+      render: (item) => {
+        return  convertEstimationScore(item?.innovation_phase)
       },
     },
     {
@@ -143,18 +141,28 @@ const RegionalInnovation = () => {
   const actionTableData = [
     {
       code: PDF_ACTION_TABLE,
+      label: "PDF",
       onClick: () => {
         console.log(PDF_ACTION_TABLE);
       },
     },
     {
       code: EXCEL_ACTION_TABLE,
+      label: "Excel",
       onClick: () => {
         console.log(EXCEL_ACTION_TABLE);
       },
     },
     {
+      code: TRANSFER_ACTION_TABLE,
+      label: "Indikator",
+      onClick: (item) => {
+        navigate(`/inovasi-daerah/${item.id}/indikator`);
+      },
+    },
+    {
       code: EDIT_ACTION_TABLE,
+      label: "Edit",
       onClick: (item) => {
         navigate(`/inovasi-daerah/edit/${item.id}`);
       },
@@ -164,6 +172,8 @@ const RegionalInnovation = () => {
   React.useEffect(() => {
     setLoadingUtil(isFetching);
   }, [isFetching]);
+
+  console.log(data?.data)
 
   return (
     <div className="flex flex-col w-full gap-6 py-6">

@@ -49,12 +49,14 @@ const UPTDList = () => {
   const actionTableData = [
     {
       code: EDIT_ACTION_TABLE,
+      label : "Edit",
       onClick: (value) => {
         navigate(`/konfigurasi/daftar-uptd/edit/${value.id}`);
       },
     },
     {
       code: DELETE_ACTION_TABLE,
+      label : "Hapus",
       onClick: (item) => {
         setCurrentItem(item);
         setShowDelete(true);

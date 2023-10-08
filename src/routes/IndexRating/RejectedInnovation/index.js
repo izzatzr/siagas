@@ -58,12 +58,14 @@ const RejectedInnovation = () => {
   const actionTableData = [
     {
       code: PREVIEW_ACTION_TABLE,
+      label : "Preview",
       onClick: (item) => {
         navigate(`/review-inovasi-daerah/detail/${item.review_inovasi_id}`);
       },
     },
     {
       code: APPROVE_ACTION_TABLE,
+      label : "Approve",
       onClick: (item) => {
         setCurrentItem(item);
         setShowConfirmation(true);
@@ -125,12 +127,12 @@ const RejectedInnovation = () => {
   ];
 
   const openModal = (item) => {
-    console.log(item);
     setCurrentItem(item);
     setShowPreviewModal(true);
   };
 
   const closeModal = () => {
+    setCurrentItem(null)
     setShowPreviewModal(false);
   };
 

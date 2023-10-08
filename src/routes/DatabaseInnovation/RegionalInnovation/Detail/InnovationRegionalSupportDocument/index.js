@@ -7,15 +7,15 @@ import Button from "../../../../../components/Button";
 import { MdCheckCircle } from "react-icons/md";
 import { useMutation, useQuery } from "react-query";
 import {
-  deleteDocumentPemdaProfile,
-  getAllDocumentPemdaProfile,
-  uploadDocumentPemdaProfile,
-} from "../../../../../services/DatabaseInnovation/pemdaProfile";
+  // deleteDocumentPemdaProfile,
+  getAllDocumentRegionalInnovation,
+  uploadDocumentRegionalInnovation,
+} from "../../../../../services/DatabaseInnovation/regional";
 import { useUtilContexts } from "../../../../../context/Utils";
 import { DELETE_ACTION_TABLE, DOWNLOAD_TABLE } from "../../../../../constants";
 import TableAction from "../../../../../components/TableAction";
 import {
-  GET_ALL_DOCUMENT_PEMDA_PROFILE,
+  GET_ALL_DOCUMENT_REGIONAL_INNOVATION_QUERY_KEY,
   GET_INDICATOR,
 } from "../../../../../constans/constans";
 import Table from "../../../../../components/Table";
@@ -29,7 +29,7 @@ const initialParams = {
   limit: 20,
 };
 
-const SupportDocument = () => {
+const InnovationRegionalSupportDocument = () => {
   const params = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -38,7 +38,7 @@ const SupportDocument = () => {
   const [filterParams, setFilterParams] = React.useState({
     ...initialParams,
     indicator_id: params.indicator,
-    pemda_id : params?.id
+    inovasi_id : params?.id
   });
   const [showDelete, setShowDelete] = React.useState(false);
   const [currentItem, setCurrentItem] = React.useState(null);
@@ -88,13 +88,13 @@ const SupportDocument = () => {
     tentang: "",
     dokumen: null,
     indikator_id: params?.indicator,
-    pemda_id : params?.id
+    inovasi_id : params?.id
   });
 
   /** Use Query */
   const { data, isFetching, refetch } = useQuery(
-    [GET_ALL_DOCUMENT_PEMDA_PROFILE, filterParams],
-    getAllDocumentPemdaProfile(filterParams)
+    [GET_ALL_DOCUMENT_REGIONAL_INNOVATION_QUERY_KEY, filterParams],
+    getAllDocumentRegionalInnovation(filterParams)
   );
 
   const { data: indicator } = useQuery(
@@ -105,8 +105,8 @@ const SupportDocument = () => {
     }
   );
 
-  const uploadSupportDocumentMutation = useMutation(uploadDocumentPemdaProfile);
-  const deleteSupportDocumentMutation = useMutation(deleteDocumentPemdaProfile);
+  const uploadSupportDocumentMutation = useMutation(uploadDocumentRegionalInnovation);
+  // const deleteSupportDocumentMutation = useMutation(deleteDocumentPemdaProfile);
 
   /** End Use Query */
 
@@ -156,22 +156,22 @@ const SupportDocument = () => {
     setShowDelete(false);
     setLoadingUtil(true);
 
-    deleteSupportDocumentMutation.mutate(
-      {
-        pemda_indikator_id: params.indicator,
-        file_id: currentItem?.file?.id,
-      },
-      {
-        onSuccess: (res) => {
-          if (res) {
-            setLoadingUtil(false);
-            snackbar("File dokumen berhasil dihapus", () => {
-              refetch();
-            });
-          }
-        },
-      }
-    );
+    // deleteSupportDocumentMutation.mutate(
+    //   {
+    //     pemda_indikator_id: params.indicator,
+    //     file_id: currentItem?.file?.id,
+    //   },
+    //   {
+    //     onSuccess: (res) => {
+    //       if (res) {
+    //         setLoadingUtil(false);
+    //         snackbar("File dokumen berhasil dihapus", () => {
+    //           refetch();
+    //         });
+    //       }
+    //     },
+    //   }
+    // );
   };
 
   const onHandlePagination = (page) => {
@@ -311,4 +311,4 @@ const SupportDocument = () => {
   );
 };
 
-export default SupportDocument;
+export default InnovationRegionalSupportDocument;

@@ -45,12 +45,14 @@ const OPDList = () => {
   const actionTableData = [
     {
       code: EDIT_ACTION_TABLE,
+      label : "Edit",
       onClick: (value) => {
         navigate(`/konfigurasi/daftar-opd/edit/${value.id}`);
       },
     },
     {
       code: DELETE_ACTION_TABLE,
+      label : "Hapus",
       onClick: (item) => {
         setCurrentItem(item);
         setShowDelete(true);

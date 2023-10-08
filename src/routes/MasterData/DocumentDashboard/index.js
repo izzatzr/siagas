@@ -41,12 +41,14 @@ const DocumentDashboard = () => {
   const actionTableData = [
     {
       code: EDIT_ACTION_TABLE,
+      label : "Edit",
       onClick: (value) => {
         navigate(`/master/dokumen/edit/${value.id}`);
       },
     },
     {
       code: DELETE_ACTION_TABLE,
+      label : "Hapus",
       onClick: (value) => {
         setCurrentItem(value);
         setShowDelete(true);

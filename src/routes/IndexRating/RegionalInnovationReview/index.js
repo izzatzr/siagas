@@ -28,7 +28,7 @@ import Button from "../../../components/Button";
 import { useNavigate } from "react-router-dom";
 import { useUtilContexts } from "../../../context/Utils";
 import ModalConfirmation from "../../../components/ModalConfirmation";
-import { convertQueryString, getToken } from "../../../utils";
+import { actionTable, convertQueryString, getToken } from "../../../utils";
 
 const initialFilter = {
   limit: 20,
@@ -92,12 +92,14 @@ const RegionalInnovationReview = () => {
   const actionTableData = [
     {
       code: PREVIEW_ACTION_TABLE,
+      label: "Preview",
       onClick: (item) => {
         navigate(`/review-inovasi-daerah/detail/${item.id}`);
       },
     },
     {
       code: APPROVE_ACTION_TABLE,
+      label: "Accept",
       onClick: (item) => {
         setCurrentItem(item);
         setShowConfirmation(true);
@@ -105,6 +107,7 @@ const RegionalInnovationReview = () => {
     },
     {
       code: REJECT_ACTION_TABLE,
+      label: "Reject",
       onClick: (item) => {
         setCurrentItem(item);
         setShowDelete(true);
@@ -161,7 +164,61 @@ const RegionalInnovationReview = () => {
     {
       key: "form-action",
       title: "Aksi",
-      render: (item) => <TableAction data={actionTableData} itemData={item} />,
+      // render: (item) => <TableAction data={actionTableData} itemData={item} />,
+      render: (item) => {
+        return (
+          <div className="flex items-center gap-3">
+            <div
+              className="cursor-pointer relative group flex justify-center"
+              onClick={() =>
+                navigate(`/review-inovasi-daerah/detail/${item.id}`)
+              }
+            >
+              {actionTable(PREVIEW_ACTION_TABLE)}
+              <>
+                <div className="hidden group-hover:block w-2 h-2 rotate-45 -top-[18px] bg-gray-700 absolute"></div>
+                <div className="hidden group-hover:block absolute whitespace-nowrap bg-gray-700 -top-10 px-3 py-1 rounded-md text-white">
+                  Preview
+                </div>
+              </>
+            </div>
+            {item?.qc === "pending" || item?.qc === "Pending" && (
+              <>
+                <div
+                  className="cursor-pointer relative group flex justify-center"
+                  onClick={() => {
+                    setCurrentItem(item);
+                    setShowConfirmation(true);
+                  }}
+                >
+                  {actionTable(APPROVE_ACTION_TABLE)}
+                  <>
+                    <div className="hidden group-hover:block w-2 h-2 rotate-45 -top-[18px] bg-gray-700 absolute"></div>
+                    <div className="hidden group-hover:block absolute whitespace-nowrap bg-gray-700 -top-10 px-3 py-1 rounded-md text-white">
+                      Preview
+                    </div>
+                  </>
+                </div>
+                <div
+                  className="cursor-pointer relative group flex justify-center"
+                  onClick={() => {
+                    setCurrentItem(item);
+                    setShowDelete(true);
+                  }}
+                >
+                  {actionTable(REJECT_ACTION_TABLE)}
+                  <>
+                    <div className="hidden group-hover:block w-2 h-2 rotate-45 -top-[18px] bg-gray-700 absolute"></div>
+                    <div className="hidden group-hover:block absolute whitespace-nowrap bg-gray-700 -top-10 px-3 py-1 rounded-md text-white">
+                      Preview
+                    </div>
+                  </>
+                </div>
+              </>
+            )}
+          </div>
+        );
+      },
     },
   ];
 

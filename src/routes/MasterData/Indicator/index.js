@@ -40,12 +40,14 @@ const Indicator = () => {
   const actionTableData = [
     {
       code: INDICATOR_ACTION_TABLE,
+      label : "Skala Indicator",
       onClick: (value) => {
         alert("INDICATOR");
       },
     },
     {
       code: EDIT_ACTION_TABLE,
+      label : "Edit",
       onClick: (value) => {
         navigate(`/master/indikator/edit/${value.id}`)
       },

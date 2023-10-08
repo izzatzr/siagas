@@ -28,6 +28,7 @@ const GovernmentBusiness = () => {
   const actionTableData = [
     {
       code: EDIT_ACTION_TABLE,
+      label : "Edit",
       onClick: (value) => {
         navigate(`/master/urusan-pemerintah/edit/${value.id}`);
       },

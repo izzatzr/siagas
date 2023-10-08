@@ -1,4 +1,5 @@
 import { BASE_API_URL } from "../../../constans/constans";
+import { processResult, throwErrorUtil } from "../../../helpers/fetchingUtils";
 import { convertQueryString, getToken } from "../../../utils";
 
 export const getAllRegionalInnovationReview = (params) => async () => {
@@ -141,7 +142,6 @@ export const updateRegionalInnovationReview = async ({ id, status, skor }) => {
         body: JSON.stringify({
           status: status,
           skor: skor,
-          inovasi_id: id,
         }),
         method: "PATCH",
       }
@@ -157,5 +157,36 @@ export const updateRegionalInnovationReview = async ({ id, status, skor }) => {
     throw Error("Error");
   } catch (error) {
     console.log("Error");
+  }
+};
+
+export const postRegionalInnovationReviewEvaluation = async (payload) => {
+  const { id, indikator_id, ...rest } = payload;
+  try {
+    const url = `${BASE_API_URL}/review_inovasi_daerah/${id}/indikator/${indikator_id}/evaluasi`;
+
+    const response = await fetch(url, {
+      method: "PATCH",
+      headers: {
+        accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken().token}`,
+      },
+      body: JSON.stringify(rest),
+    });
+
+    if (response.status === 200) {
+      const result = await processResult(response);
+
+      const isSuccess = result.code === 200;
+
+      if (isSuccess) {
+        return result;
+      }
+    }
+
+    throw Error("Terjadi kesalahan");
+  } catch (error) {
+    throwErrorUtil(error, `${error?.message || error}`);
   }
 };

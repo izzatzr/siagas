@@ -56,12 +56,14 @@ const UserAccount = () => {
   const actionTableData = [
     {
       code: EDIT_ACTION_TABLE,
+      label : "Edit",
       onClick: (value) => {
         navigate(`/konfigurasi/user-account/edit/${value.id}`);
       },
     },
     {
       code: DELETE_ACTION_TABLE,
+      label : "Hapus",
       onClick: (item) => {
         setCurrentItem(item);
         setShowDelete(true);

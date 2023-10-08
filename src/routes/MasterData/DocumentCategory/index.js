@@ -37,12 +37,14 @@ const DocumentCategory = () => {
   const actionTableData = [
     {
       code: EDIT_ACTION_TABLE,
+      label : "Edit",
       onClick: (value) => {
         navigate(`/master/kategori-dokumen/edit/${value.id}`);
       },
     },
     {
       code: DELETE_ACTION_TABLE,
+      label : "Hapus",
       onClick: (value) => {
         setCurrentItem(value);
         setShowDelete(true);

@@ -118,3 +118,62 @@ export const createRegionalInnovation = async (payload) => {
     throw Error("Submit inovasi daerah error");
   }
 };
+
+export const getAllDocumentRegionalInnovation = (params) => async () => {
+  const { indicator_id, inovasi_id, ...rest } = params;
+  try {
+    const paramsQueryString = convertQueryString(rest);
+    const response = await fetch(
+      `${BASE_API_URL}/inovasi_pemerintah_daerah/indikator/${inovasi_id}/${indicator_id}/files?${paramsQueryString}`,
+      {
+        headers: {
+          Authorization: `Bearer ${getToken().token}`,
+        },
+      }
+    );
+
+    const result = await response.json();
+
+    const isSuccess = result.code === 200;
+
+    if (isSuccess) {
+      return result;
+    }
+
+    return [];
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const uploadDocumentRegionalInnovation = async (payload) => {
+  try {
+    const formData = new FormData();
+    formData.append("nomor_surat", payload.nomor_dokumen);
+    formData.append("tanggal_surat", payload.tanggal_dokumen);
+    formData.append("tentang", payload.tentang);
+    formData.append("dokumen", payload.dokumen);
+
+    const response = await fetch(
+      `${BASE_API_URL}/inovasi_pemerintah_daerah/indikator/${payload?.inovasi_id}/${payload.indikator_id}/upload`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${getToken().token}`,
+        },
+        body: formData,
+      }
+    );
+
+    const result = await response.json();
+    const isSuccess = result.code === 200;
+
+    if (isSuccess) {
+      return result;
+    }
+
+    throw Error(result.message);
+  } catch (error) {
+    throw Error("Upload dokumen pendukung error");
+  }
+};

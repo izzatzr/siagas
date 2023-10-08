@@ -9,17 +9,23 @@ import {
   PDF_ACTION_TABLE,
   PREVIEW_ACTION_TABLE,
 } from "../../../constants";
-import { convertQueryString, getToken, getUser } from "../../../utils";
+import { convertQueryString, downloadFile, getToken, getUser } from "../../../utils";
 import {
   BASE_API_URL,
+  CHECK_USER,
   GET_ALL_PEMDA_PROFILE,
 } from "../../../constans/constans";
-import { useQuery } from "react-query";
-import { getAllPemdaProfiles } from "../../../services/DatabaseInnovation/pemdaProfile";
+import { useMutation, useQuery } from "react-query";
+import {
+  getAllPemdaProfiles,
+  getPaktaIntegritas,
+  postPaktaIntegritas,
+} from "../../../services/DatabaseInnovation/pemdaProfile";
 import { useUtilContexts } from "../../../context/Utils";
 import { Link, useNavigate } from "react-router-dom";
 import Pagination from "../../../components/Pagination";
 import Upload from "../../../components/Upload";
+import { checkUser } from "../../../services/Auth/login";
 
 const initialParamsRegion = {
   page: 1,
@@ -39,9 +45,8 @@ const PemdaProfile = () => {
   const user = getUser();
   const [params, setParams] = React.useState(initialParamsPemdaProfiles);
   const { setLoadingUtil, snackbar } = useUtilContexts();
-  const [payloadPaktaIntegritas, setPayloadPaktaIntegritas] = React.useState({
-    document: null,
-  });
+
+  const [profileLogin, setProfileLogin] = React.useState(null);
 
   const actionTableData = [
     {
@@ -69,7 +74,7 @@ const PemdaProfile = () => {
       code: DOWNLOAD_TABLE,
       label: "Download Fakta Integritas",
       onClick: () => {
-        console.log(EDIT_ACTION_TABLE);
+        onHandleDownloadPaktaIntegritas()
       },
     },
     {
@@ -148,6 +153,13 @@ const PemdaProfile = () => {
     getAllPemdaProfiles(params)
   );
 
+  const { data: profile } = useQuery([CHECK_USER], checkUser(), {
+    enabled: user?.is_super_admin === "t",
+  });
+
+  const postPaktaIntegritasMutation = useMutation(postPaktaIntegritas);
+  const downloadPaktaIntegritasMutation = useMutation(getPaktaIntegritas)
+
   const onHandlePagination = (page) => {
     setParams({
       ...params,
@@ -164,12 +176,40 @@ const PemdaProfile = () => {
     }
   };
 
+  const onHandleDownloadPaktaIntegritas = () => {
+    downloadPaktaIntegritasMutation.mutate({} , {
+      onSuccess : (res) => {
+        const fileName = res?.data?.upload?.name.replace(res?.data?.upload?.extension, "");
+        downloadFile(res?.data?.upload?.full_path, fileName)
+      },
+      onError : () => {
+        alert("Download error")
+      }
+    })
+  }
+
   const onHandleUploadPaktaIntegritas = (e) => {
     const { files } = e.target;
-    setPayloadPaktaIntegritas({
-      ...payloadPaktaIntegritas,
-      document: files[0],
-    });
+
+    setLoadingUtil(true);
+
+    postPaktaIntegritasMutation.mutate(
+      {
+        user_id: profile?.id,
+        file: files[0],
+      },
+      {
+        onSuccess: () => {
+          alert("Berhasil mengupload");
+        },
+        onError: () => {
+          alert("Gagal mengupload");
+        },
+        onSettled: () => {
+          setLoadingUtil(false);
+        },
+      }
+    );
   };
 
   React.useEffect(() => {
@@ -188,7 +228,6 @@ const PemdaProfile = () => {
           label="Pakta Integritas"
           description={"Mohon mengirimkan Pakta Integritas."}
           onChange={onHandleUploadPaktaIntegritas}
-          value={payloadPaktaIntegritas?.document}
         />
       )}
       <div className="flex justify-end items-center gap-2">

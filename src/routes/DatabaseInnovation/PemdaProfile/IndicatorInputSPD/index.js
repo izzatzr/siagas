@@ -7,15 +7,20 @@ import {
   TRANSFER_ACTION_TABLE,
 } from "../../../../constants";
 import { useQuery } from "react-query";
-import { GET_ALL_INDICATOR_PEMDA_PROFILES } from "../../../../constans/constans";
+import {
+  GET_ALL_INDICATOR,
+  GET_ALL_INDICATOR_PEMDA_PROFILES,
+} from "../../../../constans/constans";
 import { getAllIndicatorPemdaProfile } from "../../../../services/DatabaseInnovation/pemdaProfile";
 import Table from "../../../../components/Table";
 import Pagination from "../../../../components/Pagination";
+import { getAllIndicator } from "../../../../services/MasterData/indicator";
 
 const initialFilterParams = {
   page: 0,
   limit: 20,
   q: "",
+  jenis_indikator: "spd",
 };
 
 const IndicatorInputSPD = () => {
@@ -26,41 +31,23 @@ const IndicatorInputSPD = () => {
 
   const [filterParams, setFilterParams] = React.useState({
     ...initialFilterParams,
-    pemda_indikator_id: currentId,
   });
 
   const tableHeader = [
     {
-      key: "indicator.nama_indikator",
+      key: "nama_indikator",
       title: "Nama Indikator",
     },
     {
-      key: "indicator.keterangan",
-      title: "Keterangan",
-    },
-    {
-      key: "informasi",
-      title: "Informasi",
-    },
-    {
       key: "",
-      title: "Input Parameter",
-      render: (item) => {
+      title: "Keterangan",
+      render : (item) => {
         return (
-          <div style={{ marginLeft: 10 }}>
-            <TableAction
-              data={[
-                {
-                  code: EDIT_ACTION_TABLE,
-                  onClick: () => {
-                    navigate(`${item.id}/dokumen-pendukung`);
-                  },
-                },
-              ]}
-            />
+          <div className="max-w-[400px] max-h-40">
+            <div dangerouslySetInnerHTML={{__html : item?.keterangan}} />
           </div>
-        );
-      },
+        )
+      }
     },
     {
       key: "",
@@ -92,8 +79,8 @@ const IndicatorInputSPD = () => {
   ];
 
   const { data } = useQuery(
-    [GET_ALL_INDICATOR_PEMDA_PROFILES, filterParams],
-    getAllIndicatorPemdaProfile(filterParams)
+    [GET_ALL_INDICATOR, filterParams],
+    getAllIndicator(filterParams)
   );
 
   const onHandlePagination = (page) => {

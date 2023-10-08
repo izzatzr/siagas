@@ -87,7 +87,7 @@ export const downloadFile = (url, fileName) => {
   document.body.appendChild(aTag);
   aTag.click();
   aTag.remove();
-}
+};
 export const fetchData = async ({ params, endpoint }) => {
   const baseUrl = `${BASE_API_URL}/${endpoint}`;
 
@@ -138,4 +138,20 @@ export const patchData = async ({ params, endpoint, data }) => {
   const result = await response.json();
 
   return result.code === 200 ? result : null;
+};
+
+export const convertEstimationScore = (value) => {
+  switch (value) {
+    case "penerapan" || "Penerapan":
+      return 9;
+
+    case "uji coba" || "Uji Coba":
+      return 6;
+
+    case "inisiatif" || "Inisiatif":
+      return 3;
+
+    default:
+      return 0;
+  }
 };

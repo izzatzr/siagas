@@ -63,16 +63,19 @@ const ReviewResult = () => {
   const actionTableData = [
     {
       code: DOWNLOAD_TABLE,
+      label : "Download",
       onClick: (item) => {},
     },
     {
       code: PREVIEW_ACTION_TABLE,
+      label : "Preview",
       onClick: (item) => {
         navigate(`/review-inovasi-daerah/detail/${item.review_inovasi_id}`);
       },
     },
     {
       code: REJECT_ACTION_TABLE,
+      label : "Reject",
       onClick: (value) => {
         setCurrentItem(value);
         setShowDelete(true);

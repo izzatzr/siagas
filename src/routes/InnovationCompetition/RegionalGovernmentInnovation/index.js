@@ -74,6 +74,7 @@ const RegionalGovernmentInnovation = () => {
   const actionTableData = [
     {
       code: PDF_ACTION_TABLE,
+      label : "PDF",
       show : true,
       onClick: () => {
         console.log(PDF_ACTION_TABLE);
@@ -81,6 +82,7 @@ const RegionalGovernmentInnovation = () => {
     },
     {
       code: EXCEL_ACTION_TABLE,
+      label : "Excel",
       show : true,
       onClick: () => {
         console.log(EXCEL_ACTION_TABLE);
@@ -88,6 +90,7 @@ const RegionalGovernmentInnovation = () => {
     },
     {
       code: TRANSFER_ACTION_TABLE,
+      label : "Indikator",
       show : user?.is_super_admin === "y",
       onClick: (item) => {
         navigate(`/inovasi-daerah/${item.id}/indicator`);
@@ -95,6 +98,7 @@ const RegionalGovernmentInnovation = () => {
     },
     {
       code: EDIT_ACTION_TABLE,
+      label : "Edit",
       show : user?.is_super_admin === "y",
       onClick: (item) => {
         navigate(`/inovasi-daerah/edit/${item.id}`);

@@ -90,11 +90,11 @@ export const submitPemdaProfil = async (payload) => {
 };
 
 export const getAllDocumentPemdaProfile = (params) => async () => {
-  const { id, ...rest } = params;
+  const { indicator_id, pemda_id, ...rest } = params;
   try {
     const paramsQueryString = convertQueryString(rest);
     const response = await fetch(
-      `${BASE_API_URL}/profil_pemda/indikator/${id}/files?${paramsQueryString}`,
+      `${BASE_API_URL}/profil_pemda/indikator/${pemda_id}/${indicator_id}/files?${paramsQueryString}`,
       {
         headers: {
           Authorization: `Bearer ${getToken().token}`,
@@ -125,7 +125,7 @@ export const uploadDocumentPemdaProfile = async (payload) => {
     formData.append("dokumen", payload.dokumen);
 
     const response = await fetch(
-      `${BASE_API_URL}/profil_pemda/indikator/${payload.pemda_indikator_id}/upload`,
+      `${BASE_API_URL}/profil_pemda/indikator/${payload?.pemda_id}/${payload.indikator_id}/upload`,
       {
         method: "POST",
         headers: {
@@ -200,5 +200,60 @@ export const getAllIndicatorPemdaProfile = (params) => async () => {
     return [];
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const postPaktaIntegritas = async (payload) => {
+  try {
+    const url = `${BASE_API_URL}/pakta_integritas`;
+    const formData = new FormData();
+    formData.append("user_id", payload.user_id);
+    formData.append("file", payload.file);
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${getToken().token}`,
+      },
+      body: formData,
+    });
+
+    if (response.status === 200) {
+      const result = await processResult(response);
+
+      const isSuccess = result.code === 200;
+
+      if (isSuccess) {
+        return result;
+      }
+    }
+
+    throw Error("Terjadi kesalahan");
+  } catch (error) {
+    throwErrorUtil(error, `${error?.message || error}`);
+  }
+};
+
+export const getPaktaIntegritas = async () => {
+  try {
+    const response = await fetch(`${BASE_API_URL}/pakta_integritas/latest`, {
+      headers: {
+        Authorization: `Bearer ${getToken().token}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const result = await processResult(response);
+
+      const isSuccess = result.code === 200;
+
+      if (isSuccess) {
+        return result;
+      }
+    }
+
+    throw Error("Terjadi kesalahan");
+  } catch (error) {
+    throwErrorUtil(error, `${error?.message || error}`);
   }
 };
