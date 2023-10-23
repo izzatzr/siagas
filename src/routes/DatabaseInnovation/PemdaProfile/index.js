@@ -9,7 +9,12 @@ import {
   PDF_ACTION_TABLE,
   PREVIEW_ACTION_TABLE,
 } from "../../../constants";
-import { convertQueryString, downloadFile, getToken, getUser } from "../../../utils";
+import {
+  convertQueryString,
+  downloadFile,
+  getToken,
+  getUser,
+} from "../../../utils";
 import {
   BASE_API_URL,
   CHECK_USER,
@@ -59,8 +64,17 @@ const PemdaProfile = () => {
     {
       code: PDF_ACTION_TABLE,
       label: "PDF",
-      onClick: () => {
-        console.log(PDF_ACTION_TABLE);
+      onClick: (item) => {
+        if (item?.document) {
+          const fullPath = item?.document?.full_path;
+          const fileName = item?.document?.name.replace(
+            item?.document?.extension,
+            ""
+          );
+          downloadFile(fullPath, fileName);
+        } else {
+          alert("Dookumen tidak tersedia");
+        }
       },
     },
     {
@@ -74,7 +88,7 @@ const PemdaProfile = () => {
       code: DOWNLOAD_TABLE,
       label: "Download Fakta Integritas",
       onClick: () => {
-        onHandleDownloadPaktaIntegritas()
+        onHandleDownloadPaktaIntegritas();
       },
     },
     {
@@ -158,7 +172,7 @@ const PemdaProfile = () => {
   });
 
   const postPaktaIntegritasMutation = useMutation(postPaktaIntegritas);
-  const downloadPaktaIntegritasMutation = useMutation(getPaktaIntegritas)
+  const downloadPaktaIntegritasMutation = useMutation(getPaktaIntegritas);
 
   const onHandlePagination = (page) => {
     setParams({
@@ -177,16 +191,22 @@ const PemdaProfile = () => {
   };
 
   const onHandleDownloadPaktaIntegritas = () => {
-    downloadPaktaIntegritasMutation.mutate({} , {
-      onSuccess : (res) => {
-        const fileName = res?.data?.upload?.name.replace(res?.data?.upload?.extension, "");
-        downloadFile(res?.data?.upload?.full_path, fileName)
-      },
-      onError : () => {
-        alert("Download error")
+    downloadPaktaIntegritasMutation.mutate(
+      {},
+      {
+        onSuccess: (res) => {
+          const fileName = res?.data?.upload?.name.replace(
+            res?.data?.upload?.extension,
+            ""
+          );
+          downloadFile(res?.data?.upload?.full_path, fileName);
+        },
+        onError: () => {
+          alert("Download error");
+        },
       }
-    })
-  }
+    );
+  };
 
   const onHandleUploadPaktaIntegritas = (e) => {
     const { files } = e.target;

@@ -15,7 +15,12 @@ const StatisticWrapper = () => {
 
   React.useEffect(() => {
     getOPD().then((data) => {
-      setSelectedOPD(data.data[0]);
+      const firstOpd = {
+        id: data?.data[0]?.id,
+        label: data?.data[0]?.nama_daerah,
+        value: `${data?.data[0]?.nama_daerah}_${data?.data[0]?.id}`,
+      };
+      setSelectedOPD(firstOpd);
     });
   }, []);
 
@@ -24,11 +29,14 @@ const StatisticWrapper = () => {
       ...initialParamsOPD,
       q: search,
     });
-    const response = await fetch(`${BASE_API_URL}/opd?${paramsQueryString}`, {
-      headers: {
-        Authorization: `Bearer ${getToken().token}`,
-      },
-    });
+    const response = await fetch(
+      `${BASE_API_URL}/profil_pemda?${paramsQueryString}`,
+      {
+        headers: {
+          Authorization: `Bearer ${getToken().token}`,
+        },
+      }
+    );
 
     const responseJSON = await response.json();
 
@@ -37,16 +45,23 @@ const StatisticWrapper = () => {
 
   const loadOptionOPD = async (search, loadedOptions, { page }) => {
     const res = await getOPD(search);
+    const results = [];
 
-    const data = {
-      options: res?.data,
-      hasMore: res.has_more,
+    res.data.map((item) => {
+      results.push({
+        id: item.id,
+        label: item.nama_daerah,
+        value: `${item.nama_daerah}_${item.id}`,
+      });
+    });
+
+    return {
+      options: results,
+      hasMore: res.length >= 1,
       additional: {
-        page: page + 1,
+        page: search ? 2 : page + 1,
       },
     };
-
-    return data;
   };
 
   const onHandleOPDChange = (opd) => {
@@ -60,7 +75,7 @@ const StatisticWrapper = () => {
         pemdaOptions={loadOptionOPD}
         onHandleOPDChange={onHandleOPDChange}
       />
-      <GovernementAffairs pemda={selectedOPD} />
+      {/* <GovernementAffairs pemda={selectedOPD} /> */}
     </>
   );
 };

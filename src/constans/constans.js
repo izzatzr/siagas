@@ -13,13 +13,13 @@ export const sidebarDataDummy = [
     label: "Dashboard",
     icon: dashboardIcon,
     active: true,
-    roles: ["Super Admin", "User"],
+    roles: ["Super Admin", "User", "Admin", "Pemda"],
     children: [
       {
         label: "Dashboard SIAGAS",
         link: "/",
         active: false,
-        roles: ["Super Admin", "User"],
+        roles: ["Super Admin", "User", "Admin", "Pemda"],
       },
       {
         label: "Statistik Inovasi",
@@ -89,10 +89,10 @@ export const sidebarDataDummy = [
     label: "Database Inovasi Daerah",
     icon: databaseInovationIcon,
     active: false,
-    roles: ["Super Admin", "User"],
+    roles: ["Super Admin", "User", "Admin", "Pemda"],
     children: [
       {
-        label: "Profil Pemda",
+        label: "Profil OPD",
         link: "/profil-pemda",
         active: false,
         roles: ["Super Admin", "User"],
@@ -246,6 +246,26 @@ export const sidebarDataDummy = [
     ],
   },
   {
+    label: "Lomba Inovasi Daerah",
+    icon: configurationIcon,
+    active: false,
+    roles: ["User", "Admin", "Pemda"],
+    children: [
+      {
+        label: "Inovasi Pemerintah Daerah",
+        link: "/lomba/inovasi-pemerintah-daerah",
+        active: false,
+        roles: ["User", "Admin", "Pemda"],
+      },
+      {
+        label: "Inovasi Masyarakat",
+        link: "/lomba/inovasi-masyarakat",
+        active: false,
+        roles: ["User", "Admin", "Pemda"],
+      },
+    ],
+  },
+  {
     label: "Konfigurasi",
     icon: configurationIcon,
     active: false,
@@ -264,10 +284,16 @@ export const sidebarDataDummy = [
         roles: ["Super Admin", "User"],
       },
       {
-        label: "Daftar UPTD",
+        label: "Daftar Unit Sekolah/Puskesmas",
         link: "/konfigurasi/daftar-uptd",
         active: false,
         roles: ["Super Admin", "User"],
+      },
+      {
+        label: "Distrik",
+        link: "/konfigurasi/distrik",
+        active: false,
+        roles: ["Super Admin"],
       },
       {
         label: "Tuxedo",
@@ -286,26 +312,6 @@ export const sidebarDataDummy = [
       //   link: "/konfigurasi/akses-api",
       //   active: false,
       // },
-    ],
-  },
-  {
-    label: "Lomba Inovasi Daerah",
-    icon: configurationIcon,
-    active: false,
-    roles: ["User"],
-    children: [
-      {
-        label: "Inovasi Pemerintah Daerah",
-        link: "/lomba/inovasi-pemerintah-daerah",
-        active: false,
-        roles: ["User"],
-      },
-      {
-        label: "Inovasi Masyarakat",
-        link: "/lomba/inovasi-masyarakat",
-        active: false,
-        roles: ["User"],
-      },
     ],
   },
 ];
@@ -363,6 +369,11 @@ export const modules = {
     ["link", "image"],
     ["clean"],
   ],
+  keyboard: {
+    bindings: {
+      tab: false,
+    },
+  },
 };
 
 export const formats = [
@@ -466,6 +477,8 @@ export const GET_INDICATOR_REGIONAL_INNOVATION_QUERY_KEY =
 
 export const GET_ALL_DOCUMENT_REGIONAL_INNOVATION_QUERY_KEY =
   "get_all_document_regional_innovation";
+export const GET_DOWNLOAD_EXCEL_REGIONAL_INNOVATION_QUERY_KEY =
+  "get_download_excel_regional_innovation";
 
 export const GET_ALL_ASSESSMENT_TEAM_QUERY_KEY = "get_all_assessment_team";
 export const GET_SETTING = "get_setting";
@@ -504,3 +517,7 @@ export const GET_ALL_SIAGAS_RANKING = "get_all_siagas_ranking";
 
 export const GET_ALL_REGIONAL_GOVERNMENT_INNOVATION =
   "get_all_regional_government_innovation";
+
+
+export const GET_ALL_DISTRICT_QUERY_KEY = 'get_all_district'
+export const GET_DISTRICT_QUERY_KEY = 'get_district'

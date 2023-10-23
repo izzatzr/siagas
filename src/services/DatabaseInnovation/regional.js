@@ -1,4 +1,5 @@
 import { BASE_API_URL } from "../../constans/constans";
+import { processResult, throwErrorUtil } from "../../helpers/fetchingUtils";
 import { convertQueryString, getToken } from "../../utils";
 
 export const getAllRegionalInnovation = (params) => async () => {
@@ -97,6 +98,7 @@ export const createRegionalInnovation = async (payload) => {
     formData.append("urusan_pemerintah", payload.urusan_pemerintah);
     formData.append("anggaran_file", payload.anggaran_file);
     formData.append("profile_file", payload.profile_file);
+    formData.append("foto", payload.foto);
 
     const response = await fetch(url, {
       method: payload?.id ? "PATCH" : "POST",
@@ -175,5 +177,25 @@ export const uploadDocumentRegionalInnovation = async (payload) => {
     throw Error(result.message);
   } catch (error) {
     throw Error("Upload dokumen pendukung error");
+  }
+};
+
+export const getDownlaodFileRegionalInnovation = async (payload) => {
+  const { id, type } = payload;
+  try {
+    const response = await fetch(
+      `${BASE_API_URL}/inovasi_pemerintah_daerah/${id}/download/${type}`,
+      {
+        headers: {
+          Authorization: `Bearer ${getToken().token}`,
+        },
+      }
+    );
+
+    const result = await processResult(response, { downloadMode: true });
+
+    return result;
+  } catch (error) {
+    throwErrorUtil(error, `${error?.message || error}`);
   }
 };

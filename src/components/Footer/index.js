@@ -7,13 +7,12 @@ import pdfFile from "../../assets/manual-book.pdf";
 const Footer = () => {
   const downloadFileStatic = () => {
     const link = document.createElement("a");
-    link.href = pdfFile;
-    link.setAttribute("download", "petunjuk-teknis.pdf");
+    link.href =
+      "https://drive.google.com/drive/folders/1aVcDkt_yvE8Y6ySqyEWiAcEdiVfijUCi";
+    link.target = "_blank"
     document.body.appendChild(link);
-    link.click();
 
-    // Clean up and remove the link
-    link.parentNode.removeChild(link);
+    link.click();
   };
   return (
     <div className=" bg-[#434343] rounded-lg py-6 px-4 flex flex-col gap-6">

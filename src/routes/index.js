@@ -93,6 +93,8 @@ import RegionalGovernmentInnovationCreate from "./InnovationCompetition/Regional
 import Authorization from "../components/Authorization";
 import RegionalInnovationDetail from "./DatabaseInnovation/RegionalInnovation/Detail";
 import InnovationRegionalSupportDocument from "./DatabaseInnovation/RegionalInnovation/Detail/InnovationRegionalSupportDocument";
+import District from "./Configuration/District";
+import FormDistrict from "./Configuration/District/FormDistrict";
 
 const Routes = () => {
   const router = createBrowserRouter([
@@ -111,7 +113,7 @@ const Routes = () => {
         {
           path: "/",
           element: (
-            <Authorization roles={["Super Admin", "User"]}>
+            <Authorization roles={["Super Admin", "User", "Admin", "Pemda"]}>
               <Siagas />
             </Authorization>
           ),
@@ -135,7 +137,7 @@ const Routes = () => {
         {
           path: "/arsip",
           element: (
-            <Authorization roles={["Super Admin", "User"]}>
+            <Authorization roles={["Super Admin", "User", "Admin", "Pemda"]}>
               <Archive />
             </Authorization>
           ),
@@ -143,7 +145,7 @@ const Routes = () => {
         {
           path: "/faq",
           element: (
-            <Authorization roles={["Super Admin", "User"]}>
+            <Authorization roles={["Super Admin", "User", "Admin", "Pemda"]}>
               <FAQ />
             </Authorization>
           ),
@@ -267,22 +269,22 @@ const innovationCompetition = [
   {
     path: "/lomba/inovasi-pemerintah-daerah",
     element: <RegionalGovernmentInnovation />,
-    roles: ["User"],
+    roles: ["User", "Admin", "Pemda"],
   },
   {
     path: "/lomba/inovasi-pemerintah-daerah/:action/:id?",
     element: <RegionalGovernmentInnovationCreate />,
-    roles: ["User"],
+    roles: ["User", "Admin", "Pemda"],
   },
   {
     path: "/lomba/inovasi-masyarakat",
     element: <PublicInnovation />,
-    roles: ["User"],
+    roles: ["User", "Admin", "Pemda"],
   },
   {
     path: "/lomba/inovasi-masyarakat/:action/:id?",
     element: <PublicInnovationEdit />,
-    roles: ["User"],
+    roles: ["User", "Admin", "Pemda"],
   },
 ];
 
@@ -362,53 +364,63 @@ const configurationRoutes = [
     element: <SettingEdit />,
     roles: ["Super Admin", "User"],
   },
+  {
+    path: "/konfigurasi/distrik",
+    element: <District />,
+    roles: ["Super Admin"],
+  },
+  {
+    path: "/konfigurasi/distrik/:action/:id?",
+    element: <FormDistrict />,
+    roles: ["Super Admin"],
+  },
 ];
 
 const innovationDatabaseRoutes = [
   {
     path: "/profil-pemda",
     element: <PemdaProfile />,
-    roles: ["Super Admin", "User"],
+    roles: ["Super Admin", "User", "Admin", "Pemda"],
   },
   {
     path: "/profil-pemda/:action/:id?",
     element: <PemdaProfileForm />,
-    roles: ["Super Admin", "User"],
+    roles: ["Super Admin", "User", "Admin", "Pemda"],
   },
   {
     path: "/profil-pemda/:id/input-indikator",
     element: <IndicatorInputSPD />,
-    roles: ["Super Admin", "User"],
+    roles: ["Super Admin", "User", "Admin", "Pemda"],
   },
   {
     path: "profil-pemda/:id/detail",
     element: <Detail />,
-    roles: ["Super Admin", "User"],
+    roles: ["Super Admin", "User", "Admin", "Pemda"],
   },
   {
     path: "profil-pemda/:id/detail/:indicator/dokumen-pendukung",
     element: <SupportDocument />,
-    roles: ["Super Admin", "User"],
+    roles: ["Super Admin", "User", "Admin", "Pemda"],
   },
   {
     path: "/inovasi-daerah",
     element: <RegionalInnovation />,
-    roles: ["Super Admin", "User"],
+    roles: ["Super Admin", "User", "Admin", "Pemda"],
   },
   {
     path: "/inovasi-daerah/:action/:id?",
     element: <RegionalInnovationForm />,
-    roles: ["Super Admin", "User"],
+    roles: ["Super Admin", "User", "Admin", "Pemda"],
   },
   {
     path: "/inovasi-daerah/:id/indikator",
     element: <RegionalInnovationDetail />,
-    roles: ["Super Admin", "User"],
+    roles: ["Super Admin", "User", "Admin", "Pemda"],
   },
   {
     path: "inovasi-daerah/:id/indikator/:indicator/dokumen-pendukung",
     element: <InnovationRegionalSupportDocument />,
-    roles: ["Super Admin", "User"],
+    roles: ["Super Admin", "User", "Admin", "Pemda"],
   },
   {
     path: "/peringkat-hasil-review",

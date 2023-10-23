@@ -146,7 +146,7 @@ const UPTDListEdit = () => {
 
   return (
     <div className="flex flex-col w-full gap-6 py-6">
-      <div className="text-[#333333] font-medium text-2xl">UPTD</div>
+      <div className="text-[#333333] font-medium text-2xl">Unit Sekolah/Puskesmas</div>
       <div className="flex flex-col w-full gap-6 p-8 bg-white rounded-lg">
         <div className="flex items-center gap-2">
           <Link to="/konfigurasi/daftar-uptd">
@@ -154,7 +154,7 @@ const UPTDListEdit = () => {
           </Link>
           <span className="text-lg font-medium">
             {params?.action === "tambah" ? "Tambah " : "Edit "}
-            UPTD
+            Unit Sekolah/Puskesmas
           </span>
         </div>
         <div className="flex items-center gap-3">
@@ -172,7 +172,7 @@ const UPTDListEdit = () => {
         </div>
         <div className="">
           <TextInput
-            label="Nama UPTD"
+            label="Nama Unit Sekolah/Puskesmas"
             placeholder="Tulis Disini..."
             onChange={(e) => {
               onHandleChange("name", e.target.value);

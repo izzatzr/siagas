@@ -11,7 +11,7 @@ const Guide = ({ title }) => {
             <span className="text-sm text-[#333333] font-light"></span>
             <span className="text-base text-[#333333] font-bold">{title}</span>
           </div>
-          <a href={manualBook} download className="flex items-center gap-2">
+          <a href={"https://drive.google.com/drive/folders/1aVcDkt_yvE8Y6ySqyEWiAcEdiVfijUCi"} target="_blank" className="flex items-center gap-2">
             <BiDownload color="#2F80ED" size={20} />
             <span className="text-sm text-[#2F80ED]">Unduh Dokumen</span>
           </a>

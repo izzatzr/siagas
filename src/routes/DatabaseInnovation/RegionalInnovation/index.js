@@ -4,20 +4,28 @@ import { BiPlus, BiSearch } from "react-icons/bi";
 import Table from "../../../components/Table";
 import TableAction from "../../../components/TableAction";
 import {
+  DOWNLOAD_TABLE,
   EDIT_ACTION_TABLE,
   EXCEL_ACTION_TABLE,
   PDF_ACTION_TABLE,
   TRANSFER_ACTION_TABLE,
 } from "../../../constants";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { GET_ALL_REGIONAL_INNOVATION_QUERY_KEY } from "../../../constans/constans";
-import { getAllRegionalInnovation } from "../../../services/DatabaseInnovation/regional";
+import {
+  getAllRegionalInnovation,
+  getDownlaodFileRegionalInnovation,
+} from "../../../services/DatabaseInnovation/regional";
 import { useUtilContexts } from "../../../context/Utils";
 import Pagination from "../../../components/Pagination";
 import Button from "../../../components/Button";
 import { useNavigate } from "react-router-dom";
 import FilterOption from "../../../components/FilterOption";
-import { convertEstimationScore } from "../../../utils";
+import {
+  convertEstimationScore,
+  downloadExcelBlob,
+  downloadFile,
+} from "../../../utils";
 
 const initialParams = {
   page: 0,
@@ -63,7 +71,7 @@ const RegionalInnovation = () => {
       key: "",
       title: "Estimasi Skor Kematangan",
       render: (item) => {
-        return  convertEstimationScore(item?.innovation_phase)
+        return convertEstimationScore(item?.innovation_phase);
       },
     },
     {
@@ -138,19 +146,70 @@ const RegionalInnovation = () => {
     setListFilter(tempListFilter);
   };
 
+  const downloadExcel = (item) => {
+    downloadExcelBlob({
+      api: getDownlaodFileRegionalInnovation({ id: item?.id, type: "xlsx" }),
+      titleFile: `Detail-Inovasi-${item?.innovation_name}-${new Date().getTime()}`,
+      onError: () => {
+        alert("Terjadi kesalahan");
+      },
+    });
+  };
+
   const actionTableData = [
     {
+      code: DOWNLOAD_TABLE,
+      label: "Dokumentasi Foto",
+      onClick: (item) => {
+        if (item?.fotoFile) {
+          const fullPath = item?.fotoFile?.full_path;
+          const fileName = item?.fotoFile?.name.replace(
+            item?.fotoFile?.extension,
+            ""
+          );
+          downloadFile(fullPath, fileName);
+        } else {
+          alert("Dookumen tidak tersedia");
+        }
+      },
+    },
+    {
       code: PDF_ACTION_TABLE,
-      label: "PDF",
-      onClick: () => {
-        console.log(PDF_ACTION_TABLE);
+      label: "Anggaran",
+      onClick: (item) => {
+        if (item?.budgetFile) {
+          const fullPath = item?.budgetFile?.full_path;
+          const fileName = item?.budgetFile?.name.replace(
+            item?.budgetFile?.extension,
+            ""
+          );
+          downloadFile(fullPath, fileName);
+        } else {
+          alert("Dookumen tidak tersedia");
+        }
+      },
+    },
+    {
+      code: PDF_ACTION_TABLE,
+      label: "Profil Bisnis",
+      onClick: (item) => {
+        if (item?.profileFile) {
+          const fullPath = item?.profileFile?.full_path;
+          const fileName = item?.profileFile?.name.replace(
+            item?.profileFile?.extension,
+            ""
+          );
+          downloadFile(fullPath, fileName);
+        } else {
+          alert("Dookumen tidak tersedia");
+        }
       },
     },
     {
       code: EXCEL_ACTION_TABLE,
       label: "Excel",
-      onClick: () => {
-        console.log(EXCEL_ACTION_TABLE);
+      onClick: (item) => {
+        downloadExcel(item);
       },
     },
     {
@@ -172,8 +231,6 @@ const RegionalInnovation = () => {
   React.useEffect(() => {
     setLoadingUtil(isFetching);
   }, [isFetching]);
-
-  console.log(data?.data)
 
   return (
     <div className="flex flex-col w-full gap-6 py-6">

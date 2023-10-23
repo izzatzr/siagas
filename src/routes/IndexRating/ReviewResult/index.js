@@ -62,11 +62,6 @@ const ReviewResult = () => {
 
   const actionTableData = [
     {
-      code: DOWNLOAD_TABLE,
-      label : "Download",
-      onClick: (item) => {},
-    },
-    {
       code: PREVIEW_ACTION_TABLE,
       label : "Preview",
       onClick: (item) => {

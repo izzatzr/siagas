@@ -55,6 +55,7 @@ const initialPayload = {
   urusan_pemerintah: null,
   anggaran_file: null,
   profile_file: null,
+  foto: null,
 };
 
 const regionalInnovationForm = [
@@ -139,7 +140,7 @@ const RegionalInnovationForm = () => {
       onSuccess: async (res) => {
         const { data, code } = res;
         if (code === 200) {
-          const loadDataPemda = getAllPemdaProfiles();
+          const loadDataPemda = getAllPemdaProfiles({limit: 100});
 
           const dropdownData = await Promise.all([
             loadDataPemda(),
@@ -164,24 +165,24 @@ const RegionalInnovationForm = () => {
             inisiator_inovasi: data?.innovation_initiator,
             jenis_inovasi: data?.innovation_type,
             bentuk_inovasi: {
-              label : data?.innovation_form,
-              value : data?.innovation_form
+              label: data?.innovation_form,
+              value: data?.innovation_form,
             },
             tematik: {
-              label : data?.thematic,
-              value : data?.thematic
+              label: data?.thematic,
+              value: data?.thematic,
             },
             urusan_pemerintah: {
               id: urusanPemerintahData?.id,
               label: urusanPemerintahData?.name,
               value: `${urusanPemerintahData?.name}`,
             },
-            waktu_uji_coba : data?.trial_time,
-            waktu_penerapan : data?.implementation_time,
-            rancang_bangun : data?.design,
-            tujuan : data?.purpose,
-            manfaat : data?.benefit,
-            hasil_inovasi : data?.result
+            waktu_uji_coba: data?.trial_time,
+            waktu_penerapan: data?.implementation_time,
+            rancang_bangun: data?.design === "undefined" || data?.design === undefined ? null : data?.design,
+            tujuan: data?.purpose === "undefined" || data?.purpose === undefined ? null : data?.purpose,
+            manfaat: data?.benefit === "undefined" || data?.benefit === undefined ? null : data?.benefit,
+            hasil_inovasi: data?.result === "undefined" || data?.result === undefined ? null : data?.result,
           });
         }
       },
@@ -506,6 +507,13 @@ const RegionalInnovationForm = () => {
           description={"Dokumen PDF, Maksimal 2MB"}
           onChange={(e) => onHandleChangeImage("profile_file", e)}
           value={payload.profile_file}
+        />
+
+        <Upload
+          label="Upload Dokumentasi Foto (Jika Ada)"
+          description={"Dokumen JPG, Maksimal 2MB"}
+          onChange={(e) => onHandleChangeImage("foto", e)}
+          value={payload.foto}
         />
 
         <div className="flex items-center gap-4 w-60">

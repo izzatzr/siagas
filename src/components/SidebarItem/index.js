@@ -57,7 +57,7 @@ const SidebarItem = (props) => {
                 </div>
               </Link>
             ) : user?.is_super_admin === "t" &&
-              child?.roles?.includes("User") ? (
+              child?.roles?.includes("User" || "Admin" || "Pemda") ? (
               <Link to={child.link} key={key}>
                 <div
                   className={`mt-[11px] text-[13px] pl-[37px] rounded py-1.5 hover:text-[#069DD9] cursor-pointer ${
@@ -68,18 +68,6 @@ const SidebarItem = (props) => {
                 </div>
               </Link>
             ) : null;
-            // if(user?.is_super_admin === "y")
-            // return (
-            //   <Link to={child.link} key={key}>
-            //     <div
-            //       className={`mt-[11px] text-[13px] pl-[37px] rounded py-1.5 hover:text-[#069DD9] cursor-pointer ${
-            //         location.pathname.includes(child.link) && "text-[#069DD9]"
-            //       }`}
-            //     >
-            //       {child.label}
-            //     </div>
-            //   </Link>
-            // );
           })}
         </div>
       )}

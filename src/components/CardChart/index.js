@@ -47,17 +47,23 @@ const CardChart = ({ label, labels, data }) => {
         </div>
       </div>
       <div className="flex items-center justify-center w-full">
-        <div className="w-[200px]">
-          <Doughnut
-            data={dataChart}
-            options={{
-              plugins: {
-                legend: {
-                  display: false,
+        <div className="w-[200px] min-h-[200px] box-border relative">
+          {data?.length > 0 ? (
+            <Doughnut
+              data={dataChart}
+              options={{
+                plugins: {
+                  legend: {
+                    display: false,
+                  },
                 },
-              },
-            }}
-          />
+              }}
+            />
+          ) : (
+            <div className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 whitespace-nowrap">
+              <span> Tidak ada data</span>
+            </div>
+          )}
         </div>
       </div>
     </div>

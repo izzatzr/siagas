@@ -53,6 +53,7 @@ const GovernementAffairs = ({ pemda }) => {
         Urusan Pemerintah
       </span>
 
+
       {data?.data.map((item) => (
         <ProgressBar
           label={item.urusan_pemerintahan}

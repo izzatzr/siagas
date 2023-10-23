@@ -1,6 +1,8 @@
 export const processResult = (res, options) => {
   if (res?.ok) {
-    if (options?.rawResponse) {
+    if (options?.downloadMode) {
+      return res.blob();
+    } else if (options?.rawResponse) {
       return res;
     } else {
       return res.json().catch((e) => {

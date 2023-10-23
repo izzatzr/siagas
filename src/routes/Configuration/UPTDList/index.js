@@ -37,7 +37,7 @@ const UPTDList = () => {
     },
     {
       key: "name",
-      title: "Nama UPDT",
+      title: "Nama Unit Sekolah/Puskesmas",
     },
     {
       key: "form-action",
@@ -128,7 +128,7 @@ const UPTDList = () => {
       )}
 
       <Toolbar
-        title="Daftar UPDT"
+        title="Daftar Unit Sekolah/Puskesmas"
         linkButton="/konfigurasi/daftar-uptd/tambah"
         linkButtonText="Tambah UPTD"
         search={true}

@@ -1,8 +1,7 @@
 import React, { useMemo } from "react";
-import { BiPlus, BiSearch } from "react-icons/bi";
+import { BiSearch } from "react-icons/bi";
 import FilterOption from "../../../components/FilterOption";
-import { AiFillInfoCircle } from "react-icons/ai";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   GET_ALL_REGIONAL_GOVERNMENT_INNOVATION,
@@ -10,23 +9,22 @@ import {
 } from "../../../constans/constans";
 import {
   deleteRegionalGovernmentInnovation,
-  getAllRegionalGovernmentInnovation,
 } from "../../../services/DatabaseInnovation/RegionalGovernmentInnovation/regionalGovermentInnovation";
 import { useUtilContexts } from "../../../context/Utils";
 import Table from "../../../components/Table";
 import Pagination from "../../../components/Pagination";
 import {
-  DELETE_ACTION_TABLE,
-  DOCUMENT_ACTION_TABLE,
-  EDIT_ACTION_TABLE,
+  DOWNLOAD_TABLE,
   EXCEL_ACTION_TABLE,
   PDF_ACTION_TABLE,
-  TRANSFER_ACTION_TABLE,
 } from "../../../constants";
 import TableAction from "../../../components/TableAction";
 import ModalConfirmation from "../../../components/ModalConfirmation";
-import { getAllRegionalInnovation } from "../../../services/DatabaseInnovation/regional";
-import { getUser } from "../../../utils";
+import {
+  getAllRegionalInnovation,
+  getDownlaodFileRegionalInnovation,
+} from "../../../services/DatabaseInnovation/regional";
+import { downloadExcelBlob, downloadFile, getUser } from "../../../utils";
 
 const initialFilter = {
   limit: 20,
@@ -71,37 +69,72 @@ const RegionalGovernmentInnovation = () => {
   const { setLoadingUtil, snackbar } = useUtilContexts();
   const navigate = useNavigate();
 
+  const downloadExcel = (item) => {
+    downloadExcelBlob({
+      api: getDownlaodFileRegionalInnovation({ id: item?.id, type: "xlsx" }),
+      titleFile: `Detail-Inovasi-${
+        item?.innovation_name
+      }-${new Date().getTime()}`,
+      onError: () => {
+        alert("Terjadi kesalahan");
+      },
+    });
+  };
+
   const actionTableData = [
     {
+      code: DOWNLOAD_TABLE,
+      label: "Dokumentasi Foto",
+      onClick: (item) => {
+        if (item?.fotoFile) {
+          const fullPath = item?.fotoFile?.full_path;
+          const fileName = item?.fotoFile?.name.replace(
+            item?.fotoFile?.extension,
+            ""
+          );
+          downloadFile(fullPath, fileName);
+        } else {
+          alert("Dookumen tidak tersedia");
+        }
+      },
+    },
+    {
       code: PDF_ACTION_TABLE,
-      label : "PDF",
-      show : true,
-      onClick: () => {
-        console.log(PDF_ACTION_TABLE);
+      label: "Anggaran",
+      onClick: (item) => {
+        if (item?.budgetFile) {
+          const fullPath = item?.budgetFile?.full_path;
+          const fileName = item?.budgetFile?.name.replace(
+            item?.budgetFile?.extension,
+            ""
+          );
+          downloadFile(fullPath, fileName);
+        } else {
+          alert("Dookumen tidak tersedia");
+        }
+      },
+    },
+    {
+      code: PDF_ACTION_TABLE,
+      label: "Profil Bisnis",
+      onClick: (item) => {
+        if (item?.profileFile) {
+          const fullPath = item?.profileFile?.full_path;
+          const fileName = item?.profileFile?.name.replace(
+            item?.profileFile?.extension,
+            ""
+          );
+          downloadFile(fullPath, fileName);
+        } else {
+          alert("Dookumen tidak tersedia");
+        }
       },
     },
     {
       code: EXCEL_ACTION_TABLE,
-      label : "Excel",
-      show : true,
-      onClick: () => {
-        console.log(EXCEL_ACTION_TABLE);
-      },
-    },
-    {
-      code: TRANSFER_ACTION_TABLE,
-      label : "Indikator",
-      show : user?.is_super_admin === "y",
+      label: "Excel",
       onClick: (item) => {
-        navigate(`/inovasi-daerah/${item.id}/indicator`);
-      },
-    },
-    {
-      code: EDIT_ACTION_TABLE,
-      label : "Edit",
-      show : user?.is_super_admin === "y",
-      onClick: (item) => {
-        navigate(`/inovasi-daerah/edit/${item.id}`);
+        downloadExcel(item);
       },
     },
   ];
@@ -220,7 +253,7 @@ const RegionalGovernmentInnovation = () => {
       )}
 
       <div className="text-[#333333] text-2xl">Inovasi Pemerintah Daerah</div>
-      
+
       <div className="flex items-center justify-between mt-4">
         <div className="mr-3">Filter</div>
         <FilterOption items={listFilter} onFilterChange={onHandlePhaseChange} />

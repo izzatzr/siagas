@@ -61,13 +61,13 @@ const Detail = () => {
 
   return (
     <div className="w-full flex flex-col gap-6 py-6">
-      <div className="text-[#333333] text-2xl">Profile Pemda</div>
+      <div className="text-[#333333] text-2xl">Profile OPD</div>
       <div className="w-full bg-white rounded-lg p-8 flex flex-col gap-6">
         <div className="flex items-center gap-2">
           <Link to="/profil-pemda">
             <BiArrowBack />
           </Link>
-          <span className="font-medium text-lg">Detail Profil Pemda</span>
+          <span className="font-medium text-lg">Detail Profil OPD</span>
         </div>
         <div className="flex items-center w-full gap-3">
           <Chipper
@@ -90,7 +90,7 @@ const Detail = () => {
           <div className="flex flex-col gap-6">
             <DetailItem label={"Nama Daerah"} value={data?.data?.nama_daerah} />
             <DetailItem
-              label={"Nama Pemda"}
+              label={"Nama OPD"}
               value={data?.data?.user?.nama_pemda}
             />
             <DetailItem
@@ -98,14 +98,14 @@ const Detail = () => {
               value={data?.data?.opd_yang_menangani}
             />
             <DetailItem
-              label={"Alamat Pemda"}
+              label={"Alamat OPD"}
               value={data?.data?.alamat_pemda}
             />
             <DetailItem label={"E-mail"} value={data?.data?.user?.email} />
-            <DetailItem label={"No. Tel"} value={data?.data?.no_telpon} />
+            <DetailItem label={"No. Telp"} value={data?.data?.no_telpon} />
             <DetailItem label={"Nama Admin"} value={data?.data?.nama_admin} />
             <DetailItem
-              label={"Dokumen Penelitian"}
+              label={"Dokumen"}
               value={data?.data?.document?.name}
               download={data?.data?.document}
             />

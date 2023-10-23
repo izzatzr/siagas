@@ -155,3 +155,33 @@ export const convertEstimationScore = (value) => {
       return 0;
   }
 };
+
+export const downloadExcelBlob = ({
+  api,
+  titleFile,
+  onSuccess = () => {},
+  onError = () => {},
+  onFinally = () => {},
+}) => {
+  api
+    .then((blob) => {
+      if (!blob) {
+        throw Error("Oops an error of blob file");
+      }
+
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+
+      a.setAttribute("id", "junkAchorESB");
+      document.body.appendChild(a);
+      a.setAttribute("style", "display: none");
+      a.href = url;
+      a.download = `${titleFile}.xlsx`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document?.getElementById("junkAchorESB")?.remove();
+      onSuccess(blob);
+    })
+    .catch((error) => onError(error))
+    .finally(onFinally);
+};

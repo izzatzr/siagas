@@ -1,18 +1,12 @@
 import React from "react";
 
-import { MdLogout } from "react-icons/md";
-import { useDispatch } from "react-redux";
-import secureLocalStorage from "react-secure-storage";
-
 import { sidebarDataDummy } from "../../constans/constans";
 import logo from "../../assets/images/logo.png";
 import SidebarItem from "../SidebarItem";
-import { signOut } from "../../redux/actions/auth";
 import { getUser } from "../../utils";
 import { useLocation } from "react-router-dom";
 
 const Sidebar = () => {
-  const dispatch = useDispatch();
   const location = useLocation();
   const user = getUser();
   const [sidebarData, setSidebarData] = React.useState(sidebarDataDummy);
@@ -34,12 +28,7 @@ const Sidebar = () => {
     setSidebarData([...sidebarDataTemp]);
   };
 
-  const handleSignOut = () => {
-    secureLocalStorage.removeItem("isLoggedIn");
-    secureLocalStorage.removeItem("token");
-
-    dispatch(signOut());
-  };
+  
 
   React.useEffect(() => {
     let sidebarTemp = sidebarDataDummy;
@@ -89,17 +78,6 @@ const Sidebar = () => {
           })}
         </div>
         <div className="w-full h-px bg-[#EBEFF2]"></div>
-        <div className="flex flex-col w-full gap-6 p-6">
-          <div
-            className="flex gap-2 items-center text-[#BDBDBD] cursor-pointer hover:text-[#069DD9]"
-            onClick={handleSignOut}
-          >
-            <MdLogout />
-            <div className="flex-1">
-              <span className="font-medium">Keluar</span>
-            </div>
-          </div>
-        </div>
       </div>
       <div className="p-6 flex items-center bg-white justify-center bottom-0 max-w-[281px] w-full border-t-[1px] border-[#EBEFF2]">
         <div className="text-[#828282] text-[15px] text-center">

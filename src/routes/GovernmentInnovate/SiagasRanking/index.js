@@ -38,16 +38,22 @@ const initialParamsOPD = {
 
 const SiagasRanking = () => {
   const [filterParams, setFilterParams] = React.useState(initialFilter);
-  const [selectedOPD, setSelectedOPD] = React.useState(null);
 
   const { isLoading, data } = useQuery(
     [GET_ALL_SIAGAS_RANKING, filterParams],
     getAllSiagasRanking(filterParams)
   );
 
+  console.log(data)
+
   const { setLoadingUtil, snackbar } = useUtilContexts();
 
   const tableHeader = [
+    {
+      key: "nama_pemda",
+      title: "Nama OPD",
+      width : 350
+    },
     {
       key: "skor_indeks",
       title: "Skor Indeks",
@@ -82,29 +88,7 @@ const SiagasRanking = () => {
     return responseJSON;
   };
 
-  const loadOptionOPD = async (search, loadedOptions, { page }) => {
-    const res = await getOPD(search);
 
-    const data = {
-      options: res?.data,
-      hasMore: res.has_more,
-      additional: {
-        page: page + 1,
-      },
-    };
-
-    return data;
-  };
-
-  React.useEffect(() => {
-    getOPD().then((data) => {
-      setSelectedOPD(data.data[0]);
-      setFilterParams({
-        ...filterParams,
-        pemda_id: data.data[0].id,
-      });
-    });
-  }, []);
 
   React.useEffect(() => {
     if (isLoading) {
@@ -133,14 +117,6 @@ const SiagasRanking = () => {
     });
   };
 
-  const onHandleOPDChange = (opd) => {
-    setSelectedOPD(opd);
-    setFilterParams({
-      ...filterParams,
-      pemda_id: opd.id,
-    });
-  };
-
   return (
     <div className="flex flex-col w-full gap-6 py-6">
       <div className="text-[#333333] text-2xl">Rangking SIAGAS</div>
@@ -155,18 +131,7 @@ const SiagasRanking = () => {
         </button>
       </div>
       <div className="w-full rounded-lg text-[#333333] bg-white p-6 flex items-end justify-between">
-        <div className="flex w-[60%] gap-4 items-end">
-          <div className="w-[60%]">
-            <SelectOption
-              label="Pemda"
-              placeholder="Pilih Pemda"
-              options={loadOptionOPD}
-              onChange={(e) => onHandleOPDChange(e)}
-              value={selectedOPD}
-              paginate
-            />
-          </div>
-        </div>
+       
         <div className="flex items-center gap-3 text-sm border border-[#333333] placeholder:text-[#828282] rounded px-3 py-2 w-[30%]">
           <BiSearch />
           <input

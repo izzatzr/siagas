@@ -127,8 +127,6 @@ const StatisticData = ({ pemda, pemdaOptions, onHandleOPDChange }) => {
 
   React.useEffect(() => {
     if (pemdaId) {
-      console.log(pemdaId);
-
       setFilterParams({
         ...filterParams,
         pemda_id: pemdaId,
@@ -139,18 +137,6 @@ const StatisticData = ({ pemda, pemdaOptions, onHandleOPDChange }) => {
       });
     }
   }, [pemda]);
-
-  // if (isLoading) {
-  //   return (
-  //     <div className="flex justify-center w-full py-3">
-  //       <AiOutlineLoading
-  //         size={30}
-  //         color={"#069DD9"}
-  //         className="animate-spin"
-  //       />
-  //     </div>
-  //   );
-  // }
 
   return (
     <div className="w-full rounded-lg flex flex-col gap-[20px] text-[#333333] bg-white p-4">
