@@ -1,4 +1,5 @@
 import { BASE_API_URL } from "../../../constans/constans";
+import { processResult, throwErrorUtil } from "../../../helpers/fetchingUtils";
 import { convertQueryString, getToken } from "../../../utils";
 
 export const getAllReviewResult = (params) => async () => {
@@ -49,5 +50,27 @@ export const deleteReviewResult = async ({ id }) => {
     throw Error("Error");
   } catch (error) {
     console.log("Error");
+  }
+};
+
+export const getDownloadReviewResult = async (payload) => {
+  const { type, ...params } = payload;
+
+  const paramsQueryString = convertQueryString(params);
+
+  const url = `${BASE_API_URL}/hasil_review_inovasi_daerah/download/${type}?${paramsQueryString}`;
+
+  try {
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${getToken().token}`,
+      },
+    });
+
+    const result = await processResult(response, { downloadMode: true });
+
+    return result;
+  } catch (error) {
+    throwErrorUtil(error, `${error?.message || error}`);
   }
 };

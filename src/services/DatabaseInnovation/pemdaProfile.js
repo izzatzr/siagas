@@ -257,3 +257,23 @@ export const getPaktaIntegritas = async () => {
     throwErrorUtil(error, `${error?.message || error}`);
   }
 };
+
+export const getDownloadPemdaProfileFile = async (payload) => {
+  const { id, type } = payload;
+  try {
+    const response = await fetch(
+      `${BASE_API_URL}/profil_pemda/${id}/download/${type}`,
+      {
+        headers: {
+          Authorization: `Bearer ${getToken().token}`,
+        },
+      }
+    );
+
+    const result = await processResult(response, { downloadMode: true });
+
+    return result;
+  } catch (error) {
+    throwErrorUtil(error, `${error?.message || error}`);
+  }
+};

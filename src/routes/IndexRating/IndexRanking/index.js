@@ -15,9 +15,11 @@ import { GET_ALL_INDEX_RANKING } from "../../../constans/constans";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   getAllIndexRanking,
+  getDownloadIndexRanking,
   updateIndexRanking,
 } from "../../../services/IndexRating/IndexRanking/indexRanking";
 import ModalConfirmation from "../../../components/ModalConfirmation";
+import { downloadExcelBlob } from "../../../utils";
 
 const initialFilter = {
   limit: 20,
@@ -84,25 +86,15 @@ const IndexRanking = () => {
     });
   };
 
-  const onHandleSearch = (value) => {
-    if (value.length > 3) {
+  const onHandleSearch = (e) => {
+    const value = e.target.value;
+    if (e.key === "Enter") {
       setFilterParams({
+        ...filterParams,
         q: value,
-      });
-    } else if (value.length === 0) {
-      setFilterParams({
-        q: "",
       });
     }
   };
-
-  React.useEffect(() => {
-    if (isLoading) {
-      setLoadingUtil(true);
-    } else {
-      setLoadingUtil(false);
-    }
-  }, [isLoading]);
 
   const onHandleUpdateToYes = () => {
     setShowConfirmation(false);
@@ -154,6 +146,34 @@ const IndexRanking = () => {
     );
   };
 
+  const onHandleDownloadFile = (type) => {
+    const newParams = {
+      type,
+    };
+
+    if (filterParams.q) {
+      newParams["q"] = filterParams.q;
+    }
+
+    let fileName = `index-ranking-${new Date().getTime()}`;
+
+    downloadExcelBlob({
+      api: getDownloadIndexRanking(newParams),
+      titleFile: fileName,
+      onError: () => {
+        snackbar("Terjadi Kesalahan", () => {}, "error");
+      },
+    });
+  };
+
+  React.useEffect(() => {
+    if (isLoading) {
+      setLoadingUtil(true);
+    } else {
+      setLoadingUtil(false);
+    }
+  }, [isLoading]);
+
   return (
     <div className="flex flex-col w-full gap-6 py-6">
       {showConfirmation && (
@@ -167,38 +187,33 @@ const IndexRanking = () => {
 
       <div className="text-[#333333] text-2xl">Ranking Indeks</div>
       <div className="flex items-center justify-end gap-2">
-        <button className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5">
+        <button
+          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
+          onClick={() => {
+            onHandleDownloadFile("pdf");
+          }}
+        >
           <BiDownload className="text-base" />
           Unduh Data (PDF)
         </button>
-        <button className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5">
+        <button
+          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
+          onClick={() => {
+            onHandleDownloadFile("xlsx");
+          }}
+        >
           <BiDownload className="text-base" />
           Unduh Data (XLS)
         </button>
       </div>
       <div className="w-full rounded-lg text-[#333333] bg-white p-6 flex items-end justify-between">
-        <div className="flex w-[60%] gap-4 items-end">
-          {/* <div className="w-[60%]">
-          <SelectOption
-            label="Klaster"
-            placeholder="Pilih Klaster"
-            options={loadOptionRegions}
-            onChange={onHandleRegionChange}
-            value={selectedRegion}
-            paginate
-          />
-        </div>
-        <button onClick={resetRegion} className="border border-[#333333] px-6 py-2 text-sm rounded">
-          Tampilkan Semua
-        </button> */}
-        </div>
         <div className="flex items-center gap-3 text-sm border border-[#333333] placeholder:text-[#828282] rounded px-3 py-2 w-[30%]">
           <BiSearch />
           <input
             type="text"
-            className="outline-none"
+            className="outline-none w-full"
             placeholder="Pencarian"
-            onChange={(e) => onHandleSearch(e.target.value)}
+            onKeyDown={(e) => onHandleSearch(e)}
           />
         </div>
       </div>

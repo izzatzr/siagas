@@ -2,11 +2,15 @@ import React from "react";
 import TablePemda from "./components/TablePemda";
 import { useQuery } from "react-query";
 import { GET_ALL_ARCHIVE } from "../../../constans/constans";
-import { getAllArchive } from "../../../services/Dashboard/Archive/archive";
+import {
+  getAllArchive,
+  getDownloadArchiveDashboard,
+} from "../../../services/Dashboard/Archive/archive";
 import Button from "../../../components/Button";
 import { BiDownload } from "react-icons/bi";
 import FilterOption from "../../../components/FilterOption";
 import { useUtilContexts } from "../../../context/Utils";
+import { downloadExcelBlob } from "../../../utils";
 
 const initialFilter = {
   limit: 20,
@@ -42,7 +46,7 @@ const Archive = () => {
     [GET_ALL_ARCHIVE, filterParams],
     getAllArchive(filterParams)
   );
-  const { setLoadingUtil } = useUtilContexts();
+  const { setLoadingUtil, snackbar } = useUtilContexts();
 
   React.useEffect(() => {
     if (isLoading) {
@@ -66,6 +70,28 @@ const Archive = () => {
     });
   };
 
+  const onHandleDonwloadExcel = () => {
+    const newParams = {
+      type: "xlsx",
+    };
+
+    if (filterParams.tahapan) {
+      newParams["tahapan"] = filterParams.tahapan;
+    }
+
+    if (filterParams.q) {
+      newParams["q"] = filterParams.q;
+    }
+
+    downloadExcelBlob({
+      api: getDownloadArchiveDashboard(newParams),
+      titleFile: `arsip-data-${newParams["tahapan"]}-${new Date().getTime()}`,
+      onError: () => {
+        snackbar("Terjadi Kesalahan", () => {}, "error");
+      },
+    });
+  };
+
   return (
     <div className="flex flex-col w-full gap-6 py-6">
       <div className="text-[#333333] text-2xl font-bold">Arsip</div>
@@ -81,6 +107,7 @@ const Archive = () => {
           text="Unduh Data (XLS)"
           icon={<BiDownload size="16" />}
           padding="p-[10px]"
+          onClick={onHandleDonwloadExcel}
         />
       </div>
 

@@ -9,20 +9,12 @@ import {
   PDF_ACTION_TABLE,
   PREVIEW_ACTION_TABLE,
 } from "../../../constants";
-import {
-  convertQueryString,
-  downloadFile,
-  getToken,
-  getUser,
-} from "../../../utils";
-import {
-  BASE_API_URL,
-  CHECK_USER,
-  GET_ALL_PEMDA_PROFILE,
-} from "../../../constans/constans";
+import { downloadExcelBlob, downloadFile, getUser } from "../../../utils";
+import { CHECK_USER, GET_ALL_PEMDA_PROFILE } from "../../../constans/constans";
 import { useMutation, useQuery } from "react-query";
 import {
   getAllPemdaProfiles,
+  getDownloadPemdaProfileFile,
   getPaktaIntegritas,
   postPaktaIntegritas,
 } from "../../../services/DatabaseInnovation/pemdaProfile";
@@ -31,12 +23,6 @@ import { Link, useNavigate } from "react-router-dom";
 import Pagination from "../../../components/Pagination";
 import Upload from "../../../components/Upload";
 import { checkUser } from "../../../services/Auth/login";
-
-const initialParamsRegion = {
-  page: 1,
-  limit: 20,
-  name: "",
-};
 
 const initialParamsPemdaProfiles = {
   page: 1,
@@ -50,8 +36,6 @@ const PemdaProfile = () => {
   const user = getUser();
   const [params, setParams] = React.useState(initialParamsPemdaProfiles);
   const { setLoadingUtil, snackbar } = useUtilContexts();
-
-  const [profileLogin, setProfileLogin] = React.useState(null);
 
   const actionTableData = [
     {
@@ -80,8 +64,8 @@ const PemdaProfile = () => {
     {
       code: EXCEL_ACTION_TABLE,
       label: "Excel",
-      onClick: () => {
-        console.log(EDIT_ACTION_TABLE);
+      onClick: (item) => {
+        downloadExcel(item)
       },
     },
     {
@@ -136,31 +120,6 @@ const PemdaProfile = () => {
       render: (item) => <TableAction data={actionTableData} itemData={item} />,
     },
   ];
-
-  const loadOptionRegions = async (search, loadedOptions, { page }) => {
-    const paramsQueryString = convertQueryString({
-      ...initialParamsRegion,
-      name: search,
-    });
-    const response = await fetch(
-      `${BASE_API_URL}/daerah?${paramsQueryString}`,
-      {
-        headers: {
-          Authorization: `Bearer ${getToken().token}`,
-        },
-      }
-    );
-
-    const responseJSON = await response.json();
-
-    return {
-      options: responseJSON?.data,
-      hasMore: responseJSON.has_more,
-      additional: {
-        page: page + 1,
-      },
-    };
-  };
 
   const { data, isLoading: isLoadingPemdaProfile } = useQuery(
     [GET_ALL_PEMDA_PROFILE, params],
@@ -230,6 +189,18 @@ const PemdaProfile = () => {
         },
       }
     );
+  };
+
+  const downloadExcel = (item) => {
+    downloadExcelBlob({
+      api: getDownloadPemdaProfileFile({ id: item?.id, type: "xlsx" }),
+      titleFile: `profile-opd-${
+        item?.nama_daerah
+      }-${new Date().getTime()}`,
+      onError: () => {
+        alert("Terjadi kesalahan");
+      },
+    });
   };
 
   React.useEffect(() => {

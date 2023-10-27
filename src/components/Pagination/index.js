@@ -5,6 +5,7 @@ import { getPageLabel } from "../../helpers/paginationCount";
 
 const Pagination = (props) => {
   const { pageCount, onHandlePagination, totalData, size } = props;
+  
   return (
     <div className="flex justify-between items-center py-[20px]">
       <span className="trext-[#828282] text-xs">

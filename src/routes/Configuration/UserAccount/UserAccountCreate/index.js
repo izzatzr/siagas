@@ -214,7 +214,7 @@ const UserAccountCreate = () => {
         </div>
         <div>
           <TextInput
-            label="Nama Pemda"
+            label="Nama OPD / Unit (Sekolah/Puskesmas)"
             placeholder="Tulis Disini..."
             onChange={(e) => {
               onHandleChange("namaPemda", e.target.value);

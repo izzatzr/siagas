@@ -39,8 +39,16 @@ const UserAccount = () => {
       title: "Role",
     },
     {
+      key: "full_name",
+      title: "Nama Lengkap",
+    },
+    {
+      key: "nickname",
+      title: "Nama Panggilan",
+    },
+    {
       key: "nama_pemda",
-      title: "Daerah",
+      title: "Nama OPD",
     },
     {
       key: "username",

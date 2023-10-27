@@ -9,11 +9,7 @@ import ReactPaginate from "react-paginate";
 import SelectOption from "../../../components/SelectOption";
 import Table from "../../../components/Table";
 import TableAction from "../../../components/TableAction";
-import {
-  DOWNLOAD_TABLE,
-  PREVIEW_ACTION_TABLE,
-  REJECT_ACTION_TABLE,
-} from "../../../constants";
+import { PREVIEW_ACTION_TABLE, REJECT_ACTION_TABLE } from "../../../constants";
 import {
   BASE_API_URL,
   GET_ALL_REVIEW_RESULT,
@@ -22,11 +18,16 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   deleteReviewResult,
   getAllReviewResult,
+  getDownloadReviewResult,
 } from "../../../services/IndexRating/ReviewResult/reviewResult";
 import { useNavigate } from "react-router-dom";
 import { useUtilContexts } from "../../../context/Utils";
 import ModalConfirmation from "../../../components/ModalConfirmation";
-import { convertQueryString, getToken } from "../../../utils";
+import {
+  convertQueryString,
+  downloadExcelBlob,
+  getToken,
+} from "../../../utils";
 import { updateRegionalInnovationReview } from "../../../services/IndexRating/RegionalInnovationReview/regionalInnovationReview";
 import Button from "../../../components/Button";
 import Modal from "../../../components/Modal";
@@ -35,20 +36,19 @@ const initialFilter = {
   limit: 20,
   page: 1,
   q: "",
-  nama_pemda: "",
 };
 
-const initialParamsRegion = {
+const initialPemdaProfileParams = {
   page: 1,
-  limit: 20,
-  name: "",
+  limit: 10,
+  q: "",
 };
 
 const ReviewResult = () => {
   const [filterParams, setFilterParams] = React.useState(initialFilter);
   const [showDelete, setShowDelete] = React.useState(false);
   const [currentItem, setCurrentItem] = React.useState(null);
-  const [selectedRegion, setSelectedRegion] = React.useState(null);
+  const [selectedOPDProfile, setSelectedOPDProfile] = React.useState(null);
   const [showPreviewModal, setShowPreviewModal] = React.useState(false);
 
   const { setLoadingUtil, snackbar } = useUtilContexts();
@@ -63,14 +63,14 @@ const ReviewResult = () => {
   const actionTableData = [
     {
       code: PREVIEW_ACTION_TABLE,
-      label : "Preview",
+      label: "Preview",
       onClick: (item) => {
         navigate(`/review-inovasi-daerah/detail/${item.review_inovasi_id}`);
       },
     },
     {
       code: REJECT_ACTION_TABLE,
-      label : "Reject",
+      label: "Reject",
       onClick: (value) => {
         setCurrentItem(value);
         setShowDelete(true);
@@ -141,13 +141,14 @@ const ReviewResult = () => {
     setShowPreviewModal(false);
   };
 
-  const loadOptionRegions = async (search, loadedOptions, { page }) => {
+  const loadPemdaProfiles = async (id, { page }) => {
     const paramsQueryString = convertQueryString({
-      ...initialParamsRegion,
-      name: search,
+      ...initialPemdaProfileParams,
+      page,
     });
+
     const response = await fetch(
-      `${BASE_API_URL}/daerah?${paramsQueryString}`,
+      `${BASE_API_URL}/profil_pemda?${paramsQueryString}`,
       {
         headers: {
           Authorization: `Bearer ${getToken().token}`,
@@ -155,11 +156,25 @@ const ReviewResult = () => {
       }
     );
 
-    const responseJSON = await response.json();
+    return await response.json();
+  };
+
+  const loadOptionOPDProfile = async (search, loadedOptions, { page }) => {
+    const responseJSON = await loadPemdaProfiles(null, { page });
+    const results = [];
+    responseJSON.data.map((item) => {
+      results.push({
+        id: item.id,
+        label: item?.nama_daerah,
+        value: `${item?.nama_daerah}-${item?.id}`,
+      });
+    });
 
     return {
-      options: responseJSON?.data,
-      hasMore: responseJSON.has_more,
+      options: results,
+      hasMore:
+        responseJSON?.pagination?.pages >= 1 &&
+        loadedOptions.length < responseJSON?.pagination?.total,
       additional: {
         page: page + 1,
       },
@@ -185,14 +200,12 @@ const ReviewResult = () => {
     });
   };
 
-  const onHandleSearch = (value) => {
-    if (value.length > 3) {
+  const onHandleSearch = (e) => {
+    const value = e.target.value;
+    if (e.key === "Enter") {
       setFilterParams({
+        ...filterParams,
         q: value,
-      });
-    } else if (value.length === 0) {
-      setFilterParams({
-        q: "",
       });
     }
   };
@@ -222,19 +235,47 @@ const ReviewResult = () => {
     );
   };
 
-  const onHandleRegionChange = (value) => {
-    setSelectedRegion(value);
+  const onHandleOPDProfileChange = (value) => {
+    setSelectedOPDProfile(value);
     setFilterParams({
       ...filterParams,
-      nama_pemda: value.name,
+      pemda_id: value.id,
     });
   };
 
-  const resetRegion = () => {
-    setSelectedRegion(null);
+  const resetOPDProfile = () => {
+    setSelectedOPDProfile(null);
     setFilterParams({
       ...filterParams,
-      nama_pemda: "",
+      pemda_id: "",
+    });
+  };
+
+  const onHandleDownloadFile = (type) => {
+    const newParams = {
+      type,
+    };
+
+    if (filterParams.pemda_id) {
+      newParams["pemda_id"] = filterParams.pemda_id;
+    }
+
+    if (filterParams.q) {
+      newParams["q"] = filterParams.q;
+    }
+
+    let fileName = `hasil-review${
+      selectedOPDProfile
+        ? `-${selectedOPDProfile?.label?.replaceAll(" ", "_")}`
+        : ""
+    }-${new Date().getTime()}`;
+
+    downloadExcelBlob({
+      api: getDownloadReviewResult(newParams),
+      titleFile: fileName,
+      onError: () => {
+        snackbar("Terjadi Kesalahan", () => {}, "error");
+      },
     });
   };
 
@@ -269,11 +310,21 @@ const ReviewResult = () => {
 
       <div className="text-[#333333] text-2xl">Hasil Review Inovasi Daerah</div>
       <div className="flex items-center justify-end gap-2">
-        <button className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5">
+        <button
+          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
+          onClick={() => {
+            onHandleDownloadFile("pdf");
+          }}
+        >
           <BiDownload className="text-base" />
           Unduh Data (PDF)
         </button>
-        <button className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5">
+        <button
+          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
+          onClick={() => {
+            onHandleDownloadFile("xlsx");
+          }}
+        >
           <BiDownload className="text-base" />
           Unduh Data (XLS)
         </button>
@@ -282,16 +333,17 @@ const ReviewResult = () => {
         <div className="flex w-[60%] gap-4 items-end">
           <div className="w-[60%]">
             <SelectOption
-              label="Tampilkan berdasarkan daerah"
-              placeholder="Pilih Daerah"
-              options={loadOptionRegions}
-              onChange={onHandleRegionChange}
-              value={selectedRegion}
+              label="Tampilkan berdasarkan OPD"
+              placeholder="Pilih Opd Profile"
+              options={loadOptionOPDProfile}
+              onChange={onHandleOPDProfileChange}
+              value={selectedOPDProfile}
               paginate
+              getOptionLabel={(e) => e.label}
             />
           </div>
           <button
-            onClick={resetRegion}
+            onClick={resetOPDProfile}
             className="border border-[#333333] px-6 py-2 text-sm rounded"
           >
             Tampilkan Semua
@@ -301,9 +353,11 @@ const ReviewResult = () => {
           <BiSearch />
           <input
             type="text"
-            className="outline-none"
+            className="outline-none w-full"
             placeholder="Pencarian"
-            onChange={(e) => onHandleSearch(e.target.value)}
+            onKeyDown={(e) => {
+              onHandleSearch(e);
+            }}
           />
         </div>
       </div>

@@ -1,5 +1,6 @@
 import { convertQueryString, getToken } from "../../../utils";
 import { BASE_API_URL } from "../../../constans/constans";
+import { processResult, throwErrorUtil } from "../../../helpers/fetchingUtils";
 
 export const getAllRejectedInnovation = (params) => async () => {
   try {
@@ -47,5 +48,27 @@ export const updateRejectedInnovation = async (id) => {
     throw Error("Error");
   } catch (error) {
     console.log("Error");
+  }
+};
+
+export const getDownloadRejectedReview = async (payload) => {
+  const { type, ...params } = payload;
+
+  const paramsQueryString = convertQueryString(params);
+
+  const url = `${BASE_API_URL}/inovasi_ditolak/download/${type}?${paramsQueryString}`;
+
+  try {
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${getToken().token}`,
+      },
+    });
+
+    const result = await processResult(response, { downloadMode: true });
+
+    return result;
+  } catch (error) {
+    throwErrorUtil(error, `${error?.message || error}`);
   }
 };

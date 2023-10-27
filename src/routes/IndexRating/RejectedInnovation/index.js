@@ -11,19 +11,35 @@ import TableAction from "../../../components/TableAction";
 import { APPROVE_ACTION_TABLE, PREVIEW_ACTION_TABLE } from "../../../constants";
 import { useUtilContexts } from "../../../context/Utils";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { GET_ALL_REJECTED_INNOVATION } from "../../../constans/constans";
+import {
+  BASE_API_URL,
+  GET_ALL_REJECTED_INNOVATION,
+} from "../../../constans/constans";
 import {
   getAllRejectedInnovation,
+  getDownloadRejectedReview,
   updateRejectedInnovation,
 } from "../../../services/IndexRating/RejectedInnovation/rejectedInnovation";
 import { useNavigate } from "react-router-dom";
 import ModalConfirmation from "../../../components/ModalConfirmation";
 import Button from "../../../components/Button";
 import Modal from "../../../components/Modal";
+import {
+  convertQueryString,
+  downloadExcelBlob,
+  getToken,
+} from "../../../utils";
+import SelectOption from "../../../components/SelectOption";
 
 const initialFilter = {
   limit: 20,
   page: 1,
+  q: "",
+};
+
+const initialPemdaProfileParams = {
+  page: 1,
+  limit: 10,
   q: "",
 };
 
@@ -32,6 +48,7 @@ const RejectedInnovation = () => {
   const [currentItem, setCurrentItem] = React.useState(null);
   const [showConfirmation, setShowConfirmation] = React.useState(false);
   const [showPreviewModal, setShowPreviewModal] = React.useState(false);
+  const [selectedOPDProfile, setSelectedOPDProfile] = React.useState(null);
 
   const queryClient = useQueryClient();
 
@@ -58,14 +75,14 @@ const RejectedInnovation = () => {
   const actionTableData = [
     {
       code: PREVIEW_ACTION_TABLE,
-      label : "Preview",
+      label: "Preview",
       onClick: (item) => {
         navigate(`/review-inovasi-daerah/detail/${item.review_inovasi_id}`);
       },
     },
     {
       code: APPROVE_ACTION_TABLE,
-      label : "Approve",
+      label: "Approve",
       onClick: (item) => {
         setCurrentItem(item);
         setShowConfirmation(true);
@@ -132,8 +149,48 @@ const RejectedInnovation = () => {
   };
 
   const closeModal = () => {
-    setCurrentItem(null)
+    setCurrentItem(null);
     setShowPreviewModal(false);
+  };
+
+  const loadPemdaProfiles = async (id, { page }) => {
+    const paramsQueryString = convertQueryString({
+      ...initialPemdaProfileParams,
+      page,
+    });
+
+    const response = await fetch(
+      `${BASE_API_URL}/profil_pemda?${paramsQueryString}`,
+      {
+        headers: {
+          Authorization: `Bearer ${getToken().token}`,
+        },
+      }
+    );
+
+    return await response.json();
+  };
+
+  const loadOptionOPDProfile = async (search, loadedOptions, { page }) => {
+    const responseJSON = await loadPemdaProfiles(null, { page });
+    const results = [];
+    responseJSON.data.map((item) => {
+      results.push({
+        id: item.id,
+        label: item?.nama_daerah,
+        value: `${item?.nama_daerah}-${item?.id}`,
+      });
+    });
+
+    return {
+      options: results,
+      hasMore:
+        responseJSON?.pagination?.pages >= 1 &&
+        loadedOptions.length < responseJSON?.pagination?.total,
+      additional: {
+        page: page + 1,
+      },
+    };
   };
 
   const onHandleAccept = () => {
@@ -148,7 +205,7 @@ const RejectedInnovation = () => {
           queryClient.invalidateQueries([GET_ALL_REJECTED_INNOVATION]);
 
           snackbar("Berhasil menyetujui", () => {
-            navigate("/inovasi_ditolak");
+            navigate("/inovasi-ditolak");
           });
         }
       },
@@ -162,16 +219,58 @@ const RejectedInnovation = () => {
     });
   };
 
-  const onHandleSearch = (value) => {
-    if (value.length > 3) {
+  const onHandleSearch = (e) => {
+    const value = e.target.value;
+    if (e.key === "Enter") {
       setFilterParams({
+        ...filterParams,
         q: value,
       });
-    } else if (value.length === 0) {
-      setFilterParams({
-        q: "",
-      });
     }
+  };
+
+  const onHandleOPDProfileChange = (value) => {
+    setSelectedOPDProfile(value);
+    setFilterParams({
+      ...filterParams,
+      pemda_id: value.id,
+    });
+  };
+
+  const resetOPDProfile = () => {
+    setSelectedOPDProfile(null);
+    setFilterParams({
+      ...filterParams,
+      pemda_id: "",
+    });
+  };
+
+  const onHandleDownloadFile = (type) => {
+    const newParams = {
+      type,
+    };
+
+    if (filterParams.pemda_id) {
+      newParams["pemda_id"] = filterParams.pemda_id;
+    }
+
+    if (filterParams.q) {
+      newParams["q"] = filterParams.q;
+    }
+
+    let fileName = `review-ditolak${
+      selectedOPDProfile
+        ? `-${selectedOPDProfile?.label?.replaceAll(" ", "_")}`
+        : ""
+    }-${new Date().getTime()}`;
+
+    downloadExcelBlob({
+      api: getDownloadRejectedReview(newParams),
+      titleFile: fileName,
+      onError: () => {
+        snackbar("Terjadi Kesalahan", () => {}, "error");
+      },
+    });
   };
 
   return (
@@ -207,28 +306,52 @@ const RejectedInnovation = () => {
         Daftar Inovasi Daerah yang ditolak
       </div>
       <div className="flex items-center justify-end gap-2">
-        <button className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5">
+        <button
+          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
+          onClick={() => {
+            onHandleDownloadFile("pdf");
+          }}
+        >
           <BiDownload className="text-base" />
           Unduh Data (PDF)
         </button>
-        <button className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5">
+        <button
+          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
+          onClick={() => {
+            onHandleDownloadFile("xlsx");
+          }}
+        >
           <BiDownload className="text-base" />
           Unduh Data (XLS)
         </button>
       </div>
       <div className="w-full rounded-lg text-[#333333] bg-white p-6 flex items-end justify-between">
         <div className="flex w-[60%] gap-4 items-end">
-          {/* <button className="border border-[#333333] px-6 py-2 text-sm rounded">
+          <div className="w-[60%]">
+            <SelectOption
+              label="Tampilkan berdasarkan OPD"
+              placeholder="Pilih Opd Profile"
+              options={loadOptionOPDProfile}
+              onChange={onHandleOPDProfileChange}
+              value={selectedOPDProfile}
+              paginate
+              getOptionLabel={(e) => e.label}
+            />
+          </div>
+          <button
+            onClick={resetOPDProfile}
+            className="border border-[#333333] px-6 py-2 text-sm rounded"
+          >
             Tampilkan Semua
-          </button> */}
+          </button>
         </div>
         <div className="flex items-center gap-3 text-sm border border-[#333333] placeholder:text-[#828282] rounded px-3 py-2 w-[30%]">
           <BiSearch />
           <input
             type="text"
-            className="outline-none"
+            className="outline-none w-full"
             placeholder="Pencarian"
-            onChange={(e) => onHandleSearch(e.target.value)}
+            onKeyDown={(e) => onHandleSearch(e)}
           />
         </div>
       </div>

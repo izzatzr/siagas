@@ -36,7 +36,10 @@ const getItem = ({ data, name }) => {
   const tableHeader = [
     {
       key: getKeyProperty(),
-      title: `Nama ${name?.split("_").map((item) => item?.charAt(0).toUpperCase() + item?.slice(1)).join(" ")}`,
+      title: `Nama ${name
+        ?.split("_")
+        .map((item) => item?.charAt(0).toUpperCase() + item?.slice(1))
+        .join(" ")}`,
       width: 400,
     },
     {
@@ -44,7 +47,6 @@ const getItem = ({ data, name }) => {
       title: `Total disetujui`,
     },
   ];
-
 
   return (
     <Table
@@ -54,14 +56,14 @@ const getItem = ({ data, name }) => {
       columns={tableHeader}
       footer={[
         {
-            value : "Total Keseluruhan",
-            colSpan : 2
+          value: "Total Keseluruhan",
+          colSpan: 2,
         },
         {
-            value : data?.reduce((a, b) => {
-                return a + parseInt(b?.total_keseluruhan)
-            }, 0)
-        }
+          value: data?.reduce((a, b) => {
+            return a + parseInt(b?.total_keseluruhan);
+          }, 0),
+        },
       ]}
     />
   );
@@ -100,8 +102,11 @@ const Rawlog = () => {
     }
   );
 
-  const loadPemdaProfiles = async (id) => {
-    const paramsQueryString = convertQueryString(initialPemdaProfileParams);
+  const loadPemdaProfiles = async (id, { page }) => {
+    const paramsQueryString = convertQueryString({
+      ...initialPemdaProfileParams,
+      page,
+    });
 
     const response = await fetch(
       `${BASE_API_URL}/profil_pemda${id ? `/${id}` : `?${paramsQueryString}`}`,
@@ -116,7 +121,7 @@ const Rawlog = () => {
   };
 
   const loadOptionPemdaProfile = async (search, loadedOptions, { page }) => {
-    const responseJSON = await loadPemdaProfiles();
+    const responseJSON = await loadPemdaProfiles(null, { page });
     const results = [];
     responseJSON.data.map((item) => {
       results.push({
@@ -128,9 +133,9 @@ const Rawlog = () => {
 
     return {
       options: results,
-      hasMore: responseJSON.length >= 1,
+      hasMore: responseJSON?.pagination?.pages >= 1 && loadedOptions.length < responseJSON?.pagination?.total,
       additional: {
-        page: search ? 2 : page + 1,
+        page: page + 1,
       },
     };
   };
@@ -157,8 +162,8 @@ const Rawlog = () => {
       <div className="text-[#333333] font-medium text-2xl">Rawlog</div>
       <div className="w-full bg-white rounded-lg p-8 flex flex-col gap-6">
         <SelectOption
-          label="Pilih Pemda"
-          placeholder="Pilih Pemda"
+          label="Pilih OPD"
+          placeholder="Pilih OPD"
           options={loadOptionPemdaProfile}
           paginate={true}
           onChange={onHandleChange}

@@ -1,5 +1,6 @@
 import { convertQueryString, getToken } from "../../../utils";
 import { BASE_API_URL } from "../../../constans/constans";
+import { processResult, throwErrorUtil } from "../../../helpers/fetchingUtils";
 
 export const getAllIndexRanking = (params) => async () => {
   try {
@@ -50,5 +51,27 @@ export const updateIndexRanking = async ({ id, nominator }) => {
     throw Error("Error");
   } catch (error) {
     console.log("Error");
+  }
+};
+
+export const getDownloadIndexRanking = async (payload) => {
+  const { type, ...params } = payload;
+
+  const paramsQueryString = convertQueryString(params);
+
+  const url = `${BASE_API_URL}/ranking_index/download/${type}?${paramsQueryString}`;
+
+  try {
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${getToken().token}`,
+      },
+    });
+
+    const result = await processResult(response, { downloadMode: true });
+
+    return result;
+  } catch (error) {
+    throwErrorUtil(error, `${error?.message || error}`);
   }
 };

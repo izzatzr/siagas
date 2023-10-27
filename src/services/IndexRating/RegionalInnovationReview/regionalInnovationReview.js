@@ -190,3 +190,25 @@ export const postRegionalInnovationReviewEvaluation = async (payload) => {
     throwErrorUtil(error, `${error?.message || error}`);
   }
 };
+
+export const getDownloadRegionalInnovationReview = async (payload) => {
+  const { type, ...params } = payload;
+
+  const paramsQueryString = convertQueryString(params);
+
+  const url = `${BASE_API_URL}/review_inovasi_daerah/download/${type}?${paramsQueryString}`;
+
+  try {
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${getToken().token}`,
+      },
+    });
+
+    const result = await processResult(response, { downloadMode: true });
+
+    return result;
+  } catch (error) {
+    throwErrorUtil(error, `${error?.message || error}`);
+  }
+};

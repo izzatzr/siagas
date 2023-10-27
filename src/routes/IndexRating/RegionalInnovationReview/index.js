@@ -22,24 +22,31 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   updateRegionalInnovationReview,
   getAllRegionalInnovationReview,
+  getDownloadRegionalInnovationReview,
 } from "../../../services/IndexRating/RegionalInnovationReview/regionalInnovationReview";
 import Modal from "../../../components/Modal";
 import Button from "../../../components/Button";
 import { useNavigate } from "react-router-dom";
 import { useUtilContexts } from "../../../context/Utils";
 import ModalConfirmation from "../../../components/ModalConfirmation";
-import { actionTable, convertQueryString, getToken } from "../../../utils";
+import {
+  actionTable,
+  convertQueryString,
+  downloadExcelBlob,
+  getToken,
+} from "../../../utils";
 
 const initialFilter = {
   limit: 20,
   page: 1,
   q: "",
+  pemda_id: "",
 };
 
-const initialParamsRegion = {
+const initialPemdaProfileParams = {
   page: 1,
-  limit: 20,
-  name: "",
+  limit: 10,
+  q: "",
 };
 
 const RegionalInnovationReview = () => {
@@ -48,20 +55,21 @@ const RegionalInnovationReview = () => {
   const [showDelete, setShowDelete] = React.useState(false);
   const [showPreviewModal, setShowPreviewModal] = React.useState(false);
   const [currentItem, setCurrentItem] = React.useState(null);
-  const [selectedRegion, setSelectedRegion] = React.useState(null);
+  const [selectedOPDProfile, setSelectedOPDProfile] = React.useState(null);
 
   const { setLoadingUtil, snackbar } = useUtilContexts();
   const navigate = useNavigate();
 
   const queryClient = useQueryClient();
 
-  const loadOptionRegions = async (search, loadedOptions, { page }) => {
+  const loadPemdaProfiles = async (id, { page }) => {
     const paramsQueryString = convertQueryString({
-      ...initialParamsRegion,
-      name: search,
+      ...initialPemdaProfileParams,
+      page,
     });
+
     const response = await fetch(
-      `${BASE_API_URL}/daerah?${paramsQueryString}`,
+      `${BASE_API_URL}/profil_pemda${id ? `/${id}` : `?${paramsQueryString}`}`,
       {
         headers: {
           Authorization: `Bearer ${getToken().token}`,
@@ -69,11 +77,25 @@ const RegionalInnovationReview = () => {
       }
     );
 
-    const responseJSON = await response.json();
+    return await response.json();
+  };
+
+  const loadOptionOPDProfile = async (search, loadedOptions, { page }) => {
+    const responseJSON = await loadPemdaProfiles(null, { page });
+    const results = [];
+    responseJSON.data.map((item) => {
+      results.push({
+        id: item.id,
+        label: item?.nama_daerah,
+        value: `${item?.nama_daerah}-${item?.id}`,
+      });
+    });
 
     return {
-      options: responseJSON?.data,
-      hasMore: responseJSON.has_more,
+      options: results,
+      hasMore:
+        responseJSON?.pagination?.pages >= 1 &&
+        loadedOptions.length < responseJSON?.pagination?.total,
       additional: {
         page: page + 1,
       },
@@ -89,31 +111,35 @@ const RegionalInnovationReview = () => {
     getAllRegionalInnovationReview(filterParams)
   );
 
-  const actionTableData = [
-    {
-      code: PREVIEW_ACTION_TABLE,
-      label: "Preview",
-      onClick: (item) => {
-        navigate(`/review-inovasi-daerah/detail/${item.id}`);
+  const actionTableData = (item) => {
+    return [
+      {
+        code: PREVIEW_ACTION_TABLE,
+        label: "Preview",
+        onClick: (item) => {
+          navigate(`/review-inovasi-daerah/detail/${item.id}`);
+        },
       },
-    },
-    {
-      code: APPROVE_ACTION_TABLE,
-      label: "Accept",
-      onClick: (item) => {
-        setCurrentItem(item);
-        setShowConfirmation(true);
+      {
+        code: APPROVE_ACTION_TABLE,
+        show: item?.qc?.toLowerCase() === "pending",
+        label: "Accept",
+        onClick: (item) => {
+          setCurrentItem(item);
+          setShowConfirmation(true);
+        },
       },
-    },
-    {
-      code: REJECT_ACTION_TABLE,
-      label: "Reject",
-      onClick: (item) => {
-        setCurrentItem(item);
-        setShowDelete(true);
+      {
+        code: REJECT_ACTION_TABLE,
+        show: item?.qc?.toLowerCase() === "pending",
+        label: "Reject",
+        onClick: (item) => {
+          setCurrentItem(item);
+          setShowDelete(true);
+        },
       },
-    },
-  ];
+    ];
+  };
 
   const tableHeader = [
     {
@@ -164,61 +190,9 @@ const RegionalInnovationReview = () => {
     {
       key: "form-action",
       title: "Aksi",
-      // render: (item) => <TableAction data={actionTableData} itemData={item} />,
-      render: (item) => {
-        return (
-          <div className="flex items-center gap-3">
-            <div
-              className="cursor-pointer relative group flex justify-center"
-              onClick={() =>
-                navigate(`/review-inovasi-daerah/detail/${item.id}`)
-              }
-            >
-              {actionTable(PREVIEW_ACTION_TABLE)}
-              <>
-                <div className="hidden group-hover:block w-2 h-2 rotate-45 -top-[18px] bg-gray-700 absolute"></div>
-                <div className="hidden group-hover:block absolute whitespace-nowrap bg-gray-700 -top-10 px-3 py-1 rounded-md text-white">
-                  Preview
-                </div>
-              </>
-            </div>
-            {item?.qc === "pending" || item?.qc === "Pending" && (
-              <>
-                <div
-                  className="cursor-pointer relative group flex justify-center"
-                  onClick={() => {
-                    setCurrentItem(item);
-                    setShowConfirmation(true);
-                  }}
-                >
-                  {actionTable(APPROVE_ACTION_TABLE)}
-                  <>
-                    <div className="hidden group-hover:block w-2 h-2 rotate-45 -top-[18px] bg-gray-700 absolute"></div>
-                    <div className="hidden group-hover:block absolute whitespace-nowrap bg-gray-700 -top-10 px-3 py-1 rounded-md text-white">
-                      Preview
-                    </div>
-                  </>
-                </div>
-                <div
-                  className="cursor-pointer relative group flex justify-center"
-                  onClick={() => {
-                    setCurrentItem(item);
-                    setShowDelete(true);
-                  }}
-                >
-                  {actionTable(REJECT_ACTION_TABLE)}
-                  <>
-                    <div className="hidden group-hover:block w-2 h-2 rotate-45 -top-[18px] bg-gray-700 absolute"></div>
-                    <div className="hidden group-hover:block absolute whitespace-nowrap bg-gray-700 -top-10 px-3 py-1 rounded-md text-white">
-                      Preview
-                    </div>
-                  </>
-                </div>
-              </>
-            )}
-          </div>
-        );
-      },
+      render: (item) => (
+        <TableAction data={actionTableData(item)} itemData={item} />
+      ),
     },
   ];
 
@@ -289,31 +263,57 @@ const RegionalInnovationReview = () => {
     );
   };
 
-  const onHandleSearch = (value) => {
-    if (value.length > 3) {
+  const onHandleSearch = (e) => {
+    const value = e.target.value;
+    if (e.key === "Enter") {
       setFilterParams({
+        ...filterParams,
         q: value,
-      });
-    } else if (value.length === 0) {
-      setFilterParams({
-        q: "",
       });
     }
   };
 
-  const onHandleRegionChange = (value) => {
-    setSelectedRegion(value);
+  const onHandleOPDProfileChange = (value) => {
+    setSelectedOPDProfile(value);
     setFilterParams({
       ...filterParams,
-      nama_pemda: value.name,
+      pemda_id: value.id,
     });
   };
 
-  const resetRegion = () => {
-    setSelectedRegion(null);
+  const resetOPDProfile = () => {
+    setSelectedOPDProfile(null);
     setFilterParams({
       ...filterParams,
-      nama_pemda: "",
+      pemda_id: "",
+    });
+  };
+
+  const onHandleDownloadFile = (type) => {
+    const newParams = {
+      type,
+    };
+
+    if (filterParams.pemda_id) {
+      newParams["pemda_id"] = filterParams.pemda_id;
+    }
+
+    if (filterParams.q) {
+      newParams["q"] = filterParams.q;
+    }
+
+    let fileName = `review-inovasi-daerah${
+      selectedOPDProfile
+        ? `-${selectedOPDProfile?.label?.replaceAll(" ", "_")}`
+        : ""
+    }-${new Date().getTime()}`;
+
+    downloadExcelBlob({
+      api: getDownloadRegionalInnovationReview(newParams),
+      titleFile: fileName,
+      onError: () => {
+        snackbar("Terjadi Kesalahan", () => {}, "error");
+      },
     });
   };
 
@@ -369,11 +369,21 @@ const RegionalInnovationReview = () => {
 
       <div className="text-[#333333] text-2xl">Review Inovasi Daerah</div>
       <div className="flex items-center justify-end gap-2">
-        <button className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5">
+        <button
+          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
+          onClick={() => {
+            onHandleDownloadFile("pdf");
+          }}
+        >
           <BiDownload className="text-base" />
           Unduh Data (PDF)
         </button>
-        <button className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5">
+        <button
+          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
+          onClick={() => {
+            onHandleDownloadFile("xlsx");
+          }}
+        >
           <BiDownload className="text-base" />
           Unduh Data (XLS)
         </button>
@@ -382,16 +392,17 @@ const RegionalInnovationReview = () => {
         <div className="flex w-[60%] gap-4 items-end">
           <div className="w-[60%]">
             <SelectOption
-              label="Tampilkan berdasarkan daerah"
-              placeholder="Pilih Daerah"
-              options={loadOptionRegions}
-              onChange={onHandleRegionChange}
-              value={selectedRegion}
+              label="Tampilkan berdasarkan OPD"
+              placeholder="Pilih Opd Profile"
+              options={loadOptionOPDProfile}
+              onChange={onHandleOPDProfileChange}
+              value={selectedOPDProfile}
               paginate
+              getOptionLabel={(e) => e.label}
             />
           </div>
           <button
-            onClick={resetRegion}
+            onClick={resetOPDProfile}
             className="border border-[#333333] px-6 py-2 text-sm rounded"
           >
             Tampilkan Semua
@@ -401,9 +412,11 @@ const RegionalInnovationReview = () => {
           <BiSearch />
           <input
             type="text"
-            className="outline-none"
+            className="outline-none w-full"
             placeholder="Pencarian"
-            onChange={(e) => onHandleSearch(e.target.value)}
+            onKeyDown={(e) => {
+              onHandleSearch(e);
+            }}
           />
         </div>
       </div>
