@@ -20,6 +20,7 @@ import {
 } from "../../../services/IndexRating/IndexRanking/indexRanking";
 import ModalConfirmation from "../../../components/ModalConfirmation";
 import { downloadExcelBlob } from "../../../utils";
+import { printToPDF } from "../../../helpers/common";
 
 const initialFilter = {
   limit: 20,
@@ -166,6 +167,42 @@ const IndexRanking = () => {
     });
   };
 
+  const onHandleDownloadPDf = () => {
+    const columns = [
+      "No.",
+      "Nama Daerah",
+      "Jumlah Inovasi",
+      "Total Skor",
+      "Nilai Indeks",
+      "Total File",
+      "Predikat",
+      "Indeks",
+      "Nomimator",
+    ];
+    var rows = [];
+
+    for (let i = 0; i < data?.data?.length; i++) {
+      var temp = [
+        i + 1,
+        data?.data?.[i].nama_daerah,
+        data?.data?.[i].jumlah_inovasi,
+        data?.data?.[i].total_skor_mandiri,
+        data?.data?.[i].nilai_indeks,
+        data?.data?.[i].total_file,
+        data?.data?.[i].predikat,
+        data?.data?.[i].indeks,
+        data?.data?.[i].nominator || "-",
+
+      ];
+      rows.push(temp);
+    }
+
+    let fileName = `index-ranking-${new Date().getTime()}`;
+
+
+    printToPDF(columns, rows, fileName, "Table Ranking Indeks")
+  };
+
   React.useEffect(() => {
     if (isLoading) {
       setLoadingUtil(true);
@@ -189,9 +226,7 @@ const IndexRanking = () => {
       <div className="flex items-center justify-end gap-2">
         <button
           className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
-          onClick={() => {
-            onHandleDownloadFile("pdf");
-          }}
+          onClick={onHandleDownloadPDf}
         >
           <BiDownload className="text-base" />
           Unduh Data (PDF)

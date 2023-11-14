@@ -35,6 +35,7 @@ import {
   downloadExcelBlob,
   getToken,
 } from "../../../utils";
+import { printToPDF } from "../../../helpers/common";
 
 const initialFilter = {
   limit: 20,
@@ -317,6 +318,42 @@ const RegionalInnovationReview = () => {
     });
   };
 
+  const onHandleDownloadPDf = () => {
+    const columns = [
+      "Nomor",
+      "Judul",
+      "Pemda",
+      "Waktu Penerapan",
+      "Skor",
+      "Skor Verifikasi",
+      "QC"
+    ];
+    var rows = [];
+
+    for (let i = 0; i < data?.data?.length; i++) {
+      var temp = [
+        data?.data?.[i].nomor,
+        data?.data?.[i].judul,
+        data?.data?.[i].pemda?.nama_pemda,
+        data?.data?.[i].waktu_penerapan,
+        data?.data?.[i].skor,
+        data?.data?.[i].skor_verifikasi,
+        data?.data?.[i].qc,
+
+      ];
+      rows.push(temp);
+    }
+
+    let fileName = `review-inovasi-daerah${
+      selectedOPDProfile
+        ? `-${selectedOPDProfile?.label?.replaceAll(" ", "_")}`
+        : ""
+    }-${new Date().getTime()}`;
+
+
+    printToPDF(columns, rows, fileName, "Table Review Inovasi Daerah")
+  };
+
   React.useEffect(() => {
     if (isLoading) {
       setLoadingUtil(true);
@@ -371,9 +408,7 @@ const RegionalInnovationReview = () => {
       <div className="flex items-center justify-end gap-2">
         <button
           className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
-          onClick={() => {
-            onHandleDownloadFile("pdf");
-          }}
+          onClick={onHandleDownloadPDf}
         >
           <BiDownload className="text-base" />
           Unduh Data (PDF)

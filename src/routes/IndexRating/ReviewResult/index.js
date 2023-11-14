@@ -31,6 +31,7 @@ import {
 import { updateRegionalInnovationReview } from "../../../services/IndexRating/RegionalInnovationReview/regionalInnovationReview";
 import Button from "../../../components/Button";
 import Modal from "../../../components/Modal";
+import { printToPDF } from "../../../helpers/common";
 
 const initialFilter = {
   limit: 20,
@@ -279,6 +280,42 @@ const ReviewResult = () => {
     });
   };
 
+  const onHandleDownloadPDf = () => {
+    const columns = [
+      "Nomor",
+      "Judul",
+      "Pemda",
+      "Waktu Penerapan",
+      "Kematangan",
+      "Skor Verifikasi",
+      "QC"
+    ];
+    var rows = [];
+
+    for (let i = 0; i < data?.data?.length; i++) {
+      var temp = [
+        data?.data?.[i].nomor,
+        data?.data?.[i].judul,
+        data?.data?.[i].pemda?.nama_pemda,
+        data?.data?.[i].waktu_penerapan,
+        data?.data?.[i].kematangan,
+        data?.data?.[i].skor_verifikasi,
+        data?.data?.[i].qc,
+
+      ];
+      rows.push(temp);
+    }
+
+    let fileName = `hasil-review${
+      selectedOPDProfile
+        ? `-${selectedOPDProfile?.label?.replaceAll(" ", "_")}`
+        : ""
+    }-${new Date().getTime()}`;
+
+
+    printToPDF(columns, rows, fileName, "Table Hasil Review")
+  };
+
   return (
     <div className="flex flex-col w-full gap-6 py-6">
       {showDelete && (
@@ -312,9 +349,7 @@ const ReviewResult = () => {
       <div className="flex items-center justify-end gap-2">
         <button
           className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
-          onClick={() => {
-            onHandleDownloadFile("pdf");
-          }}
+          onClick={onHandleDownloadPDf}
         >
           <BiDownload className="text-base" />
           Unduh Data (PDF)

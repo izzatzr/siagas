@@ -8,7 +8,7 @@ import { getToken } from "../../../utils";
 import { UtilProvider } from "../../../context/Utils";
 
 const AdminLayout = () => {
-  console.log(JSON.stringify(getToken()));
+  console.log(getToken());
 
   return (
     <UtilProvider>

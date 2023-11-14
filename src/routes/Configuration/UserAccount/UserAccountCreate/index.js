@@ -171,6 +171,7 @@ const UserAccountCreate = () => {
               value={payload?.roleId}
               paginate
               required
+              getOptionLabel= {(value) => value.label}
             />
           </div>
           <div className="flex-1">

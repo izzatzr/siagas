@@ -1,24 +1,22 @@
 import React from "react";
 import { BiDownload, BiSearch } from "react-icons/bi";
-import SelectOption from "../../../components/SelectOption";
 import Table from "../../../components/Table";
 import TableAction from "../../../components/TableAction";
 import { EDIT_ACTION_TABLE } from "../../../constants";
 
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import {
-  BASE_API_URL,
-  GET_ALL_REVIEW_RANKING,
-} from "../../../constans/constans";
+import { GET_ALL_REVIEW_RANKING } from "../../../constans/constans";
 import {
   getAllReviewRanking,
+  getDownloadReviewRanking,
   updateReviewRanking,
 } from "../../../services/GovermentInnovate/ReviewRanking/reviewRanking";
 import { useNavigate } from "react-router-dom";
 import { useUtilContexts } from "../../../context/Utils";
-import { convertQueryString, getToken } from "../../../utils";
+import { downloadExcelBlob } from "../../../utils";
 import Pagination from "../../../components/Pagination";
 import ModalConfirmation from "../../../components/ModalConfirmation";
+import { printToPDF } from "../../../helpers/common";
 
 const initialFilter = {
   limit: 20,
@@ -53,7 +51,7 @@ const ReviewRanking = () => {
   const actionTableData = [
     {
       code: EDIT_ACTION_TABLE,
-      label : "Edit",
+      label: "Edit",
       onClick: (item) => {
         setCurrentItem(item);
         setShowConfirmation(true);
@@ -92,31 +90,6 @@ const ReviewRanking = () => {
       render: (item) => <TableAction data={actionTableData} itemData={item} />,
     },
   ];
-
-  const getOPD = async (search = "") => {
-    const paramsQueryString = convertQueryString({
-      ...initialParamsOPD,
-      q: search,
-    });
-    const response = await fetch(`${BASE_API_URL}/opd?${paramsQueryString}`, {
-      headers: {
-        Authorization: `Bearer ${getToken().token}`,
-      },
-    });
-
-    const responseJSON = await response.json();
-
-    return responseJSON;
-  };
-
-
-  React.useEffect(() => {
-    if (isLoading) {
-      setLoadingUtil(true);
-    } else {
-      setLoadingUtil(false);
-    }
-  }, [isLoading]);
 
   const onHandleSearch = (value) => {
     if (value.length > 3) {
@@ -187,6 +160,67 @@ const ReviewRanking = () => {
     );
   };
 
+  const onHandleDownloadPDf = () => {
+    const columns = [
+      "No.",
+      "Nama Pemda",
+      "Jumlah Inovasi",
+      "ISP",
+      "Rata-rata",
+      "Skor Total",
+      "Predikat",
+      "Nominator",
+    ];
+    var rows = [];
+
+    for (let i = 0; i < data?.data?.length; i++) {
+      var temp = [
+        i + 1,
+        data?.data?.[i].nama_pemda,
+        data?.data?.[i].jumlah_inovasi,
+        data?.data?.[i].isp,
+        parseFloat(data?.data?.[i].rata_rata).toFixed(2),
+        data?.data?.[i].skor_total,
+        data?.data?.[i].predikat,
+        data?.data?.[i].nominator,
+        
+      ];
+      rows.push(temp);
+    }
+
+    let fileName = `peringkat-hasil-review-${new Date().getTime()}`;
+
+    printToPDF(columns, rows, fileName, "Table Peringkat Hasil Review");
+  };
+
+  const onHandleDownloadFile = (type) => {
+    const newParams = {
+      type,
+    };
+
+    if (filterParams.q) {
+      newParams["q"] = filterParams.q;
+    }
+
+    let fileName = `peringkat-hasil-review-${new Date().getTime()}`;
+
+    downloadExcelBlob({
+      api: getDownloadReviewRanking(newParams),
+      titleFile: fileName,
+      onError: () => {
+        snackbar("Terjadi Kesalahan", () => {}, "error");
+      },
+    });
+  };
+
+  React.useEffect(() => {
+    if (isLoading) {
+      setLoadingUtil(true);
+    } else {
+      setLoadingUtil(false);
+    }
+  }, [isLoading]);
+
   return (
     <div className="flex flex-col w-full gap-6 py-6">
       {showConfirmation && (
@@ -200,11 +234,19 @@ const ReviewRanking = () => {
 
       <div className="text-[#333333] text-2xl">Peringkat Hasil Review</div>
       <div className="flex items-center justify-end gap-2">
-        <button className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5">
+        <button
+          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
+          onClick={onHandleDownloadPDf}
+        >
           <BiDownload className="text-base" />
           Unduh Data (PDF)
         </button>
-        <button className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5">
+        <button
+          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
+          onClick={() => {
+            onHandleDownloadFile("xlsx");
+          }}
+        >
           <BiDownload className="text-base" />
           Unduh Data (XLS)
         </button>

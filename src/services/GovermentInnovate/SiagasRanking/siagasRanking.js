@@ -1,4 +1,5 @@
 import { BASE_API_URL } from "../../../constans/constans";
+import { processResult, throwErrorUtil } from "../../../helpers/fetchingUtils";
 import { convertQueryString, getToken } from "../../../utils";
 
 export const getAllSiagasRanking = (params) => async () => {
@@ -24,5 +25,28 @@ export const getAllSiagasRanking = (params) => async () => {
     return [];
   } catch (error) {
     console.log(error);
+  }
+};
+
+
+export const getDownloadSiagasRanking = async (payload) => {
+  const { type, ...params } = payload;
+
+  const paramsQueryString = convertQueryString(params);
+
+  const url = `${BASE_API_URL}/innovative_government_award/rangking/download/${type}?${paramsQueryString}`;
+
+  try {
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${getToken().token}`,
+      },
+    });
+
+    const result = await processResult(response, { downloadMode: true });
+
+    return result;
+  } catch (error) {
+    throwErrorUtil(error, `${error?.message || error}`);
   }
 };

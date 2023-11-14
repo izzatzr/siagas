@@ -1,4 +1,5 @@
 import { BASE_API_URL } from "../../../constans/constans";
+import { processResult, throwErrorUtil } from "../../../helpers/fetchingUtils";
 import { convertQueryString, getToken } from "../../../utils";
 
 export const getAllReviewRanking = (params) => async () => {
@@ -53,5 +54,28 @@ export const updateReviewRanking = async ({ id, nominator }) => {
     throw Error("Error");
   } catch (error) {
     throw error;
+  }
+};
+
+
+export const getDownloadReviewRanking = async (payload) => {
+  const { type, ...params } = payload;
+
+  const paramsQueryString = convertQueryString(params);
+
+  const url = `${BASE_API_URL}/innovative_government_award/peringkat_hasil_review/download/${type}?${paramsQueryString}`;
+
+  try {
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${getToken().token}`,
+      },
+    });
+
+    const result = await processResult(response, { downloadMode: true });
+
+    return result;
+  } catch (error) {
+    throwErrorUtil(error, `${error?.message || error}`);
   }
 };

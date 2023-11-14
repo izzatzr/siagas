@@ -1,27 +1,23 @@
 import React from "react";
-import {
-  BiChevronLeft,
-  BiChevronRight,
-  BiDownload,
-  BiSearch,
-} from "react-icons/bi";
-import ReactPaginate from "react-paginate";
-import SelectOption from "../../../components/SelectOption";
+import { BiDownload, BiSearch } from "react-icons/bi";
 import Table from "../../../components/Table";
-import {
-  jsonHeaderSiagasRanking,
-  jsonRowSiagasRanking,
-} from "../../../dummies/IGA";
 import {
   BASE_API_URL,
   GET_ALL_SIAGAS_RANKING,
 } from "../../../constans/constans";
-import { getAllSiagasRanking } from "../../../services/GovermentInnovate/SiagasRanking/siagasRanking";
+import {
+  getAllSiagasRanking,
+  getDownloadSiagasRanking,
+} from "../../../services/GovermentInnovate/SiagasRanking/siagasRanking";
 import { useQuery } from "react-query";
-import { useNavigate } from "react-router-dom";
 import { useUtilContexts } from "../../../context/Utils";
-import { convertQueryString, getToken } from "../../../utils";
+import {
+  convertQueryString,
+  downloadExcelBlob,
+  getToken,
+} from "../../../utils";
 import Pagination from "../../../components/Pagination";
+import { printToPDF } from "../../../helpers/common";
 
 const initialFilter = {
   limit: 20,
@@ -44,15 +40,13 @@ const SiagasRanking = () => {
     getAllSiagasRanking(filterParams)
   );
 
-  console.log(data)
-
   const { setLoadingUtil, snackbar } = useUtilContexts();
 
   const tableHeader = [
     {
       key: "nama_pemda",
       title: "Nama OPD",
-      width : 350
+      width: 350,
     },
     {
       key: "skor_indeks",
@@ -71,32 +65,6 @@ const SiagasRanking = () => {
       title: "Predikat",
     },
   ];
-
-  const getOPD = async (search = "") => {
-    const paramsQueryString = convertQueryString({
-      ...initialParamsOPD,
-      q: search,
-    });
-    const response = await fetch(`${BASE_API_URL}/opd?${paramsQueryString}`, {
-      headers: {
-        Authorization: `Bearer ${getToken().token}`,
-      },
-    });
-
-    const responseJSON = await response.json();
-
-    return responseJSON;
-  };
-
-
-
-  React.useEffect(() => {
-    if (isLoading) {
-      setLoadingUtil(true);
-    } else {
-      setLoadingUtil(false);
-    }
-  }, [isLoading]);
 
   const onHandleSearch = (value) => {
     if (value.length > 3) {
@@ -117,21 +85,84 @@ const SiagasRanking = () => {
     });
   };
 
+  const onHandleDownloadPDf = () => {
+    const columns = [
+      "No.",
+      "Nama Pemda",
+      "Skor Indeks",
+      "Skor Penilaian",
+      "Skor Akhir",
+      "Predikat",
+    ];
+    var rows = [];
+
+    for (let i = 0; i < data?.data?.length; i++) {
+      var temp = [
+        i + 1,
+        data?.data?.[i].nama_pemda,
+        parseFloat(data?.data?.[i].skor_indeks).toFixed(2),
+        parseFloat(data?.data?.[i].skor_penilaian).toFixed(2),
+        parseFloat(data?.data?.[i].skor_akhir).toFixed(2),
+        data?.data?.[i].predikat,
+      ];
+      rows.push(temp);
+    }
+
+    let fileName = `siagas-ranking-${new Date().getTime()}`;
+
+    printToPDF(columns, rows, fileName, "Table Siagas Ranking");
+  };
+
+  const onHandleDownloadFile = (type) => {
+    const newParams = {
+      type,
+    };
+
+    if (filterParams.q) {
+      newParams["q"] = filterParams.q;
+    }
+
+    let fileName = `siagas-ranking-${new Date().getTime()}`;
+
+    downloadExcelBlob({
+      api: getDownloadSiagasRanking(newParams),
+      titleFile: fileName,
+      onError: () => {
+        snackbar("Terjadi Kesalahan", () => {}, "error");
+      },
+    });
+  };
+
+  React.useEffect(() => {
+    if (isLoading) {
+      setLoadingUtil(true);
+    } else {
+      setLoadingUtil(false);
+    }
+  }, [isLoading]);
+
   return (
     <div className="flex flex-col w-full gap-6 py-6">
       <div className="text-[#333333] text-2xl">Rangking SIAGAS</div>
       <div className="flex items-center justify-end gap-2">
-        <button className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5">
+        <button
+          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
+          onClick={onHandleDownloadPDf}
+        >
           <BiDownload className="text-base" />
           Unduh Data (PDF)
         </button>
-        <button className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5">
+        <button
+          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
+          onClick={() => {
+            onHandleDownloadFile("xlsx");
+          }}
+        >
           <BiDownload className="text-base" />
           Unduh Data (XLS)
         </button>
       </div>
       <div className="w-full rounded-lg text-[#333333] bg-white p-6 flex items-end justify-between">
-       
         <div className="flex items-center gap-3 text-sm border border-[#333333] placeholder:text-[#828282] rounded px-3 py-2 w-[30%]">
           <BiSearch />
           <input
