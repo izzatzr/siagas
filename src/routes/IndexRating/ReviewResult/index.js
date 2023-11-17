@@ -404,10 +404,7 @@ const ReviewResult = () => {
           action={<TableAction data={actionTableData} />}
           ranking={true}
         />
-        <div className="flex justify-between items-center py-[20px] pl-6">
-          <span className="trext-[#828282] text-xs">
-            Menampilkan 1 sampai 10 dari 48 entri
-          </span>
+        <div className="flex justify-end items-center py-[20px] pl-6">
           <ReactPaginate
             breakLabel="..."
             nextLabel={<BiChevronRight />}

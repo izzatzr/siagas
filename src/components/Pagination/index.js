@@ -7,11 +7,7 @@ const Pagination = (props) => {
   const { pageCount, onHandlePagination, totalData, size } = props;
   
   return (
-    <div className="flex justify-between items-center py-[20px]">
-      <span className="trext-[#828282] text-xs">
-        Menampilkan {getPageLabel(totalData, size, pageCount - 1)} dari{" "}
-        {totalData} entri
-      </span>
+    <div className="flex justify-end items-center py-[20px]">
       <ReactPaginate
         breakLabel="..."
         nextLabel={<BiChevronRight />}

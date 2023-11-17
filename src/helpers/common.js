@@ -98,3 +98,50 @@ export const printToPDF = (headerColumn, jsonData, fileName, titlePdf) => {
 
   pdf.save(fileName);
 };
+
+export const convertCurrentDataScore = (value) => {
+  switch (value) {
+    case "SK Kepala Perangkat Daerah":
+      return "6.00";
+    case "SK Kepala Daerah":
+      return "3.00";
+    case "Peraturan Kepala Daerah / Peraturan Daerah":
+      return "9.00";
+    case "Tidak dapat diukur":
+      return "0.00";
+    default:
+      return "-";
+  }
+};
+
+export const convertEvaluationScore = (currentData, category) => {
+  let valueCurrentData = 0;
+  let valueCategory = 0;
+
+  switch (currentData) {
+    case "SK Kepala Perangkat Daerah":
+      valueCurrentData = 25;
+      break;
+    case "SK Kepala Daerah":
+      valueCurrentData = 25;
+      break;
+    case "Peraturan Kepala Daerah / Peraturan Daerah":
+      valueCurrentData = 50;
+      break;
+    default:
+      valueCurrentData = 0;
+      break;
+  }
+
+  switch (category) {
+    case "Sesuai":
+      valueCategory = 50;
+      break;
+
+    default:
+      valueCategory = 0;
+      break;
+  }
+
+  return parseFloat(valueCurrentData + valueCategory).toFixed(2)
+};

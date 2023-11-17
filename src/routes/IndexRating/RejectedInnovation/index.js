@@ -30,6 +30,7 @@ import {
   getToken,
 } from "../../../utils";
 import SelectOption from "../../../components/SelectOption";
+import { printToPDF } from "../../../helpers/common";
 
 const initialFilter = {
   limit: 20,
@@ -273,6 +274,40 @@ const RejectedInnovation = () => {
     });
   };
 
+  const onHandleDownloadPDf = () => {
+    const columns = [
+      "No.",
+      "Nomor Dokumen",
+      "Judul",
+      "Nama Pemda",
+      "Waktu Penerapan",
+      "Kematangan",
+      "Skor Verifikasi",
+      "QC",
+    ];
+    var rows = [];
+
+    for (let i = 0; i < data?.data?.length; i++) {
+      var temp = [
+        i + 1,
+        data?.data?.[i].nomor,
+        data?.data?.[i].judul ?? "-",
+        data?.data?.[i].pemda?.pemda_name,
+        data?.data?.[i].waktu_penerapan ?? "-",
+        data?.data?.[i].kematangan,
+        data?.data?.[i].skor_verifikasi,
+        data?.data?.[i].qc,
+
+      ];
+      rows.push(temp);
+    }
+
+    let fileName = `inovasi-tolak-${new Date().getTime()}`;
+
+
+    printToPDF(columns, rows, fileName, "Table Inovasi yang ditolak")
+  };
+
   return (
     <div className="flex flex-col w-full gap-6 py-6">
       {showConfirmation && (
@@ -308,9 +343,7 @@ const RejectedInnovation = () => {
       <div className="flex items-center justify-end gap-2">
         <button
           className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
-          onClick={() => {
-            onHandleDownloadFile("pdf");
-          }}
+          onClick={onHandleDownloadPDf}
         >
           <BiDownload className="text-base" />
           Unduh Data (PDF)
@@ -362,10 +395,7 @@ const RejectedInnovation = () => {
           columns={tableHeader}
           action={<TableAction data={actionTableData} />}
         />
-        <div className="flex justify-between items-center py-[20px] pl-6">
-          <span className="trext-[#828282] text-xs">
-            Menampilkan 1 sampai 10 dari 48 entri
-          </span>
+        <div className="flex justify-end items-center py-[20px] pl-6">
           <ReactPaginate
             breakLabel="..."
             nextLabel={<BiChevronRight />}
