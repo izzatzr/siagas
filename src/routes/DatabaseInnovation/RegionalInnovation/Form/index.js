@@ -1,4 +1,5 @@
 import React from "react";
+import { v4 as uuidv4 } from "uuid";
 import { BiArrowBack } from "react-icons/bi";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { convertQueryString, getToken } from "../../../../utils";
@@ -21,20 +22,19 @@ import {
   getRegionalInnovation,
 } from "../../../../services/DatabaseInnovation/regional";
 import { useUtilContexts } from "../../../../context/Utils";
-import {
-  getAllPemdaProfiles,
-  getPemdaProfiles,
-} from "../../../../services/DatabaseInnovation/pemdaProfile";
+import { getAllPemdaProfiles } from "../../../../services/DatabaseInnovation/pemdaProfile";
+import "react-quill/dist/quill.snow.css";
+import { Editor } from "../../../../components/TextEditor";
 
 const initialParamsNamaPemda = {
   page: 1,
-  limit: 20,
+  limit: 100,
   q: "",
 };
 
 const initialParamsBusinessGovernment = {
   page: 1,
-  limit: 20,
+  limit: 100,
   nama: "",
 };
 
@@ -115,13 +115,14 @@ const RegionalInnovationForm = () => {
 
   const [payload, setPayload] = React.useState(initialPayload);
 
-  const loadUrusanPemerintahData = async () => {
-    const paramsQueryString = convertQueryString(
-      initialParamsBusinessGovernment
-    );
+  const loadUrusanPemerintahData = async (page) => {
+    const paramsQueryString = convertQueryString({
+      ...initialParamsBusinessGovernment,
+      page: page || 1,
+    });
 
     const response = await fetch(
-      `${BASE_API_URL}/urusan_pemerintahan?${paramsQueryString}`,
+      `${BASE_API_URL}urusan_pemerintahan?${paramsQueryString}`,
       {
         headers: {
           Authorization: `Bearer ${getToken().token}`,
@@ -132,7 +133,7 @@ const RegionalInnovationForm = () => {
     return await response.json();
   };
 
-  const { data } = useQuery(
+  useQuery(
     [GET_REGIONAL_INNOVATION_QUERY_KEY],
     getRegionalInnovation(currentId),
     {
@@ -140,7 +141,7 @@ const RegionalInnovationForm = () => {
       onSuccess: async (res) => {
         const { data, code } = res;
         if (code === 200) {
-          const loadDataPemda = getAllPemdaProfiles({limit: 100});
+          const loadDataPemda = getAllPemdaProfiles({ limit: 100 });
 
           const dropdownData = await Promise.all([
             loadDataPemda(),
@@ -160,7 +161,7 @@ const RegionalInnovationForm = () => {
               label: pemdaData?.nama_daerah,
               value: `${pemdaData?.nama_daerah}_${pemdaData?.id}`,
             },
-            nama_inovasi: data?.innovation_name,
+            nama_inovasi: data?.innovation_name ?? null,
             tahapan_inovasi: data?.innovation_phase,
             inisiator_inovasi: data?.innovation_initiator,
             jenis_inovasi: data?.innovation_type,
@@ -168,21 +169,49 @@ const RegionalInnovationForm = () => {
               label: data?.innovation_form,
               value: data?.innovation_form,
             },
-            tematik: {
-              label: data?.thematic,
-              value: data?.thematic,
-            },
+            tematik: data?.thematic
+              ? {
+                  label: data?.thematic,
+                  value: data?.thematic,
+                }
+              : null,
             urusan_pemerintah: {
-              id: urusanPemerintahData?.id,
-              label: urusanPemerintahData?.name,
-              value: `${urusanPemerintahData?.name}`,
+              id: urusanPemerintahData?.id ?? "",
+              label: urusanPemerintahData?.name ?? "",
+              value: `${urusanPemerintahData?.name ?? ""}`,
             },
-            waktu_uji_coba: data?.trial_time,
-            waktu_penerapan: data?.implementation_time,
-            rancang_bangun: data?.design === "undefined" || data?.design === undefined ? null : data?.design,
-            tujuan: data?.purpose === "undefined" || data?.purpose === undefined ? null : data?.purpose,
-            manfaat: data?.benefit === "undefined" || data?.benefit === undefined ? null : data?.benefit,
-            hasil_inovasi: data?.result === "undefined" || data?.result === undefined ? null : data?.result,
+            waktu_uji_coba: data?.trial_time ?? "",
+            waktu_penerapan: data?.implementation_time ?? "",
+            rancang_bangun:
+              data?.design === "undefined" ||
+              data?.design === "null" ||
+              data?.design === undefined
+                ? null
+                : data?.design,
+            tujuan:
+              data?.purpose === "undefined" ||
+              data?.purpose === "null" ||
+              data?.purpose === undefined
+                ? null
+                : data?.purpose,
+            manfaat:
+              data?.benefit === "undefined" ||
+              data?.benefit === "null" ||
+              data?.benefit === undefined
+                ? null
+                : data?.benefit,
+            hasil_inovasi:
+              data?.result === "undefined" ||
+              data?.result === "null" ||
+              data?.result === undefined
+                ? null
+                : data?.result,
+            key: {
+              rancang_bangun: uuidv4(),
+              tujuan: uuidv4(),
+              manfaat: uuidv4(),
+              hasil_inovasi: uuidv4(),
+            },
           });
         }
       },
@@ -194,9 +223,12 @@ const RegionalInnovationForm = () => {
   );
 
   const loadOptionsPemdaName = async (search, loadedOptions, { page }) => {
-    const paramsQueryString = convertQueryString(initialParamsNamaPemda);
+    const paramsQueryString = convertQueryString({
+      ...initialParamsNamaPemda,
+      page: page || 1,
+    });
     const response = await fetch(
-      `${BASE_API_URL}/profil_pemda?${paramsQueryString}`,
+      `${BASE_API_URL}profil_pemda?${paramsQueryString}`,
       {
         headers: {
           Authorization: `Bearer ${getToken().token}`,
@@ -216,9 +248,9 @@ const RegionalInnovationForm = () => {
 
     return {
       options: results,
-      hasMore: responseJSON.length >= 1,
+      hasMore: responseJSON?.pagination?.links?.next ? true : false,
       additional: {
-        page: search ? 2 : page + 1,
+        page: responseJSON?.pagination?.links?.next ? page + 1 : page,
       },
     };
   };
@@ -232,7 +264,7 @@ const RegionalInnovationForm = () => {
     loadedOptions,
     { page }
   ) => {
-    const responseJSON = await loadUrusanPemerintahData();
+    const responseJSON = await loadUrusanPemerintahData(page || 1);
     const results = [];
     responseJSON.data.map((item) => {
       results.push({
@@ -244,9 +276,9 @@ const RegionalInnovationForm = () => {
 
     return {
       options: results,
-      hasMore: responseJSON.length >= 1,
+      hasMore: responseJSON?.pagination?.links?.next ? true : false,
       additional: {
-        page: search ? 2 : page + 1,
+        page: responseJSON?.pagination?.links?.next ? page + 1 : page,
       },
     };
   };
@@ -276,13 +308,11 @@ const RegionalInnovationForm = () => {
       bentuk_inovasi: payload.bentuk_inovasi?.value,
       tematik: payload.tematik?.value,
       urusan_pemerintah: payload.urusan_pemerintah?.label,
+      tujuan: payload?.tujuan ?? "",
+      manfaat: payload?.manfaat ?? "",
+      hasil_inovasi: payload?.hasil_inovasi ?? "",
+      rancang_bangun: payload?.rancang_bangun ?? "",
     };
-
-    for (var key in newPayload) {
-      if (newPayload[key] === "" || newPayload[key] === null) {
-        delete newPayload[key];
-      }
-    }
 
     submitRegionalInnovationMutation.mutate(
       {
@@ -323,8 +353,8 @@ const RegionalInnovationForm = () => {
           </span>
         </div>
         <SelectOption
-          label="Nama Pemda"
-          placeholder="Pilih Nama Pemda"
+          label="Nama OPD"
+          placeholder="Pilih Nama OPD"
           options={loadOptionsPemdaName}
           paginate={true}
           onChange={(e) => onHandleChange("nama_pemda", e)}
@@ -401,7 +431,14 @@ const RegionalInnovationForm = () => {
           options={loadedOptionsBusinessGovernment}
           paginate={true}
           onChange={(e) => onHandleChange("urusan_pemerintah", e)}
-          value={payload?.urusan_pemerintah}
+          value={
+            payload?.urusan_pemerintah?.value
+              ? payload?.urusan_pemerintah
+              : null
+          }
+          additional={{
+            page: 1,
+          }}
         />
 
         <div className="flex gap-6">
@@ -427,73 +464,44 @@ const RegionalInnovationForm = () => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-2">
-          <label
-            htmlFor={"content"}
-            className="text-[#333333] text-sm font-normal"
-          >
-            Rancang Bangun {"(Minimal 300 kata)"}
-          </label>
-          <ReactQuill
-            theme="snow"
-            value={payload?.rancang_bangun}
-            onChange={(value) => onHandleChange("rancang_bangun", value)}
-            modules={modules}
-            formats={formats}
-            placeholder="Tulis disini"
-          />
-        </div>
+        <Editor
+          key={payload?.key?.rancang_bangun}
+          label="Rancang Bangun (Minimal 300 kata)"
+          value={payload.rancang_bangun}
+          onChange={(value) => {
+            onHandleChange("rancang_bangun", value);
+          }}
+          placeholder={"Tulis disini"}
+        />
+        <Editor
+          key={payload?.key?.tujuan}
+          label="Tujuan Inovasi Daerah"
+          value={payload.tujuan}
+          onChange={(value) => {
+            onHandleChange("tujuan", value);
+          }}
+          placeholder={"Tulis disini"}
+        />
 
-        <div className="flex flex-col gap-2">
-          <label
-            htmlFor={"content"}
-            className="text-[#333333] text-sm font-normal"
-          >
-            Tujuan Inovasi Daerah
-          </label>
-          <ReactQuill
-            theme="snow"
-            value={payload?.tujuan}
-            onChange={(value) => onHandleChange("tujuan", value)}
-            modules={modules}
-            formats={formats}
-            placeholder="Tulis disini"
-          />
-        </div>
+        <Editor
+          key={payload?.key?.manfaat}
+          label="Manfaat yang diperoleh"
+          value={payload.manfaat}
+          onChange={(value) => {
+            onHandleChange("manfaat", value);
+          }}
+          placeholder={"Tulis disini"}
+        />
 
-        <div className="flex flex-col gap-2">
-          <label
-            htmlFor={"content"}
-            className="text-[#333333] text-sm font-normal"
-          >
-            Manfaat yang diperoleh
-          </label>
-          <ReactQuill
-            theme="snow"
-            value={payload?.manfaat}
-            onChange={(value) => onHandleChange("manfaat", value)}
-            modules={modules}
-            formats={formats}
-            placeholder="Tulis disini"
-          />
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <label
-            htmlFor={"content"}
-            className="text-[#333333] text-sm font-normal"
-          >
-            Hasil Inovasi
-          </label>
-          <ReactQuill
-            theme="snow"
-            value={payload?.hasil_inovasi}
-            onChange={(value) => onHandleChange("hasil_inovasi", value)}
-            modules={modules}
-            formats={formats}
-            placeholder="Tulis disini"
-          />
-        </div>
+        <Editor
+          key={payload?.key?.hasil_inovasi}
+          label="Hasil Inovasi"
+          value={payload.hasil_inovasi}
+          onChange={(value) => {
+            onHandleChange("hasil_inovasi", value);
+          }}
+          placeholder={"Tulis disini"}
+        />
 
         <Upload
           label="Anggaran (Jika Diperlukan)"

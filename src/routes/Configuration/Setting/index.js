@@ -85,7 +85,6 @@ const Setting = () => {
   };
 
   const onHandleSearch = (value) => {
-    console.log(value);
     if (value.length > 3) {
       setFilterParams({
         q: value,

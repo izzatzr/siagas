@@ -8,8 +8,6 @@ import { getToken } from "../../../utils";
 import { UtilProvider } from "../../../context/Utils";
 
 const AdminLayout = () => {
-  console.log(getToken());
-
   return (
     <UtilProvider>
       <div className="box-border flex w-screen h-screen">

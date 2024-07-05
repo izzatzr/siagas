@@ -85,8 +85,6 @@ const SettingEdit = () => {
 
     let newPayload = payload;
 
-    console.log(newPayload);
-
     for (var key in newPayload) {
       if (newPayload[key] === "") {
         delete newPayload[key];

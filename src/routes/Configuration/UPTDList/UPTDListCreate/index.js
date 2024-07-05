@@ -85,7 +85,7 @@ const UPTDListCreate = () => {
       regionalApparatur: payload?.regionalApparatur?.id,
     };
 
-    console.log(newPayload);
+    
 
     for (var key in newPayload) {
       if (newPayload[key] === "") {
