@@ -122,7 +122,7 @@ const RegionalInnovationForm = () => {
     });
 
     const response = await fetch(
-      `${BASE_API_URL}urusan_pemerintahan?${paramsQueryString}`,
+      `${BASE_API_URL}/urusan_pemerintahan?${paramsQueryString}`,
       {
         headers: {
           Authorization: `Bearer ${getToken().token}`,
@@ -228,7 +228,7 @@ const RegionalInnovationForm = () => {
       page: page || 1,
     });
     const response = await fetch(
-      `${BASE_API_URL}profil_pemda?${paramsQueryString}`,
+      `${BASE_API_URL}/profil_pemda?${paramsQueryString}`,
       {
         headers: {
           Authorization: `Bearer ${getToken().token}`,
@@ -340,14 +340,14 @@ const RegionalInnovationForm = () => {
   };
 
   return (
-    <div className="w-full flex flex-col gap-6 py-6">
+    <div className="flex flex-col w-full gap-6 py-6">
       <div className="text-[#333333] text-2xl font-bold">Inovasi Daerah</div>
-      <div className="w-full bg-white rounded-lg p-8 flex flex-col gap-6">
+      <div className="flex flex-col w-full gap-6 p-8 bg-white rounded-lg">
         <div className="flex items-center gap-2">
           <Link to="/inovasi-daerah">
             <BiArrowBack />
           </Link>
-          <span className="font-medium text-lg">
+          <span className="text-lg font-medium">
             {params?.action === "tambah" ? "Tambah " : "Edit "}
             Inovasi Daerah
           </span>
