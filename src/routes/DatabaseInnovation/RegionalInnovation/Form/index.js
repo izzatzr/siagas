@@ -284,10 +284,10 @@ const RegionalInnovationForm = () => {
   };
 
   const onHandleChange = (key, value) => {
-    setPayload({
-      ...payload,
+    setPayload((prevState) => ({
+      ...prevState,
       [key]: value,
-    });
+    }));
   };
 
   const onHandleChangeImage = (key, e) => {
