@@ -352,16 +352,18 @@ const RegionalInnovationForm = () => {
             Inovasi Daerah
           </span>
         </div>
-        {/* <SelectOption
-          label="Nama OPD"
-          placeholder="Pilih Nama OPD"
-          options={loadOptionsPemdaName}
-          paginate={true}
-          disabled={currentId ? true : false}
-          onChange={(e) => onHandleChange("nama_pemda", e)}
-          value={payload?.nama_pemda}
-          getOptionLabel={getOptionLabelPemdaName}
-        /> */}
+        {!currentId && (
+          <SelectOption
+            label="Nama OPD"
+            placeholder="Pilih Nama OPD"
+            options={loadOptionsPemdaName}
+            paginate={true}
+            disabled={currentId ? true : false}
+            onChange={(e) => onHandleChange("nama_pemda", e)}
+            value={payload?.nama_pemda}
+            getOptionLabel={getOptionLabelPemdaName}
+          />
+        )}
         <TextInput
           label={"Nama Inovasi"}
           placeholder="Tulis disini"
