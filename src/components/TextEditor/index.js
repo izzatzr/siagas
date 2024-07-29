@@ -11,6 +11,7 @@ export const Editor = ({
   errorText,
   customToolbar,
 }) => {
+
   const [loaded, setLoaded] = useState(false);
 
   React.useEffect(() => {
@@ -30,6 +31,7 @@ export const Editor = ({
             onChange(evt.editor?.getData());
           }}
           config={{
+            versionCheck: false,
             alignment: {
               options: ["left", "right", "center", "justify"],
             },
