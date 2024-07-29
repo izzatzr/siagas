@@ -108,8 +108,6 @@ const TuxedoCreate = () => {
       section: payload?.section?.value,
     };
 
-    console.log(newPayload);
-
     for (var key in newPayload) {
       if (newPayload[key] === "") {
         delete newPayload[key];

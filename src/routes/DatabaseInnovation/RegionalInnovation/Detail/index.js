@@ -1,5 +1,11 @@
-import React from "react";
-import { Link, useParams } from "react-router-dom";
+import React, { useState } from "react";
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+  createSearchParams,
+} from "react-router-dom";
 import Chipper from "../../../../components/Chipper";
 import {
   GET_ALL_INDICATOR,
@@ -19,10 +25,6 @@ const initialIndicatorFilterParams = {
 
 const DetailItem = (props) => {
   const { label, value, download, isHtml } = props;
-
-  if (isHtml) {
-    console.log("VALUE", value);
-  }
 
   return (
     <div className="flex flex-col gap-2">
@@ -57,9 +59,11 @@ const RegionalInnovationDetail = () => {
     initialIndicatorFilterParams
   );
   const params = useParams();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const currentId = params.id;
 
-  const [tabActive, setTabActive] = React.useState(0);
+  const tabActive = parseInt(searchParams.get('tabActive')) || 0
 
   const { data: indicators } = useQuery(
     [GET_ALL_INDICATOR, indicatorFilterParams],
@@ -74,7 +78,14 @@ const RegionalInnovationDetail = () => {
     }
   );
 
-  console.log(data?.data);
+  const onChangeTabActive = (value) => {
+    navigate({
+      pathname: "",
+      search: createSearchParams({
+        tabActive: value,
+      }).toString(),
+    });
+  };
 
   return (
     <div className="w-full flex flex-col gap-6 py-6">
@@ -91,14 +102,14 @@ const RegionalInnovationDetail = () => {
             active={tabActive === 0}
             label="Profil Inovasi"
             onClick={() => {
-              setTabActive(0);
+              onChangeTabActive(0);
             }}
           />
           <Chipper
             active={tabActive === 1}
             label="Indikator"
             onClick={() => {
-              setTabActive(1);
+              onChangeTabActive(1);
             }}
           />
         </div>
@@ -135,10 +146,13 @@ const RegionalInnovationDetail = () => {
 
             <DetailItem label="Tematik" value={data?.data?.thematic || "-"} />
 
-            <DetailItem label="Waktu Uji Coba" value={data?.data?.trial_time|| "-"} />
+            <DetailItem
+              label="Waktu Uji Coba"
+              value={data?.data?.trial_time || "-"}
+            />
             <DetailItem
               label="Waktu Penerapan"
-              value={data?.data?.implementation_time|| "-"}
+              value={data?.data?.implementation_time || "-"}
             />
             <DetailItem
               label="Nama Admin"

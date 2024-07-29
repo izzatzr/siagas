@@ -1,13 +1,12 @@
 import React from "react";
 import { BiArrowBack, BiUpload } from "react-icons/bi";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams, createSearchParams } from "react-router-dom";
 import TextInput from "../../../../../components/TextInput";
 import Upload from "../../../../../components/Upload";
 import Button from "../../../../../components/Button";
 import { MdCheckCircle } from "react-icons/md";
 import { useMutation, useQuery } from "react-query";
 import {
-  // deleteDocumentPemdaProfile,
   getAllDocumentRegionalInnovation,
   uploadDocumentRegionalInnovation,
 } from "../../../../../services/DatabaseInnovation/regional";
@@ -273,7 +272,12 @@ const InnovationRegionalSupportDocument = () => {
         <div className="text-[#333333] text-2xl">Profile Pemda</div>
         <div className="flex flex-col w-full gap-6 p-8 bg-white rounded-lg">
           <div className="flex items-center gap-2">
-            <Link to={location?.state?.urlBefore}>
+            <Link to={{
+              pathname: location?.state?.urlBefore,
+              search: createSearchParams({
+                tabActive: 1,
+              }).toString()
+            }}>
               <BiArrowBack />
             </Link>
             <span className="text-lg font-medium">Dokumen Pendukung</span>

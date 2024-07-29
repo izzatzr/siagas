@@ -130,7 +130,7 @@ const TuxedoEdit = () => {
       section: payload?.section?.value,
     };
 
-    console.log(newPayload);
+    
 
     for (var key in newPayload) {
       if (newPayload[key] === "") {

@@ -104,7 +104,7 @@ const UserAccountCreate = () => {
       roleId: payload?.roleId.id,
     };
 
-    console.log(newPayload);
+    
 
     for (var key in newPayload) {
       if (newPayload[key] === "") {

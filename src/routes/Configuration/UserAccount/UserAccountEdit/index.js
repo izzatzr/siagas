@@ -114,7 +114,7 @@ const UserAccountEdit = () => {
       roleId: payload?.roleId.id,
     };
 
-    console.log(newPayload);
+    
 
     for (var key in newPayload) {
       if (newPayload[key] === "") {
@@ -129,7 +129,6 @@ const UserAccountEdit = () => {
       },
       {
         onSuccess: (res) => {
-          console.log(res);
           if (res.code === 200) {
             snackbar("Berhasil disimpan", () => {
               navigate("/konfigurasi/user-account");
