@@ -26,6 +26,7 @@ import {
   convertEstimationScore,
   downloadExcelBlob,
   downloadFile,
+  getUser,
 } from "../../../utils";
 import ModalConfirmation from "../../../components/ModalConfirmation";
 import { deleteRegionalGovernmentInnovation } from "../../../services/DatabaseInnovation/RegionalGovernmentInnovation/regionalGovermentInnovation";
@@ -44,6 +45,7 @@ const RegionalInnovation = () => {
   const [currentItem, setCurrentItem] = React.useState(null);
   const { setLoadingUtil, snackbar } = useUtilContexts();
   const navigate = useNavigate();
+  const user = getUser()
 
   const deleteMutation = useMutation(deleteRegionalGovernmentInnovation);
 
@@ -175,7 +177,7 @@ const RegionalInnovation = () => {
     });
   };
 
-  const actionTableData = [
+  var actionTableData = [
     {
       code: DOWNLOAD_TABLE,
       label: "Dokumentasi Foto",
@@ -245,15 +247,18 @@ const RegionalInnovation = () => {
         navigate(`/inovasi-daerah/edit/${item.id}`);
       },
     },
-    // {
-    //   code: DELETE_ACTION_TABLE,
-    //   label: "Hapus",
-    //   onClick: (item) => {
-    //     setCurrentItem(item)
-    //     setShowDelete(true)
-    //   }
-    // }
   ];
+
+  if (user?.name === 'Super Admin') {
+    actionTableData = [...actionTableData, {
+      code: DELETE_ACTION_TABLE,
+      label: "Hapus",
+      onClick: (item) => {
+        setCurrentItem(item)
+        setShowDelete(true)
+      }
+    }]
+  }
 
   React.useEffect(() => {
     setLoadingUtil(isFetching);
