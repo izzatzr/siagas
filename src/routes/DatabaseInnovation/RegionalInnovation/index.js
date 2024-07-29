@@ -4,14 +4,15 @@ import { BiPlus, BiSearch } from "react-icons/bi";
 import Table from "../../../components/Table";
 import TableAction from "../../../components/TableAction";
 import {
+  DELETE_ACTION_TABLE,
   DOWNLOAD_TABLE,
   EDIT_ACTION_TABLE,
   EXCEL_ACTION_TABLE,
   PDF_ACTION_TABLE,
   TRANSFER_ACTION_TABLE,
 } from "../../../constants";
-import { useMutation, useQuery } from "react-query";
-import { GET_ALL_REGIONAL_INNOVATION_QUERY_KEY } from "../../../constans/constans";
+import { QueryClient, useMutation, useQuery } from "react-query";
+import { GET_ALL_REGIONAL_GOVERNMENT_INNOVATION, GET_ALL_REGIONAL_INNOVATION_QUERY_KEY } from "../../../constans/constans";
 import {
   getAllRegionalInnovation,
   getDownlaodFileRegionalInnovation,
@@ -26,6 +27,9 @@ import {
   downloadExcelBlob,
   downloadFile,
 } from "../../../utils";
+import ModalConfirmation from "../../../components/ModalConfirmation";
+import { deleteRegionalGovernmentInnovation } from "../../../services/DatabaseInnovation/RegionalGovernmentInnovation/regionalGovermentInnovation";
+
 
 const initialParams = {
   page: 0,
@@ -36,8 +40,13 @@ const initialParams = {
 
 const RegionalInnovation = () => {
   const [params, setParams] = React.useState(initialParams);
+  const [showDelete, setShowDelete] = React.useState(false);
+  const [currentItem, setCurrentItem] = React.useState(null);
   const { setLoadingUtil, snackbar } = useUtilContexts();
   const navigate = useNavigate();
+
+  const deleteMutation = useMutation(deleteRegionalGovernmentInnovation);
+
 
   const tableHeader = [
     {
@@ -104,6 +113,16 @@ const RegionalInnovation = () => {
     [params, GET_ALL_REGIONAL_INNOVATION_QUERY_KEY, params],
     getAllRegionalInnovation(params)
   );
+
+  const onHandleDelete = () => {
+    setShowDelete(false);
+    setLoadingUtil(true);
+    deleteMutation.mutate(currentItem?.id, {
+      onSuccess: (res) => {
+        navigate(0);
+      }
+    });
+  };
 
   const onHandlePagination = (page) => {
     setParams({
@@ -226,6 +245,14 @@ const RegionalInnovation = () => {
         navigate(`/inovasi-daerah/edit/${item.id}`);
       },
     },
+    // {
+    //   code: DELETE_ACTION_TABLE,
+    //   label: "Hapus",
+    //   onClick: (item) => {
+    //     setCurrentItem(item)
+    //     setShowDelete(true)
+    //   }
+    // }
   ];
 
   React.useEffect(() => {
@@ -234,6 +261,19 @@ const RegionalInnovation = () => {
 
   return (
     <div className="flex flex-col w-full gap-6 py-6">
+      {showDelete && (
+        <ModalConfirmation
+          variant="delete"
+          message={`Apakah Anda yakin ingin menghapus "${currentItem?.innovation_name}" ?`}
+          onCancel={() => {
+            setCurrentItem(null)
+            setShowDelete(false)
+          }
+          }
+          onConfirm={onHandleDelete}
+        />
+      )}
+
       <div className="text-[#333333] text-2xl font-bold">Inovasi Daerah</div>
       <div className="mt-4">
         <FilterOption

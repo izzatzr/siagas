@@ -14,6 +14,7 @@ import { useUtilContexts } from "../../../context/Utils";
 import Table from "../../../components/Table";
 import Pagination from "../../../components/Pagination";
 import {
+  DELETE_ACTION_TABLE,
   DOWNLOAD_TABLE,
   EXCEL_ACTION_TABLE,
   PDF_ACTION_TABLE,
@@ -72,9 +73,8 @@ const RegionalGovernmentInnovation = () => {
   const downloadExcel = (item) => {
     downloadExcelBlob({
       api: getDownlaodFileRegionalInnovation({ id: item?.id, type: "xlsx" }),
-      titleFile: `Detail-Inovasi-${
-        item?.innovation_name
-      }-${new Date().getTime()}`,
+      titleFile: `Detail-Inovasi-${item?.innovation_name
+        }-${new Date().getTime()}`,
       onError: () => {
         alert("Terjadi kesalahan");
       },
@@ -137,6 +137,14 @@ const RegionalGovernmentInnovation = () => {
         downloadExcel(item);
       },
     },
+    // {
+    //   code: DELETE_ACTION_TABLE,
+    //   label: 'Hapus',
+    //   onClick: (item) => {
+    //     setCurrentItem(item)
+    //     setShowDelete(true)
+    //   }
+    // }
   ];
 
   const tableHeader = [
@@ -209,6 +217,10 @@ const RegionalGovernmentInnovation = () => {
     setLoadingUtil(true);
     deleteMutation.mutate(currentItem?.id, {
       onSuccess: (res) => {
+        snackbar("Berhasil menghapus data inovasi daerah", () => {
+          navigate("/lomba/inovasi-pemerintah-daerah");
+        });
+
         setLoadingUtil(false);
         setCurrentItem(null);
         if (res.code) {
@@ -216,9 +228,7 @@ const RegionalGovernmentInnovation = () => {
             GET_ALL_REGIONAL_GOVERNMENT_INNOVATION,
           ]);
 
-          snackbar("Berhasil menghapus inovasi masyarakat", () => {
-            navigate("/lomba/inovasi-masyarakat");
-          });
+
         }
       },
     });
@@ -247,7 +257,11 @@ const RegionalGovernmentInnovation = () => {
         <ModalConfirmation
           variant="delete"
           message="Apakah Anda yakin ingin menghapus"
-          onCancel={() => setShowDelete(false)}
+          onCancel={() => {
+            setCurrentItem(null)
+            setShowDelete(false)
+          }
+          }
           onConfirm={onHandleDelete}
         />
       )}
