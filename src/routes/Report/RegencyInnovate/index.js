@@ -1,11 +1,18 @@
 import React from "react";
-import { convertQueryString, getToken } from "../../../utils";
+import {
+  convertQueryString,
+  downloadExcelBlob,
+  getToken,
+} from "../../../utils";
 import {
   BASE_API_URL,
   GET_ALL_REGENCY_INNOVATE,
 } from "../../../constans/constans";
 import { useQuery } from "react-query";
-import { getAllRegencyInnovate } from "../../../services/Report/RegencyInnovate/regencyInnovate";
+import {
+  getAllRegencyInnovate,
+  getDownloadXLS,
+} from "../../../services/Report/RegencyInnovate/regencyInnovate";
 import Pagination from "../../../components/Pagination";
 import Table from "../../../components/Table";
 import { useUtilContexts } from "../../../context/Utils";
@@ -159,6 +166,34 @@ const RegencyInnovate = () => {
     }
   };
 
+  const onHandleDownloadFile = (type) => {
+    const newParams = {
+      type,
+    };
+
+    if (filterParams.q) {
+      newParams["q"] = filterParams.q;
+    }
+
+    if (filterParams.predikat) {
+      newParams["predikat"] = filterParams.predikat;
+    }
+
+    if (filterParams.pemda_id) {
+      newParams["pemda_id"] = filterParams.pemda_id;
+    }
+
+    let fileName = `indeks-rata-rata-opd-${new Date().getTime()}`;
+
+    downloadExcelBlob({
+      api: getDownloadXLS(newParams),
+      titleFile: fileName,
+      onError: () => {
+        snackbar("Terjadi Kesalahan", () => {}, "error");
+      },
+    });
+  };
+
   return (
     <div className="flex flex-col w-full gap-6 py-6">
       <div className="text-[#333333] font-medium text-2xl mb-8">
@@ -176,6 +211,9 @@ const RegencyInnovate = () => {
           text="Unduh Data (XLS)"
           icon={<BiDownload size="16" />}
           padding="p-[10px]"
+          onClick={() => {
+            onHandleDownloadFile("xlsx");
+          }}
         />
       </div>
 
