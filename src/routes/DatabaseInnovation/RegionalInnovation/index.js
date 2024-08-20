@@ -1,5 +1,4 @@
 import React from 'react';
-import { AiFillInfoCircle } from 'react-icons/ai';
 import { BiPlus, BiSearch } from 'react-icons/bi';
 import Table from '../../../components/Table';
 import TableAction from '../../../components/TableAction';
@@ -7,15 +6,13 @@ import {
   DELETE_ACTION_TABLE,
   DOWNLOAD_TABLE,
   EDIT_ACTION_TABLE,
+  EDIT_SKOR_KEMATANGAN_ACTION_TABLE,
   EXCEL_ACTION_TABLE,
   PDF_ACTION_TABLE,
   TRANSFER_ACTION_TABLE,
 } from '../../../constants';
-import { QueryClient, useMutation, useQuery } from 'react-query';
-import {
-  GET_ALL_REGIONAL_GOVERNMENT_INNOVATION,
-  GET_ALL_REGIONAL_INNOVATION_QUERY_KEY,
-} from '../../../constans/constans';
+import { useMutation, useQuery } from 'react-query';
+import { GET_ALL_REGIONAL_INNOVATION_QUERY_KEY } from '../../../constans/constans';
 import {
   getAllRegionalInnovation,
   getDownlaodFileRegionalInnovation,
@@ -25,12 +22,7 @@ import Pagination from '../../../components/Pagination';
 import Button from '../../../components/Button';
 import { useNavigate } from 'react-router-dom';
 import FilterOption from '../../../components/FilterOption';
-import {
-  convertEstimationScore,
-  downloadExcelBlob,
-  downloadFile,
-  getUser,
-} from '../../../utils';
+import { downloadExcelBlob, downloadFile, getUser } from '../../../utils';
 import ModalConfirmation from '../../../components/ModalConfirmation';
 import { deleteRegionalGovernmentInnovation } from '../../../services/DatabaseInnovation/RegionalGovernmentInnovation/regionalGovermentInnovation';
 
@@ -82,11 +74,8 @@ const RegionalInnovation = () => {
       title: 'Waktu Penerapan',
     },
     {
-      key: '',
+      key: 'skor_kematangan',
       title: 'Estimasi Skor Kematangan',
-      render: (item) => {
-        return convertEstimationScore(item?.innovation_phase);
-      },
     },
     {
       key: 'form-action',
@@ -186,18 +175,11 @@ const RegionalInnovation = () => {
     {
       code: DOWNLOAD_TABLE,
       label: 'Dokumentasi Foto',
-      onClick: (item) => {
-        if (item?.fotoFile) {
-          const fullPath = item?.fotoFile?.full_path;
-          const fileName = item?.fotoFile?.name.replace(
-            item?.fotoFile?.extension,
-            ''
-          );
-          downloadFile(fullPath, fileName);
-        } else {
-          alert('Dookumen tidak tersedia');
-        }
-      },
+      contextMenu: (itemData) =>
+        itemData.daftar_foto.map((item) => ({
+          label: item.title,
+          link: item.link,
+        })),
     },
     {
       code: PDF_ACTION_TABLE,
@@ -250,6 +232,13 @@ const RegionalInnovation = () => {
       label: 'Edit',
       onClick: (item) => {
         navigate(`/inovasi-daerah/edit/${item.id}`);
+      },
+    },
+    {
+      code: EDIT_SKOR_KEMATANGAN_ACTION_TABLE,
+      label: 'Edit Skor Kematangan',
+      onClick: (item) => {
+        navigate(`/inovasi-daerah/edit/skor_kematangan/${item.id}`);
       },
     },
   ];

@@ -1,6 +1,6 @@
-import { BASE_API_URL } from "../../constans/constans";
-import { processResult, throwErrorUtil } from "../../helpers/fetchingUtils";
-import { convertQueryString, getToken } from "../../utils";
+import { BASE_API_URL } from '../../constans/constans';
+import { processResult, throwErrorUtil } from '../../helpers/fetchingUtils';
+import { convertQueryString, getToken } from '../../utils';
 
 export const getAllRegionalInnovation = (params) => async () => {
   try {
@@ -78,30 +78,33 @@ export const createRegionalInnovation = async (payload) => {
   try {
     const { id, ...body } = payload;
     const url = `${BASE_API_URL}/inovasi_pemerintah_daerah${
-      id ? "/" + id : ""
+      id ? '/' + id : ''
     }`;
 
+    console.log(payload);
+
     const formData = new FormData();
-    formData.append("nama_pemda", payload.nama_pemda);
-    formData.append("nama_inovasi", payload.nama_inovasi);
-    formData.append("tahapan_inovasi", payload.tahapan_inovasi);
-    formData.append("inisiator_inovasi", payload.inisiator_inovasi);
-    formData.append("jenis_inovasi", payload.jenis_inovasi);
-    formData.append("bentuk_inovasi", payload.bentuk_inovasi);
-    formData.append("tematik", payload.tematik);
-    formData.append("waktu_uji_coba", payload.waktu_uji_coba);
-    formData.append("waktu_penerapan", payload.waktu_penerapan);
-    formData.append("rancang_bangun", payload.rancang_bangun);
-    formData.append("tujuan", payload.tujuan);
-    formData.append("manfaat", payload.manfaat);
-    formData.append("hasil_inovasi", payload.hasil_inovasi);
-    formData.append("urusan_pemerintah", payload.urusan_pemerintah);
-    formData.append("anggaran_file", payload.anggaran_file);
-    formData.append("profile_file", payload.profile_file);
-    formData.append("foto", payload.foto);
+    formData.append('nama_pemda', payload.nama_pemda);
+    formData.append('nama_inovasi', payload.nama_inovasi);
+    formData.append('tahapan_inovasi', payload.tahapan_inovasi);
+    formData.append('inisiator_inovasi', payload.inisiator_inovasi);
+    formData.append('jenis_inovasi', payload.jenis_inovasi);
+    formData.append('bentuk_inovasi', payload.bentuk_inovasi);
+    formData.append('tematik', payload.tematik);
+    formData.append('waktu_uji_coba', payload.waktu_uji_coba);
+    formData.append('waktu_penerapan', payload.waktu_penerapan);
+    formData.append('rancang_bangun', payload.rancang_bangun);
+    formData.append('tujuan', payload.tujuan);
+    formData.append('manfaat', payload.manfaat);
+    formData.append('hasil_inovasi', payload.hasil_inovasi);
+    formData.append('urusan_pemerintah', payload.urusan_pemerintah);
+    formData.append('anggaran_file', payload.anggaran_file);
+    formData.append('profile_file', payload.profile_file);
+    formData.append('foto', payload.foto);
+    formData.append('daftar_foto', JSON.stringify(payload.daftar_foto));
 
     const response = await fetch(url, {
-      method: payload?.id ? "PATCH" : "POST",
+      method: payload?.id ? 'PATCH' : 'POST',
       headers: {
         Authorization: `Bearer ${getToken().token}`,
       },
@@ -117,7 +120,36 @@ export const createRegionalInnovation = async (payload) => {
 
     throw Error(result.message);
   } catch (error) {
-    throw Error("Submit inovasi daerah error");
+    throw Error('Submit inovasi daerah error');
+  }
+};
+
+export const editRegionalInnovationScore = async (payload) => {
+  try {
+    const { id, ...body } = payload;
+    const url = `${BASE_API_URL}/inovasi_pemerintah_daerah/skor_kematangan/${id}`;
+
+    const response = await fetch(url, {
+      method: payload?.id ? 'PATCH' : 'POST',
+      headers: {
+        Authorization: `Bearer ${getToken().token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        skor_kematangan: parseFloat(payload.skor_kematangan),
+      }),
+    });
+
+    const result = await response.json();
+    const isSuccess = result.code === 200;
+
+    if (isSuccess) {
+      return result;
+    }
+
+    throw Error(result.message);
+  } catch (error) {
+    throw Error('Submit inovasi daerah error');
   }
 };
 
@@ -151,15 +183,15 @@ export const getAllDocumentRegionalInnovation = (params) => async () => {
 export const uploadDocumentRegionalInnovation = async (payload) => {
   try {
     const formData = new FormData();
-    formData.append("nomor_surat", payload.nomor_dokumen);
-    formData.append("tanggal_surat", payload.tanggal_dokumen);
-    formData.append("tentang", payload.tentang);
-    formData.append("dokumen", payload.dokumen);
+    formData.append('nomor_surat', payload.nomor_dokumen);
+    formData.append('tanggal_surat', payload.tanggal_dokumen);
+    formData.append('tentang', payload.tentang);
+    formData.append('dokumen', payload.dokumen);
 
     const response = await fetch(
       `${BASE_API_URL}/inovasi_pemerintah_daerah/indikator/${payload?.inovasi_id}/${payload.indikator_id}/upload`,
       {
-        method: "POST",
+        method: 'POST',
         headers: {
           Authorization: `Bearer ${getToken().token}`,
         },
@@ -176,7 +208,7 @@ export const uploadDocumentRegionalInnovation = async (payload) => {
 
     throw Error(result.message);
   } catch (error) {
-    throw Error("Upload dokumen pendukung error");
+    throw Error('Upload dokumen pendukung error');
   }
 };
 
