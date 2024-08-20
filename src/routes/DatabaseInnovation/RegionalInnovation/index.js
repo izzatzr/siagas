@@ -237,6 +237,7 @@ const RegionalInnovation = () => {
     {
       code: EDIT_SKOR_KEMATANGAN_ACTION_TABLE,
       label: 'Edit Skor Kematangan',
+      show: user?.name === 'Super Admin',
       onClick: (item) => {
         navigate(`/inovasi-daerah/edit/skor_kematangan/${item.id}`);
       },
