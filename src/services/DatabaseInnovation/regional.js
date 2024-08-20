@@ -81,7 +81,10 @@ export const createRegionalInnovation = async (payload) => {
       id ? '/' + id : ''
     }`;
 
-    console.log(payload);
+    // Filter out objects in daftar_foto where either title or link is empty
+    const filteredDaftarFoto = payload.daftar_foto.filter(
+      (item) => item.title.trim() !== '' && item.link.trim() !== ''
+    );
 
     const formData = new FormData();
     formData.append('nama_pemda', payload.nama_pemda);
@@ -101,7 +104,7 @@ export const createRegionalInnovation = async (payload) => {
     formData.append('anggaran_file', payload.anggaran_file);
     formData.append('profile_file', payload.profile_file);
     formData.append('foto', payload.foto);
-    formData.append('daftar_foto', JSON.stringify(payload.daftar_foto));
+    formData.append('daftar_foto', JSON.stringify(filteredDaftarFoto));
 
     const response = await fetch(url, {
       method: payload?.id ? 'PATCH' : 'POST',
