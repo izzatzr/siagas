@@ -1,10 +1,12 @@
-FROM node:18 as build
+FROM node:18-alpine as build
 
 WORKDIR /usr/src/app
 
+ENV NODE_ENV=production
+
 COPY package*.json ./
 
-RUN npm ci
+RUN npm i
 
 COPY . .
 
