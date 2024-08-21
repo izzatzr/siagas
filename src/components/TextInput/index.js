@@ -1,12 +1,14 @@
-import React from "react";
+import React from 'react';
+import { twMerge } from 'tailwind-merge';
 
 const TextInput = (props) => {
   const {
+    className,
     label,
     name,
     icon,
     placeholder,
-    type = "text",
+    type = 'text',
     onChange,
     value,
     clickIcon,
@@ -16,7 +18,9 @@ const TextInput = (props) => {
   } = props;
 
   return (
-    <div className="flex gap-2 flex-col relative -mt-[7px]">
+    <div
+      className={twMerge('flex gap-2 flex-col relative -mt-[7px]', className)}
+    >
       {label && (
         <label htmlFor={name} className="text-[#333333] text-sm font-normal">
           {required && <span className="mr-1 text-red-600">*</span>}
@@ -25,9 +29,9 @@ const TextInput = (props) => {
       )}
       <div
         className={`group flex gap-[10px] rounded-lg border border-[#828282] ${
-          errorMessage && "border-[red]"
-        } p-3 bg-white ${icon ? "justify-between" : ""} ${
-          disabled && "pointer-events-none bg-[#3b3b3b]/10"
+          errorMessage && 'border-[red]'
+        } p-3 bg-white ${icon ? 'justify-between' : ''} ${
+          disabled && 'pointer-events-none bg-[#3b3b3b]/10'
         }`}
       >
         <input

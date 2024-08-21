@@ -1,75 +1,77 @@
-import React from "react";
-import { v4 as uuidv4 } from "uuid";
-import { BiArrowBack } from "react-icons/bi";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { convertQueryString, getToken } from "../../../../utils";
+import React from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import { BiArrowBack } from 'react-icons/bi';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { convertQueryString, getToken } from '../../../../utils';
 import {
   BASE_API_URL,
   GET_REGIONAL_INNOVATION_QUERY_KEY,
   formats,
   modules,
-} from "../../../../constans/constans";
-import SelectOption from "../../../../components/SelectOption";
-import TextInput from "../../../../components/TextInput";
-import Checkbox from "../../../../components/Checkbox";
-import ReactQuill from "react-quill";
-import Upload from "../../../../components/Upload";
-import { MdCheckCircle } from "react-icons/md";
-import Button from "../../../../components/Button";
-import { useMutation, useQuery } from "react-query";
+} from '../../../../constans/constans';
+import SelectOption from '../../../../components/SelectOption';
+import TextInput from '../../../../components/TextInput';
+import Checkbox from '../../../../components/Checkbox';
+import ReactQuill from 'react-quill';
+import Upload from '../../../../components/Upload';
+import { MdArrowRightAlt, MdCheckCircle } from 'react-icons/md';
+import Button from '../../../../components/Button';
+import { useMutation, useQuery } from 'react-query';
 import {
   createRegionalInnovation,
   getRegionalInnovation,
-} from "../../../../services/DatabaseInnovation/regional";
-import { useUtilContexts } from "../../../../context/Utils";
-import { getAllPemdaProfiles } from "../../../../services/DatabaseInnovation/pemdaProfile";
-import "react-quill/dist/quill.snow.css";
-import { Editor } from "../../../../components/TextEditor";
+} from '../../../../services/DatabaseInnovation/regional';
+import { useUtilContexts } from '../../../../context/Utils';
+import { getAllPemdaProfiles } from '../../../../services/DatabaseInnovation/pemdaProfile';
+import 'react-quill/dist/quill.snow.css';
+import { Editor } from '../../../../components/TextEditor';
+import ChainTextInput from '../../../../components/ChainTextInput';
 
 const initialParamsNamaPemda = {
   page: 1,
   limit: 100,
-  q: "",
+  q: '',
 };
 
 const initialParamsBusinessGovernment = {
   page: 1,
   limit: 100,
-  nama: "",
+  nama: '',
 };
 
 const initialPayload = {
   nama_pemda: null,
-  nama_inovasi: "",
-  tahapan_inovasi: "",
-  inisiator_inovasi: "",
-  jenis_inovasi: "",
+  nama_inovasi: '',
+  tahapan_inovasi: '',
+  inisiator_inovasi: '',
+  jenis_inovasi: '',
   bentuk_inovasi: null,
   tematik: null,
-  waktu_uji_coba: "",
-  waktu_penerapan: "",
-  rancang_bangun: "",
-  tujuan: "",
-  manfaat: "",
-  hasil_inovasi: "",
+  waktu_uji_coba: '',
+  waktu_penerapan: '',
+  rancang_bangun: '',
+  tujuan: '',
+  manfaat: '',
+  hasil_inovasi: '',
   urusan_pemerintah: null,
   anggaran_file: null,
   profile_file: null,
   foto: null,
+  daftar_foto: [],
 };
 
 const regionalInnovationForm = [
-  "Inovasi daerah lainnya dengan urusan pemerintahan yang menjadi kewenangan daerah",
-  "Inovasi pelayanan publik",
-  "Inovasi tata kelola pemerintahan daerah",
+  'Inovasi daerah lainnya dengan urusan pemerintahan yang menjadi kewenangan daerah',
+  'Inovasi pelayanan publik',
+  'Inovasi tata kelola pemerintahan daerah',
 ];
 
 const tematik = [
-  "Digitalisasi layanan pemerintahan",
-  "Penanggulangan kemiskinan",
-  "Kemudahan investasi",
-  "Prioritas aktual presiden",
-  "Non tematik",
+  'Digitalisasi layanan pemerintahan',
+  'Penanggulangan kemiskinan',
+  'Kemudahan investasi',
+  'Prioritas aktual presiden',
+  'Non tematik',
 ];
 
 const ChecboxContainer = (props) => {
@@ -84,9 +86,8 @@ const ChecboxContainer = (props) => {
         {(options || []).map((item, index) => {
           return (
             <div
-              className={`flex gap-2 p-4 border cursor-pointer hover:border-[#069DD9] ${
-                value === item && "border-[#069DD9]"
-              }`}
+              className={`flex gap-2 p-4 border cursor-pointer hover:border-[#069DD9] ${value === item && 'border-[#069DD9]'
+                }`}
               key={index}
               onClick={() => {
                 onChange(type, item);
@@ -155,6 +156,8 @@ const RegionalInnovationForm = () => {
             (item) => item?.id === data?.government_sector_id
           );
 
+          console.log(data);
+
           setPayload({
             nama_pemda: {
               id: pemdaData?.id,
@@ -171,39 +174,39 @@ const RegionalInnovationForm = () => {
             },
             tematik: data?.thematic
               ? {
-                  label: data?.thematic,
-                  value: data?.thematic,
-                }
+                label: data?.thematic,
+                value: data?.thematic,
+              }
               : null,
             urusan_pemerintah: {
-              id: urusanPemerintahData?.id ?? "",
-              label: urusanPemerintahData?.name ?? "",
-              value: `${urusanPemerintahData?.name ?? ""}`,
+              id: urusanPemerintahData?.id ?? '',
+              label: urusanPemerintahData?.name ?? '',
+              value: `${urusanPemerintahData?.name ?? ''}`,
             },
-            waktu_uji_coba: data?.trial_time ?? "",
-            waktu_penerapan: data?.implementation_time ?? "",
+            waktu_uji_coba: data?.trial_time ?? '',
+            waktu_penerapan: data?.implementation_time ?? '',
             rancang_bangun:
-              data?.design === "undefined" ||
-              data?.design === "null" ||
-              data?.design === undefined
+              data?.design === 'undefined' ||
+                data?.design === 'null' ||
+                data?.design === undefined
                 ? null
                 : data?.design,
             tujuan:
-              data?.purpose === "undefined" ||
-              data?.purpose === "null" ||
-              data?.purpose === undefined
+              data?.purpose === 'undefined' ||
+                data?.purpose === 'null' ||
+                data?.purpose === undefined
                 ? null
                 : data?.purpose,
             manfaat:
-              data?.benefit === "undefined" ||
-              data?.benefit === "null" ||
-              data?.benefit === undefined
+              data?.benefit === 'undefined' ||
+                data?.benefit === 'null' ||
+                data?.benefit === undefined
                 ? null
                 : data?.benefit,
             hasil_inovasi:
-              data?.result === "undefined" ||
-              data?.result === "null" ||
-              data?.result === undefined
+              data?.result === 'undefined' ||
+                data?.result === 'null' ||
+                data?.result === undefined
                 ? null
                 : data?.result,
             key: {
@@ -212,6 +215,7 @@ const RegionalInnovationForm = () => {
               manfaat: uuidv4(),
               hasil_inovasi: uuidv4(),
             },
+            daftar_foto: data?.daftar_foto ?? [],
           });
         }
       },
@@ -308,10 +312,10 @@ const RegionalInnovationForm = () => {
       bentuk_inovasi: payload.bentuk_inovasi?.value,
       tematik: payload.tematik?.value,
       urusan_pemerintah: payload.urusan_pemerintah?.label,
-      tujuan: payload?.tujuan ?? "",
-      manfaat: payload?.manfaat ?? "",
-      hasil_inovasi: payload?.hasil_inovasi ?? "",
-      rancang_bangun: payload?.rancang_bangun ?? "",
+      tujuan: payload?.tujuan ?? '',
+      manfaat: payload?.manfaat ?? '',
+      hasil_inovasi: payload?.hasil_inovasi ?? '',
+      rancang_bangun: payload?.rancang_bangun ?? '',
     };
 
     submitRegionalInnovationMutation.mutate(
@@ -324,19 +328,61 @@ const RegionalInnovationForm = () => {
           if (res.code === 200) {
             setLoadingUtil(false);
             snackbar(
-              currentId ? "Berhasil diubah" : "Berhasil disimpan",
+              currentId ? 'Berhasil diubah' : 'Berhasil disimpan',
               () => {
-                navigate("/inovasi-daerah");
+                navigate('/inovasi-daerah');
               }
             );
           }
         },
         onError: () => {
           setLoadingUtil(false);
-          snackbar("Terjadi kesalahan", () => {}, "error");
+          snackbar('Terjadi kesalahan', () => { }, 'error');
         },
       }
     );
+  };
+
+  const handleTitleChange = (index, value) => {
+    setPayload((prev) => {
+      const newDaftarFoto = [...prev.daftar_foto];
+      newDaftarFoto[index].title = value;
+
+      return {
+        ...prev,
+        daftar_foto: newDaftarFoto,
+      };
+    });
+  };
+
+  const handleLinkChange = (index, value) => {
+    setPayload((prev) => {
+      const newDaftarFoto = [...prev.daftar_foto];
+      newDaftarFoto[index].link = value;
+
+      return {
+        ...prev,
+        daftar_foto: newDaftarFoto,
+      };
+    });
+  };
+
+  const handleRemoveItem = (index) => {
+    setPayload((prev) => {
+      const newDaftarFoto = [...prev.daftar_foto];
+      newDaftarFoto.splice(index, 1);
+      return {
+        ...prev,
+        daftar_foto: newDaftarFoto,
+      };
+    });
+  };
+
+  const handleAddItem = () => {
+    setPayload((prev) => ({
+      ...prev,
+      daftar_foto: [...prev.daftar_foto, { title: '', link: '' }],
+    }));
   };
 
   return (
@@ -348,7 +394,7 @@ const RegionalInnovationForm = () => {
             <BiArrowBack />
           </Link>
           <span className="text-lg font-medium">
-            {params?.action === "tambah" ? "Tambah " : "Edit "}
+            {params?.action === 'tambah' ? 'Tambah ' : 'Edit '}
             Inovasi Daerah
           </span>
         </div>
@@ -359,33 +405,33 @@ const RegionalInnovationForm = () => {
             options={loadOptionsPemdaName}
             paginate={true}
             disabled={currentId ? true : false}
-            onChange={(e) => onHandleChange("nama_pemda", e)}
+            onChange={(e) => onHandleChange('nama_pemda', e)}
             value={payload?.nama_pemda}
             getOptionLabel={getOptionLabelPemdaName}
           />
         )}
         <TextInput
-          label={"Nama Inovasi"}
+          label={'Nama Inovasi'}
           placeholder="Tulis disini"
-          onChange={(e) => onHandleChange("nama_inovasi", e.target.value)}
+          onChange={(e) => onHandleChange('nama_inovasi', e.target.value)}
           value={payload.nama_inovasi}
         />
         <ChecboxContainer
-          label={"Tahapan Inovasi"}
-          options={["inisiatif", "uji coba", "penerapan"]}
+          label={'Tahapan Inovasi'}
+          options={['inisiatif', 'uji coba', 'penerapan']}
           onChange={(key, value) => onHandleChange(key, value)}
           value={payload.tahapan_inovasi}
           type="tahapan_inovasi"
         />
 
         <ChecboxContainer
-          label={"Inisiator Inovasi Daerah"}
+          label={'Inisiator Inovasi Daerah'}
           options={[
-            "Kepala Daerah",
-            "Anggota DPRD",
-            "OPD",
-            "ASN",
-            "Masyarakat",
+            'Kepala Daerah',
+            'Anggota DPRD',
+            'OPD',
+            'ASN',
+            'Masyarakat',
           ]}
           onChange={(key, value) => onHandleChange(key, value)}
           value={payload.inisiator_inovasi}
@@ -393,8 +439,8 @@ const RegionalInnovationForm = () => {
         />
 
         <ChecboxContainer
-          label={"Jenis Inovasi"}
-          options={["Digital", "Non Digital"]}
+          label={'Jenis Inovasi'}
+          options={['Digital', 'Non Digital']}
           onChange={(key, value) => onHandleChange(key, value)}
           value={payload.jenis_inovasi}
           type="jenis_inovasi"
@@ -402,27 +448,27 @@ const RegionalInnovationForm = () => {
 
         <div className="flex gap-6">
           <SelectOption
-            label={"Bentuk Inovasi Daerah"}
+            label={'Bentuk Inovasi Daerah'}
             options={regionalInnovationForm.map((item) => ({
               label: item,
               value: item,
             }))}
-            placeholder={"Pilih"}
+            placeholder={'Pilih'}
             onChange={(value) => {
-              onHandleChange("bentuk_inovasi", value);
+              onHandleChange('bentuk_inovasi', value);
             }}
             value={payload?.bentuk_inovasi}
           />
 
           <SelectOption
-            label={"Tematik"}
+            label={'Tematik'}
             options={tematik.map((item) => ({
               label: item,
               value: item,
             }))}
-            placeholder={"Pilih"}
+            placeholder={'Pilih'}
             onChange={(value) => {
-              onHandleChange("tematik", value);
+              onHandleChange('tematik', value);
             }}
             value={payload?.tematik}
           />
@@ -433,7 +479,7 @@ const RegionalInnovationForm = () => {
           placeholder="Pilih"
           options={loadedOptionsBusinessGovernment}
           paginate={true}
-          onChange={(e) => onHandleChange("urusan_pemerintah", e)}
+          onChange={(e) => onHandleChange('urusan_pemerintah', e)}
           value={
             payload?.urusan_pemerintah?.value
               ? payload?.urusan_pemerintah
@@ -447,43 +493,44 @@ const RegionalInnovationForm = () => {
         <div className="flex gap-6">
           <div className="flex-1">
             <TextInput
-              label={"Waktu Uji Coba Inovasi Daerah"}
+              label={'Waktu Uji Coba Inovasi Daerah'}
               value={payload.waktu_uji_coba}
-              onChange={(e) => onHandleChange("waktu_uji_coba", e.target.value)}
-              placeholder={"Pilih tanggal uji coba"}
-              type={"date"}
+              onChange={(e) => onHandleChange('waktu_uji_coba', e.target.value)}
+              placeholder={'Pilih tanggal uji coba'}
+              type={'date'}
             />
           </div>
           <div className="flex-1">
             <TextInput
-              label={"Waktu Penerapan Inovasi Daerah"}
+              label={'Waktu Penerapan Inovasi Daerah'}
               value={payload.waktu_penerapan}
               onChange={(e) =>
-                onHandleChange("waktu_penerapan", e.target.value)
+                onHandleChange('waktu_penerapan', e.target.value)
               }
-              placeholder={"Pilih tanggal penerapan"}
-              type={"date"}
+              placeholder={'Pilih tanggal penerapan'}
+              type={'date'}
             />
           </div>
         </div>
-
+        <a href='https://chatgpt.com/' rel="noreferrer" target="_blank"><Button padding="px-3 py-2"
+          icon={<MdArrowRightAlt />} text="Buka Chat GPT"></Button></a>
         <Editor
           key={payload?.key?.rancang_bangun}
           label="Rancang Bangun (Minimal 300 kata)"
           value={payload.rancang_bangun}
           onChange={(value) => {
-            onHandleChange("rancang_bangun", value);
+            onHandleChange('rancang_bangun', value);
           }}
-          placeholder={"Tulis disini"}
+          placeholder={'Tulis disini'}
         />
         <Editor
           key={payload?.key?.tujuan}
           label="Tujuan Inovasi Daerah"
           value={payload.tujuan}
           onChange={(value) => {
-            onHandleChange("tujuan", value);
+            onHandleChange('tujuan', value);
           }}
-          placeholder={"Tulis disini"}
+          placeholder={'Tulis disini'}
         />
 
         <Editor
@@ -491,9 +538,9 @@ const RegionalInnovationForm = () => {
           label="Manfaat yang diperoleh"
           value={payload.manfaat}
           onChange={(value) => {
-            onHandleChange("manfaat", value);
+            onHandleChange('manfaat', value);
           }}
-          placeholder={"Tulis disini"}
+          placeholder={'Tulis disini'}
         />
 
         <Editor
@@ -501,30 +548,39 @@ const RegionalInnovationForm = () => {
           label="Hasil Inovasi"
           value={payload.hasil_inovasi}
           onChange={(value) => {
-            onHandleChange("hasil_inovasi", value);
+            onHandleChange('hasil_inovasi', value);
           }}
-          placeholder={"Tulis disini"}
+          placeholder={'Tulis disini'}
         />
 
         <Upload
           label="Anggaran (Jika Diperlukan)"
-          description={"Dokumen PDF, Maksimal 2MB"}
-          onChange={(e) => onHandleChangeImage("anggaran_file", e)}
+          description={'Dokumen PDF, Maksimal 2MB'}
+          onChange={(e) => onHandleChangeImage('anggaran_file', e)}
           value={payload.anggaran_file}
         />
 
         <Upload
           label="Profil Bisnis (Jika Ada)"
-          description={"Dokumen PDF, Maksimal 2MB"}
-          onChange={(e) => onHandleChangeImage("profile_file", e)}
+          description={'Dokumen PDF, Maksimal 2MB'}
+          onChange={(e) => onHandleChangeImage('profile_file', e)}
           value={payload.profile_file}
         />
 
-        <Upload
+        {/* <Upload
           label="Upload Dokumentasi Foto (Jika Ada)"
-          description={"Dokumen JPG, Maksimal 2MB"}
-          onChange={(e) => onHandleChangeImage("foto", e)}
+          description={'Dokumen JPG, Maksimal 2MB'}
+          onChange={(e) => onHandleChangeImage('foto', e)}
           value={payload.foto}
+        /> */}
+
+        <ChainTextInput
+          label="Upload Dokumentasi Foto (Jika Ada)"
+          items={payload.daftar_foto}
+          onTitleChange={handleTitleChange}
+          onLinkChange={handleLinkChange}
+          onRemove={handleRemoveItem}
+          onAdd={handleAddItem}
         />
 
         <div className="flex items-center gap-4 w-60">
@@ -539,7 +595,7 @@ const RegionalInnovationForm = () => {
           <div className="flex-1">
             <Button
               onClick={() => {
-                navigate("/inovasi-daerah");
+                navigate('/inovasi-daerah');
               }}
               padding="px-3 py-2"
               text="Batal"
