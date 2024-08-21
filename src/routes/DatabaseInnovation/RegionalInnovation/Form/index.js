@@ -14,7 +14,7 @@ import TextInput from '../../../../components/TextInput';
 import Checkbox from '../../../../components/Checkbox';
 import ReactQuill from 'react-quill';
 import Upload from '../../../../components/Upload';
-import { MdCheckCircle } from 'react-icons/md';
+import { MdArrowRightAlt, MdCheckCircle } from 'react-icons/md';
 import Button from '../../../../components/Button';
 import { useMutation, useQuery } from 'react-query';
 import {
@@ -86,9 +86,8 @@ const ChecboxContainer = (props) => {
         {(options || []).map((item, index) => {
           return (
             <div
-              className={`flex gap-2 p-4 border cursor-pointer hover:border-[#069DD9] ${
-                value === item && 'border-[#069DD9]'
-              }`}
+              className={`flex gap-2 p-4 border cursor-pointer hover:border-[#069DD9] ${value === item && 'border-[#069DD9]'
+                }`}
               key={index}
               onClick={() => {
                 onChange(type, item);
@@ -175,9 +174,9 @@ const RegionalInnovationForm = () => {
             },
             tematik: data?.thematic
               ? {
-                  label: data?.thematic,
-                  value: data?.thematic,
-                }
+                label: data?.thematic,
+                value: data?.thematic,
+              }
               : null,
             urusan_pemerintah: {
               id: urusanPemerintahData?.id ?? '',
@@ -188,26 +187,26 @@ const RegionalInnovationForm = () => {
             waktu_penerapan: data?.implementation_time ?? '',
             rancang_bangun:
               data?.design === 'undefined' ||
-              data?.design === 'null' ||
-              data?.design === undefined
+                data?.design === 'null' ||
+                data?.design === undefined
                 ? null
                 : data?.design,
             tujuan:
               data?.purpose === 'undefined' ||
-              data?.purpose === 'null' ||
-              data?.purpose === undefined
+                data?.purpose === 'null' ||
+                data?.purpose === undefined
                 ? null
                 : data?.purpose,
             manfaat:
               data?.benefit === 'undefined' ||
-              data?.benefit === 'null' ||
-              data?.benefit === undefined
+                data?.benefit === 'null' ||
+                data?.benefit === undefined
                 ? null
                 : data?.benefit,
             hasil_inovasi:
               data?.result === 'undefined' ||
-              data?.result === 'null' ||
-              data?.result === undefined
+                data?.result === 'null' ||
+                data?.result === undefined
                 ? null
                 : data?.result,
             key: {
@@ -338,7 +337,7 @@ const RegionalInnovationForm = () => {
         },
         onError: () => {
           setLoadingUtil(false);
-          snackbar('Terjadi kesalahan', () => {}, 'error');
+          snackbar('Terjadi kesalahan', () => { }, 'error');
         },
       }
     );
@@ -513,7 +512,8 @@ const RegionalInnovationForm = () => {
             />
           </div>
         </div>
-
+        <a href='https://chatgpt.com/' rel="noreferrer" target="_blank"><Button padding="px-3 py-2"
+          icon={<MdArrowRightAlt />} text="Buka Chat GPT"></Button></a>
         <Editor
           key={payload?.key?.rancang_bangun}
           label="Rancang Bangun (Minimal 300 kata)"
