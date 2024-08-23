@@ -1,22 +1,21 @@
-import { LOGIN_SUCCESS, LOGOUT } from "../types";
-import  secureLocalStorage  from  "react-secure-storage";
+import { createReducer } from '@reduxjs/toolkit';
+import { LOGIN_SUCCESS, LOGOUT } from '../types';
+import secureLocalStorage from 'react-secure-storage';
 
-const isLoggedIn = secureLocalStorage.getItem("isLoggedIn") ? true : false;
+const isLoggedIn = secureLocalStorage.getItem('isLoggedIn') ? true : false;
 
 const initialState = {
-  isLoggedIn: isLoggedIn,
+  isLoggedIn,
 };
 
-// eslint-disable-next-line
-export default (state = initialState, actions) => {
-  const { type } = actions;
+const authReducer = createReducer(initialState, (builder) => {
+  builder
+    .addCase(LOGIN_SUCCESS, (state) => {
+      state.isLoggedIn = true;
+    })
+    .addCase(LOGOUT, (state) => {
+      state.isLoggedIn = false;
+    });
+});
 
-  switch (type) {
-    case LOGIN_SUCCESS:
-      return { ...state, isLoggedIn: true };
-    case LOGOUT:
-      return { ...state, isLoggedIn: false };
-    default:
-      return state;
-  }
-};
+export default authReducer;

@@ -1,27 +1,25 @@
-import React from "react";
-import { Navigate, Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { FaEye } from "react-icons/fa";
-import { useMutation, useQuery } from "react-query";
-import secureLocalStorage from "react-secure-storage";
+import React from 'react';
+import { Navigate, Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { FaEye } from 'react-icons/fa';
+import { useMutation } from 'react-query';
+import secureLocalStorage from 'react-secure-storage';
 
-import Button from "../../components/Button";
-import CardLogin from "../../components/CardLogin";
-import Checkbox from "../../components/Checkbox";
-import TextInput from "../../components/TextInput";
+import Button from '../../components/Button';
+import CardLogin from '../../components/CardLogin';
+import Checkbox from '../../components/Checkbox';
+import TextInput from '../../components/TextInput';
 
-import logo from "../../assets/images/logo.png";
-import announcementLogo from "../../assets/images/announcement.svg";
-import { doLogin } from "../../services/Auth/login";
-import Loading from "../../components/Loading";
-import Slider from "react-slick";
+import logo from '../../assets/images/logo.png';
+import announcementLogo from '../../assets/images/announcement.svg';
+import { doLogin } from '../../services/Auth/login';
+import Loading from '../../components/Loading';
+import Slider from 'react-slick';
 
-import imageOne from "../../assets/images/slider/1.jpeg";
-import imageTwo from "../../assets/images/slider/2.jpeg";
-import imageThree from "../../assets/images/slider/3.jpeg";
-import Innovation from "./Components/Innovation";
-import { GET_ALL_INNOVATION_STATISTIC } from "../../constans/constans";
-import { getInnovationStatistic } from "../../services/Dashboard/InnovationStatistic/innovationStatistic";
+import imageOne from '../../assets/images/slider/1.jpeg';
+import imageTwo from '../../assets/images/slider/2.jpeg';
+import imageThree from '../../assets/images/slider/3.jpeg';
+import Innovation from './Components/Innovation';
 
 const settings = {
   infinite: true,
@@ -35,12 +33,12 @@ const settings = {
 
 const Login = () => {
   const [loading, setLoading] = React.useState(false);
-  const { auth } = useSelector((state) => state);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   const [payload, setPayload] = React.useState({
-    username: "",
-    password: "",
-    rememberMe: "",
+    username: '',
+    password: '',
+    rememberMe: '',
   });
 
   const [errors, setErrors] = React.useState();
@@ -51,7 +49,7 @@ const Login = () => {
     if (value.length < 0) {
       setErrors({
         ...errors,
-        [name]: "",
+        [name]: '',
       });
     }
 
@@ -77,9 +75,9 @@ const Login = () => {
             token: res.token,
             token_expired_at: res.token_expired_at,
           };
-          secureLocalStorage.setItem("isLoggedIn", true);
-          secureLocalStorage.setItem("token", token);
-          secureLocalStorage.setItem("user", res.role);
+          secureLocalStorage.setItem('isLoggedIn', true);
+          secureLocalStorage.setItem('token', token);
+          secureLocalStorage.setItem('user', res.role);
 
           setLoading(false);
 
@@ -97,9 +95,11 @@ const Login = () => {
     );
   };
 
-  return auth.isLoggedIn ? (
-    <Navigate to="/" />
-  ) : (
+  if (isLoggedIn) {
+    return <Navigate to="/" replace />;
+  }
+
+  return (
     <div className="box-border flex flex-col w-screen h-screen">
       {loading && <Loading />}
       <div className="z-10 flex items-center justify-between w-full px-24 py-6 bg-[#063a69] text-white shadow-lg">
@@ -160,22 +160,22 @@ const Login = () => {
           <div className="w-full">
             <TextInput
               value={payload.username}
-              onChange={(e) => handleChange("username", e.target.value)}
-              label={"Username"}
+              onChange={(e) => handleChange('username', e.target.value)}
+              label={'Username'}
               name="username"
-              placeholder={"Masukan username"}
+              placeholder={'Masukan username'}
               errorMessage={errors?.username}
             />
           </div>
           <div className="w-full">
             <TextInput
               value={payload.password}
-              onChange={(e) => handleChange("password", e.target.value)}
-              label={"Password"}
+              onChange={(e) => handleChange('password', e.target.value)}
+              label={'Password'}
               name="password"
-              placeholder={"Masukan password"}
+              placeholder={'Masukan password'}
               icon={<FaEye />}
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               clickIcon={() => setShowPassword(!showPassword)}
               errorMessage={errors?.password}
             />
@@ -183,7 +183,7 @@ const Login = () => {
           <div className="flex justify-between w-full">
             <Checkbox
               checked={payload.rememberMe}
-              onChange={() => handleChange("rememberMe", !payload.rememberMe)}
+              onChange={() => handleChange('rememberMe', !payload.rememberMe)}
               label="Ingatkan Saya"
             />
           </div>

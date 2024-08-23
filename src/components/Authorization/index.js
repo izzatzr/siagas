@@ -1,6 +1,6 @@
-import React from "react";
-import { getUser } from "../../utils";
-import Unauthorized from "../../routes/Unauthorized";
+import React from 'react';
+import { getUser } from '../../utils';
+import Unauthorized from '../../routes/Unauthorized';
 
 const Authorization = ({ children, roles }) => {
   const user = getUser();
