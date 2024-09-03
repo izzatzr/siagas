@@ -42,7 +42,7 @@ const Siagas = () => {
         </div>
         <CardGradient
           type="secondary"
-          label="Total Inovasi Nasional"
+          label="Total Inovasi Daerah"
           total={data?.data.total_inovasi || 0}
         />
         <div className="grid grid-cols-2 gap-4">
