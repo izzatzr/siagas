@@ -43,7 +43,10 @@ const DataEvents = [
   },
 ];
 
-const Timeline = () => {
+const Timeline = (props) => {
+  // const { value } = props;
+  // console.log(value, 'ini props timeline');
+
   const [selectedEvent, setSelectedEvent] = useState(null);
 
   const handleEdit = (card) => {
@@ -60,24 +63,24 @@ const Timeline = () => {
             <li key={idx} className="mb-10 ms-4">
               <div className="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -start-1.5 border border-white dark:border-gray-900 dark:bg-gray-700" />
               <time className="mb-1 text-lg font-bold leading-none text-dark ">
-                {event.date}
+                {/* {event.date_groups} */}
               </time>
-              {event.events.map((card, cardIdx) => (
+              {/* {event.details.map((card, cardIdx) => ( */}
                 <div
-                  key={cardIdx}
+                  // key={cardIdx}
                   className="border mt-3 border-gray-600 rounded-lg px-4 py-4 bg-white w-70 z-10 sm:w-72 me-2 mb-2 cursor-pointer hover:shadow-lg"
-                  onClick={() => handleEdit(card)}
+                  onClick={() => handleEdit()}
                 >
                   <div className="">
-                    <div className="text-black text-xl font-medium">
-                      {card.title}
-                    </div>
+                    {/* <div className="text-black text-xl font-medium">
+                      {card.comment[0]}
+                    </div> */}
                     <div className="text-black mb-4 text-left h-[50px]">
-                      {card.description}
+                      {/* {card.date_formatted} */}
                     </div>
                   </div>
                 </div>
-              ))}
+              {/* ))} */}
             </li>
           ))}
         </ol>
