@@ -8,6 +8,7 @@ import {
 } from 'react-router-dom';
 import Chipper from '../../../../components/Chipper';
 import {
+  BASE_API_URL,
   GET_ALL_INDICATOR,
   GET_REGIONAL_INNOVATION_QUERY_KEY,
 } from '../../../../constans/constans';
@@ -16,12 +17,81 @@ import { useQuery } from 'react-query';
 import { BiArrowBack } from 'react-icons/bi';
 import { getRegionalInnovation } from '../../../../services/DatabaseInnovation/regional';
 import IndicatorList from './IndicatorList';
-import Timeline from '../../../../components/Timeline';
+import TextEditor from '../../../../components/TextEditorQuill';
+import axios from 'axios';
+import { getToken } from '../../../../utils';
 
 const initialIndicatorFilterParams = {
   page: 1,
   limit: 10,
   jenis_indikator: 'si',
+};
+
+const Timeline = ({ value, handleEditComment, handleDeleteComment }) => {
+  const stripHtml = (html) => {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    return div.textContent || div.innerText || '';
+  };
+
+  const sortCommentsByDate = (comments) => {
+    return comments.sort(
+      (a, b) => new Date(b.date_groups) - new Date(a.date_groups)
+    );
+  };
+
+  const sortedComments = sortCommentsByDate(value ?? []);
+
+  console.log(sortedComments, 'ini sortedComments');
+
+  return (
+    <div>
+      <ol className="ms-4 relative border-s border-gray-200 dark:border-gray-700">
+        {sortedComments.map((event, idx) => (
+          <li key={idx} className="mb-10 ms-4">
+            <div className="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -start-1.5 border border-white dark:border-gray-900 dark:bg-gray-700" />
+            <time className="mb-1 text-lg font-bold leading-none text-dark ">
+              {event.date_groups}
+            </time>
+            {event.details.map((card, cardIdx) => (
+              <div
+                key={cardIdx}
+                className="border mt-3 border-gray-600 rounded-lg px-4 py-4 bg-white w-70 z-10 sm:w-72 me-2 mb-2 cursor-pointer hover:shadow-lg"
+                onClick={() =>
+                  handleEditComment(
+                    card.comment.comment,
+                    card.id,
+                    card.gov_innov_id
+                  )
+                } // Pass edit handler
+              >
+                <div className="">
+                  <div className="text-black font-bold text-left text-xl h-[50px]">
+                    {card.user_id.full_name}
+                  </div>
+                  <div className="text-red-500 font-bold text-left text-xl h-[50px]">
+                    {stripHtml(card.comment.comment)}
+                  </div>
+                  <div className="text-black text-md font-thin">
+                    {card.date_formatted}
+                  </div>
+                  <button
+                    className="text-red-500 hover:text-black"
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent triggering the edit handler
+                      handleDeleteComment(card.id, card.gov_innov_id);
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
 };
 
 const DetailItem = (props) => {
@@ -59,10 +129,74 @@ const RegionalInnovationDetail = () => {
   const [indicatorFilterParams, setIndicatorFilterParams] = React.useState(
     initialIndicatorFilterParams
   );
+  const [showEditor, setShowEditor] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [selectedComment, setSelectedComment] = useState(null);
+  const [innovId, setInnovId] = useState(null);
+  const [commentId, setCommentId] = useState(null);
   const params = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const currentId = params.id;
+
+  // Handler for adding a comment
+  const handlePostComment = () => {
+    setIsEditing(false);
+    setSelectedComment('');
+    setInnovId(currentId);
+    setCommentId(null);
+    setShowEditor(true);
+  };
+
+  // Handler for editing a comment (passed to Timeline component)
+  const handleEditComment = (comment, id, innovId) => {
+    setIsEditing(true);
+    setSelectedComment(comment);
+    setInnovId(innovId);
+    setCommentId(id);
+    setShowEditor(true);
+  };
+
+  // Function to handle cancel button in TextEditor
+  const handleCancel = () => {
+    setShowEditor(false);
+    setInnovId(null);
+    setCommentId(null);
+  };
+
+  // Function to delete a comment
+  const handleDeleteComment = async (commentId, innovId) => {
+    try {
+      console.log(innovId, 'ini innovId', commentId, 'ini commentid');
+      await deleteComment(innovId, commentId);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteComment = async (innovId, commentId) => {
+    try {
+      const token = getToken().token;
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      };
+
+      const response = await axios({
+        method: 'DELETE',
+        url: `${BASE_API_URL}/innovasi_pemerintah_daerah/${innovId}/comment/${commentId}`,
+        headers,
+      });
+
+      console.log(response, 'response');
+
+      return response;
+    } catch (error) {
+      console.error('Failed to delete comment:', error.message || error);
+      throw error; // Rethrow the error so it can be handled by the caller
+    }
+  };
 
   const tabActive = parseInt(searchParams.get('tabActive')) || 0;
 
@@ -87,6 +221,10 @@ const RegionalInnovationDetail = () => {
       }).toString(),
     });
   };
+
+  console.log(data, 'ini data');
+
+  const hasTimeline = data?.data?.comments_timeline?.length > 0;
 
   return (
     <div className="w-full flex flex-col gap-6 py-6">
@@ -113,6 +251,15 @@ const RegionalInnovationDetail = () => {
               onChangeTabActive(1);
             }}
           />
+          {hasTimeline && tabActive !== 1 && (
+            <div className="absolute right-56">
+              <Chipper
+                active={tabActive === 2}
+                label="Add Comment"
+                onClick={handlePostComment}
+              />
+            </div>
+          )}
         </div>
         {tabActive === 0 && (
           <div className="flex gap-6">
@@ -185,8 +332,23 @@ const RegionalInnovationDetail = () => {
                 value={data?.data?.result || ''}
               />
             </div>
+
             <div className="flex-1 flex-col gap-6 overflow-y-auto h-screen">
-              <Timeline />
+              {showEditor ? (
+                <TextEditor
+                  selectedEvent={selectedComment}
+                  commentId={commentId}
+                  innovId={innovId}
+                  isEditing={isEditing}
+                  handleCancel={handleCancel} // Pass handleCancel to the TextEditor
+                />
+              ) : (
+                <Timeline
+                  value={data?.data?.comments_timeline}
+                  handleEditComment={handleEditComment}
+                  handleDeleteComment={handleDeleteComment}
+                />
+              )}
             </div>
           </div>
         )}
