@@ -19,7 +19,7 @@ import { getRegionalInnovation } from '../../../../services/DatabaseInnovation/r
 import IndicatorList from './IndicatorList';
 import TextEditor from '../../../../components/TextEditorQuill';
 import axios from 'axios';
-import { getToken } from '../../../../utils';
+import { getToken, getUser } from '../../../../utils';
 
 const initialIndicatorFilterParams = {
   page: 1,
@@ -82,7 +82,7 @@ const Timeline = ({ value, handleEditComment, handleDeleteComment }) => {
                       handleDeleteComment(card.id, card.gov_innov_id);
                     }}
                   >
-                    Delete
+                    Hapus
                   </button>
                 </div>
               </div>
@@ -251,11 +251,11 @@ const RegionalInnovationDetail = () => {
               onChangeTabActive(1);
             }}
           />
-          {hasTimeline && tabActive !== 1 && (
+          {getUser()?.is_super_admin === "y" && (
             <div className="absolute right-56">
               <Chipper
                 active={tabActive === 2}
-                label="Add Comment"
+                label="Tambah Komentar"
                 onClick={handlePostComment}
               />
             </div>

@@ -45,15 +45,33 @@ export default function TextEditor({
 
   useEffect(() => {
     const toolbarOptions = [
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      ['link', 'image'],
+      // ['bold', 'italic', 'underline', 'strike'],
+      // [{ list: 'ordered' }, { list: 'bullet' }],
+      // ['link', 'image'],
+      ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+      ['blockquote', 'code-block'],
+      ['link', 'image', 'video', 'formula'],
+
+      [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+      [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'list': 'check' }],
+      [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
+      [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
+      [{ 'direction': 'rtl' }],                         // text direction
+
+      [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+      [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+      [{ 'font': [] }],
+      [{ 'align': [] }],
+
+      ['clean']
     ];
 
     if (!quillInstance) {
       const data = document.getElementById('data');
       const quill = new Quill(data, {
-        // modules: { toolbar: toolbarOptions },
+        modules: { toolbar: toolbarOptions },
         theme: 'snow',
       });
       setQuillInstance(quill);
@@ -79,13 +97,13 @@ export default function TextEditor({
           className="border border-blue-400 py-2 px-2 w-[80px] rounded-lg hover:bg-blue-100"
           onClick={handleSubmit}
         >
-          {isEditing ? 'Update' : 'Post'}
+          {isEditing ? 'Update' : 'Tambahkan'}
         </button>
         <button
           className="border border-blue-400 py-2 px-2 w-[80px] rounded-lg hover:bg-red-300"
           onClick={handleCancel}
         >
-          Cancel
+          Batalkan
         </button>
       </div>
     </div>
