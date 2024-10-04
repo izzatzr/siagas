@@ -25,9 +25,9 @@ const SidebarItem = (props) => {
   return (
     <div className="w-full">
       <div className="flex items-center gap-2">
-        <img src={icon} alt="" />
+        <img src={icon} style={{ color: 'white' }} alt="" />
         <div className="flex-1">
-          <span className="font-medium">{label}</span>
+          <span className="font-medium text-white">{label}</span>
         </div>
         {children.length > 0 && (
           <div
@@ -35,23 +35,22 @@ const SidebarItem = (props) => {
             onClick={() => handleOpenAccordion(label, !active)}
           >
             {active && sidebarActive === indexSidebar ? (
-              <AiFillCaretUp size={10} />
+              <AiFillCaretUp color="white" size={10} />
             ) : (
-              <AiFillCaretDown size={10} />
+              <AiFillCaretDown color="white" size={10} />
             )}
           </div>
         )}
       </div>
       {sidebarActive === indexSidebar && active && (
-        <div className={`flex flex-col pt-1.5`}>
+        <div className={`flex flex-col pt-1.5 text-white`}>
           {children.map((child, key) => {
             return user?.is_super_admin === "y" &&
               child?.roles?.includes("Super Admin") ? (
               <Link to={child.link} key={key}>
                 <div
-                  className={`mt-[11px] text-[13px] pl-[37px] rounded py-1.5 hover:text-[#069DD9] cursor-pointer ${
-                    location.pathname.includes(child.link) && "text-[#069DD9]"
-                  }`}
+                  className={`mt-[11px] text-[13px] pl-[37px] rounded py-1.5 hover:text-[#069DD9] cursor-pointer ${location.pathname.includes(child.link) && "text-[#069DD9]"
+                    }`}
                 >
                   {child.label}
                 </div>
@@ -60,9 +59,8 @@ const SidebarItem = (props) => {
               child?.roles?.includes("User" || "Admin" || "Pemda") ? (
               <Link to={child.link} key={key}>
                 <div
-                  className={`mt-[11px] text-[13px] pl-[37px] rounded py-1.5 hover:text-[#069DD9] cursor-pointer ${
-                    location.pathname.includes(child.link) && "text-[#069DD9]"
-                  }`}
+                  className={`mt-[11px] text-[13px] pl-[37px] rounded py-1.5 hover:text-[#069DD9] cursor-pointer ${location.pathname.includes(child.link) && "text-[#069DD9]"
+                    }`}
                 >
                   {child.label}
                 </div>

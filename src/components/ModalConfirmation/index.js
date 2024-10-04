@@ -78,9 +78,8 @@ const ModalConfirmation = ({ message, onConfirm, onCancel, variant }) => {
           </button>
           <button
             onClick={onCancel}
-            className={`p-3 flex items-center gap-[10px] ${
-              variant === "option" ? "bg-[#EB5757]" : "bg-[#069DD9]"
-            } text-white rounded-lg cursor-pointer font-bold text-sm hover:bg-[#db5353]`}
+            className={`p-3 flex items-center gap-[10px] ${variant === "option" ? "bg-[#EB5757]" : "bg-[#063a69]"
+              } text-white rounded-lg cursor-pointer font-bold text-sm hover:bg-[#db5353]`}
           >
             {variant === "option" ? "TIDAK" : "Cancel"}
           </button>

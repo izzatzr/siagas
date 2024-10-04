@@ -28,7 +28,7 @@ const GovernmentBusiness = () => {
   const actionTableData = [
     {
       code: EDIT_ACTION_TABLE,
-      label : "Edit",
+      label: "Edit",
       onClick: (value) => {
         navigate(`/master/urusan-pemerintah/edit/${value.id}`);
       },
@@ -40,7 +40,7 @@ const GovernmentBusiness = () => {
     {
       key: "",
       title: "Deadline",
-      width : 300,
+      width: 300,
       render: (item) => {
         return (
           <div
@@ -66,7 +66,7 @@ const GovernmentBusiness = () => {
     {
       retry: 0,
       onError: (error) => {
-        snackbar(error?.message || "Terjadi Kesalahan", () => {}, {
+        snackbar(error?.message || "Terjadi Kesalahan", () => { }, {
           type: "error",
         });
       },
@@ -112,7 +112,7 @@ const GovernmentBusiness = () => {
       <div className="flex justify-end items-center gap-2">
         <Link
           to="/master/urusan-pemerintah/tambah"
-          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
+          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#063a69] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
         >
           <BiPlus className="text-base" />
           Tambah Urusan Pemerintah

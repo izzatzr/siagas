@@ -13,7 +13,7 @@ const Toolbar = (props) => {
         <div className="flex justify-end items-center gap-2">
           <Link
             to={linkButton}
-            className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
+            className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#063a69] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
           >
             <BiPlus className="text-base" />
             {linkButtonText}

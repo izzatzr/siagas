@@ -102,7 +102,7 @@ const Login = () => {
   ) : (
     <div className="box-border flex flex-col w-screen h-screen">
       {loading && <Loading />}
-      <div className="z-10 flex items-center justify-between w-full px-24 py-6 bg-[#063a69] text-white shadow-lg">
+      {/* <div className="z-10 flex items-center justify-between w-full px-24 py-6 bg-[#063a69] text-white shadow-lg">
         <div className="flex gap-4">
           <img src={logo} alt="logo" className="w-[53px] h-[56px]" />
           <div className="flex flex-col">
@@ -146,12 +146,12 @@ const Login = () => {
             />
           </div>
         </Slider>
-      </div>
+      </div> */}
       <div className="flex items-center justify-center pb-24 bg-cover">
         <div className="flex mt-[54px] flex-col gap-4 bg-black/5 p-10 w-[484px] items-center shadow-lg rounded-lg">
           <div className="flex flex-col gap-2 text-center">
             <span className="font-bold text-2xl text-[#333333]">
-              Selamat datang
+              Selamat datang di menu inovasi
             </span>
             <span className=" text-base text-[#828282]">
               Login dibawah untuk akses akun Anda
@@ -194,7 +194,7 @@ const Login = () => {
         </div>
       </div>
 
-      <Innovation />
+      {/* <Innovation /> */}
     </div>
   );
 };

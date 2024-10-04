@@ -38,7 +38,7 @@ const SupportDocument = () => {
   const [filterParams, setFilterParams] = React.useState({
     ...initialParams,
     indicator_id: params.indicator,
-    pemda_id : params?.id
+    pemda_id: params?.id
   });
   const [showDelete, setShowDelete] = React.useState(false);
   const [currentItem, setCurrentItem] = React.useState(null);
@@ -88,7 +88,7 @@ const SupportDocument = () => {
     tentang: "",
     dokumen: null,
     indikator_id: params?.indicator,
-    pemda_id : params?.id
+    pemda_id: params?.id
   });
 
   /** Use Query */
@@ -289,7 +289,7 @@ const SupportDocument = () => {
           </div>
 
           <button
-            className="flex gap-2 bg-[#069DD9] rounded-lg px-4 py-2 items-center text-white w-28 ml-auto"
+            className="flex gap-2 bg-[#063a69] rounded-lg px-4 py-2 items-center text-white w-28 ml-auto"
             onClick={() => {
               setOpenForm(true);
             }}

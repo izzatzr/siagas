@@ -120,9 +120,9 @@ const RegionData = () => {
             </select>
           </div>
         </div>
-        <button className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5">
-            <BiDownload className="text-base" />
-            Unduh Semua
+        <button className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#063a69] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5">
+          <BiDownload className="text-base" />
+          Unduh Semua
         </button>
       </div>
       <table className="w-full table">
@@ -130,9 +130,8 @@ const RegionData = () => {
           <tr className="border-b px-4">
             {tableHeader.map((title, index) => (
               <td
-                className={`text-[13px] text-[#717171] font-medium py-3 ${
-                  index = 0 && "pl-6"
-                }
+                className={`text-[13px] text-[#717171] font-medium py-3 ${index = 0 && "pl-6"
+                  }
                 ${(index === 2 || index === 3) && "text-center"}
                 ${index === 4 && "text-right pr-12"}`}
                 key={index}

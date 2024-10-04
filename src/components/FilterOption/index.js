@@ -19,11 +19,10 @@ const FilterOption = ({ items, defaultValue = "", onFilterChange }) => {
           <div
             key={item.value}
             onClick={() => onHandleSelected(item.value)}
-            className={`${
-              selected === item.value
-                ? "bg-[#069DD9] text-white"
+            className={`${selected === item.value
+                ? "bg-[#063a69] text-white"
                 : "bg-transparent text-[#069DD9]"
-            } border border-[#069DD9] rounded-lg py-2 px-6 cursor-pointer transition-colors`}
+              } border border-[#069DD9] rounded-lg py-2 px-6 cursor-pointer transition-colors`}
           >
             {item.name}
           </div>

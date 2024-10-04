@@ -139,7 +139,7 @@ const PemdaLoginList = () => {
             previousClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
             nextClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
             disabledClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center bg-[#828282] text-white"
-            activeClassName="w-[28px] h-[28px] rounded-md border border-[#069DD9] flex justify-center items-center bg-[#069DD9] text-white"
+            activeClassName="w-[28px] h-[28px] rounded-md border border-[#069DD9] flex justify-center items-center bg-[#063a69] text-white"
           />
         </div>
       </div>

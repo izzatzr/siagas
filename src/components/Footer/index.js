@@ -17,7 +17,7 @@ const Footer = () => {
   return (
     <div className=" bg-[#434343] rounded-lg py-6 px-4 flex flex-col gap-6">
       <div className="font-bold text-[#F2F2F2] text-lg">
-        Indeks Inovasi Daerah 2023
+        Indeks Inovasi Daerah
       </div>
       <div className="font-normal text-[#F2F2F2] text-base">
         Sistem ini digunakan untuk mengumpulkan seluruh Inovasi Daerah baik itu

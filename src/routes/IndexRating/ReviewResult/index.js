@@ -265,17 +265,16 @@ const ReviewResult = () => {
       newParams["q"] = filterParams.q;
     }
 
-    let fileName = `hasil-review${
-      selectedOPDProfile
+    let fileName = `hasil-review${selectedOPDProfile
         ? `-${selectedOPDProfile?.label?.replaceAll(" ", "_")}`
         : ""
-    }-${new Date().getTime()}`;
+      }-${new Date().getTime()}`;
 
     downloadExcelBlob({
       api: getDownloadReviewResult(newParams),
       titleFile: fileName,
       onError: () => {
-        snackbar("Terjadi Kesalahan", () => {}, "error");
+        snackbar("Terjadi Kesalahan", () => { }, "error");
       },
     });
   };
@@ -306,11 +305,10 @@ const ReviewResult = () => {
       rows.push(temp);
     }
 
-    let fileName = `hasil-review${
-      selectedOPDProfile
+    let fileName = `hasil-review${selectedOPDProfile
         ? `-${selectedOPDProfile?.label?.replaceAll(" ", "_")}`
         : ""
-    }-${new Date().getTime()}`;
+      }-${new Date().getTime()}`;
 
 
     printToPDF(columns, rows, fileName, "Table Hasil Review")
@@ -348,14 +346,14 @@ const ReviewResult = () => {
       <div className="text-[#333333] text-2xl">Hasil Review Inovasi Daerah</div>
       <div className="flex items-center justify-end gap-2">
         <button
-          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
+          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#063a69] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
           onClick={onHandleDownloadPDf}
         >
           <BiDownload className="text-base" />
           Unduh Data (PDF)
         </button>
         <button
-          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
+          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#063a69] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
           onClick={() => {
             onHandleDownloadFile("xlsx");
           }}
@@ -418,7 +416,7 @@ const ReviewResult = () => {
             previousClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
             nextClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
             disabledClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center bg-[#828282] text-white"
-            activeClassName="w-[28px] h-[28px] rounded-md border border-[#069DD9] flex justify-center items-center bg-[#069DD9] text-white"
+            activeClassName="w-[28px] h-[28px] rounded-md border border-[#069DD9] flex justify-center items-center bg-[#063a69] text-white"
           />
         </div>
       </div>

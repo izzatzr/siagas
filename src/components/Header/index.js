@@ -22,9 +22,9 @@ const Header = () => {
   };
 
   return (
-    <div className="h-[80px] max-h-[80px] w-full flex justify-between items-center py-5 px-6 shadow-lg">
+    <div className="h-[80px] max-h-[80px] w-full flex justify-between items-center py-5 px-6 shadow-lg" style={{ backgroundColor: '#063a69' }}>
       <div className="">
-        <FiMenu />
+        <FiMenu color="white" />
       </div>
       <div className="flex items-center gap-8">
         <div className="flex items-center gap-[42px]">
@@ -35,12 +35,12 @@ const Header = () => {
         <div className="w-px h-full bg-[#E0E0E0]">&nbsp;</div>
         <div className="flex items-center gap-3 relative">
           <div className="flex flex-col">
-            <span className="text-base font-bold">{user?.name}</span>
-            <span className="text-[11px] text-[#828282] font-medium">
+            <span className="text-base font-bold text-white">{user?.name}</span>
+            <span className="text-[11px] text-[#cfcece] font-medium">
               {user?.name}
             </span>
           </div>
-          <AiFillCaretDown size={16} onClick={() => setIsOpen(!isOpen)} />
+          <AiFillCaretDown size={16} color="white" onClick={() => setIsOpen(!isOpen)} />
           {isOpen && (
             <>
               <div

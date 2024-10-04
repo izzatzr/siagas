@@ -28,7 +28,7 @@ const Sidebar = () => {
     setSidebarData([...sidebarDataTemp]);
   };
 
-  
+
 
   React.useEffect(() => {
     let sidebarTemp = sidebarDataDummy;
@@ -50,16 +50,16 @@ const Sidebar = () => {
   return (
     <div className="min-w-[281px] max-w-[281px] flex flex-col justify-between">
       {/* Header sidebar */}
-      <div className="flex gap-4 p-6">
+      <div className="flex gap-4 p-6" style={{ backgroundColor: '#063a69' }}>
         <img src={logo} alt="logo" className="w-[35px] h-[37px]" />
-        <div className="flex flex-col">
-          <span className="font-bold text-[#333333] text-xs">SIAGAS</span>
-          <span className="text-[#333333] text-xs">KABUPATEN SORONG</span>
+        <div className="flex flex-col" style={{ backgroundColor: '#063a69' }}>
+          <span className="font-bold text-white text-xs">SIAGAS</span>
+          <span className="text-white text-xs">KABUPATEN SORONG</span>
         </div>
       </div>
       <div className="w-full h-px bg-[#EBEFF2]"></div>
       {/* Body sidebar */}
-      <div className="flex flex-col flex-1 overflow-scroll">
+      <div className="flex flex-col flex-1 overflow-scroll" style={{ backgroundColor: '#063a69' }}>
         <div className="flex flex-col w-full gap-6 p-6">
           {sidebarData.map((item, key) => {
             return (
@@ -79,10 +79,10 @@ const Sidebar = () => {
         </div>
         <div className="w-full h-px bg-[#EBEFF2]"></div>
       </div>
-      <div className="p-6 flex items-center bg-white justify-center bottom-0 max-w-[281px] w-full border-t-[1px] border-[#EBEFF2]">
+      <div className="p-6 flex items-center justify-center bottom-0 max-w-[281px] w-full border-t-[1px] border-[#EBEFF2]" style={{ backgroundColor: '#063a69' }}>
         <div className="text-[#828282] text-[15px] text-center">
-          <div className="font-semibold">&copy; 2023 BAPPEDA</div>
-          <div className="font-normal">KAB. SORONG</div>
+          <div className="font-semibold text-white">&copy; {new Date().getFullYear()} BAPPEDA</div>
+          <div className="font-normal text-white">KAB. SORONG</div>
         </div>
       </div>
     </div>

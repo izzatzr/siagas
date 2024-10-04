@@ -1,7 +1,7 @@
 import React from "react";
 import { BsTrash } from "react-icons/bs";
 
-const ModalDelete = ({doDelete, cancelDelete}) => {
+const ModalDelete = ({ doDelete, cancelDelete }) => {
   return (
     <div className="w-screen h-screen flex justify-center items-center fixed top-0 left-0 z-30 bg-black/20">
       <div className="bg-white rounded-lg w-[344px] h-[344px] flex justify-center items-center flex-col gap-4">
@@ -20,7 +20,7 @@ const ModalDelete = ({doDelete, cancelDelete}) => {
           </button>
           <button
             onClick={cancelDelete}
-            className="p-3 flex items-center gap-[10px] bg-[#069DD9] text-white rounded-lg cursor-pointer font-bold text-sm hover:bg-[#0688d9]"
+            className="p-3 flex items-center gap-[10px] bg-[#063a69] text-white rounded-lg cursor-pointer font-bold text-sm hover:bg-[#0688d9]"
           >
             Batal
           </button>

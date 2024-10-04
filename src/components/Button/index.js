@@ -6,7 +6,7 @@ const Button = ({
   onClick,
   padding = "px-6 py-[8px]",
   fontSize,
-  background = "#069DD9",
+  background = "#063a69",
   fontColor = "#fff",
   border,
   disabled,

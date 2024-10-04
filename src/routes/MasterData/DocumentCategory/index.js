@@ -37,14 +37,14 @@ const DocumentCategory = () => {
   const actionTableData = [
     {
       code: EDIT_ACTION_TABLE,
-      label : "Edit",
+      label: "Edit",
       onClick: (value) => {
         navigate(`/master/kategori-dokumen/edit/${value.id}`);
       },
     },
     {
       code: DELETE_ACTION_TABLE,
-      label : "Hapus",
+      label: "Hapus",
       onClick: (value) => {
         setCurrentItem(value);
         setShowDelete(true);
@@ -68,7 +68,7 @@ const DocumentCategory = () => {
     {
       retry: 0,
       onError: (error) => {
-        snackbar(error?.message || "Terjadi Kesalahan", () => {}, {
+        snackbar(error?.message || "Terjadi Kesalahan", () => { }, {
           type: "error",
         });
       },
@@ -123,7 +123,7 @@ const DocumentCategory = () => {
         },
         onError: () => {
           setLoadingUtil(false);
-          snackbar("Terjadi kesalahan", () => {}, "error");
+          snackbar("Terjadi kesalahan", () => { }, "error");
         },
       }
     );
@@ -149,7 +149,7 @@ const DocumentCategory = () => {
       <div className="flex items-center justify-end gap-2">
         <Link
           to="/master/kategori-dokumen/tambah"
-          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
+          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#063a69] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
         >
           <BiPlus className="text-base" />
           Tambah Kategori Dokumen

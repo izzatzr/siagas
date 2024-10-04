@@ -53,7 +53,7 @@ const FinalIndex = () => {
   const actionTableData = [
     {
       code: EDIT_ACTION_TABLE,
-      label : "Edit",
+      label: "Edit",
       onClick: (item) => {
         setCurrentItem(item);
         setShowConfirmation(true);
@@ -183,11 +183,11 @@ const FinalIndex = () => {
 
       <div className="text-[#333333] text-2xl">Rekap Indeks Akhir</div>
       <div className="flex items-center justify-end gap-2">
-        <button className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5">
+        <button className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#063a69] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5">
           <BiDownload className="text-base" />
           Unduh Data (PDF)
         </button>
-        <button className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5">
+        <button className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#063a69] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5">
           <BiDownload className="text-base" />
           Unduh Data (XLS)
         </button>
@@ -243,7 +243,7 @@ const FinalIndex = () => {
             previousClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
             nextClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
             disabledClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center bg-[#828282] text-white"
-            activeClassName="w-[28px] h-[28px] rounded-md border border-[#069DD9] flex justify-center items-center bg-[#069DD9] text-white"
+            activeClassName="w-[28px] h-[28px] rounded-md border border-[#069DD9] flex justify-center items-center bg-[#063a69] text-white"
           />
         </div>
       </div>

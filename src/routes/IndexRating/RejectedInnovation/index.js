@@ -259,17 +259,16 @@ const RejectedInnovation = () => {
       newParams["q"] = filterParams.q;
     }
 
-    let fileName = `review-ditolak${
-      selectedOPDProfile
+    let fileName = `review-ditolak${selectedOPDProfile
         ? `-${selectedOPDProfile?.label?.replaceAll(" ", "_")}`
         : ""
-    }-${new Date().getTime()}`;
+      }-${new Date().getTime()}`;
 
     downloadExcelBlob({
       api: getDownloadRejectedReview(newParams),
       titleFile: fileName,
       onError: () => {
-        snackbar("Terjadi Kesalahan", () => {}, "error");
+        snackbar("Terjadi Kesalahan", () => { }, "error");
       },
     });
   };
@@ -342,14 +341,14 @@ const RejectedInnovation = () => {
       </div>
       <div className="flex items-center justify-end gap-2">
         <button
-          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
+          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#063a69] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
           onClick={onHandleDownloadPDf}
         >
           <BiDownload className="text-base" />
           Unduh Data (PDF)
         </button>
         <button
-          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
+          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#063a69] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
           onClick={() => {
             onHandleDownloadFile("xlsx");
           }}
@@ -409,7 +408,7 @@ const RejectedInnovation = () => {
             previousClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
             nextClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center"
             disabledClassName="w-[28px] h-[28px] rounded-md border flex justify-center items-center bg-[#828282] text-white"
-            activeClassName="w-[28px] h-[28px] rounded-md border border-[#069DD9] flex justify-center items-center bg-[#069DD9] text-white"
+            activeClassName="w-[28px] h-[28px] rounded-md border border-[#069DD9] flex justify-center items-center bg-[#063a69] text-white"
           />
         </div>
       </div>

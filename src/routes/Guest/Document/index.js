@@ -53,7 +53,7 @@ const Document = () => {
           forcePage={1}
           renderOnZeroPageCount={null}
           containerClassName="flex items-center gap-2"
-          activeClassName="bg-[#069DD9] text-white"
+          activeClassName="bg-[#063a69] text-white"
           pageClassName="w-7 h-7 rounded-md flex items-center justify-center text-[13px] font-bold border border-[#DFE3E8]"
           disabledClassName="w-7 h-7 rounded-md flex items-center justify-center text-[13px] bg-[#828282] text-[#E0E0E0] text-white"
           nextClassName="w-7 h-7 rounded-md flex items-center justify-center text-[13px] text-[#C4CDD5] font-bold border border-[#DFE3E8]"

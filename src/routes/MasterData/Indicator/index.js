@@ -30,9 +30,9 @@ const Indicator = () => {
     [GET_ALL_INDICATOR, filterParams],
     getAllIndicator(filterParams),
     {
-      retry : 0,
+      retry: 0,
       onError: (error) => {
-        snackbar(error?.message || "Terjadi Kesalahan", () => {}, {type : "error"})
+        snackbar(error?.message || "Terjadi Kesalahan", () => { }, { type: "error" })
       },
     }
   );
@@ -40,14 +40,14 @@ const Indicator = () => {
   const actionTableData = [
     {
       code: INDICATOR_ACTION_TABLE,
-      label : "Skala Indicator",
+      label: "Skala Indicator",
       onClick: (value) => {
         alert("INDICATOR");
       },
     },
     {
       code: EDIT_ACTION_TABLE,
-      label : "Edit",
+      label: "Edit",
       onClick: (value) => {
         navigate(`/master/indikator/edit/${value.id}`)
       },
@@ -64,7 +64,7 @@ const Indicator = () => {
       key: "jenis_indikator",
       title: "Tipe",
       width: 300,
-      render : (item) => {
+      render: (item) => {
         return typeList.find((type) => type?.value === item?.jenis_indikator)?.label || "-"
       }
     },
@@ -135,21 +135,21 @@ const Indicator = () => {
   const onChangeIndicatorType = (value) => {
     setFilterParams({
       ...filterParams,
-      jenis_indikator : value?.value
+      jenis_indikator: value?.value
     })
   }
 
   React.useEffect(() => {
     setLoadingUtil(isFetching)
   }, [isFetching])
-  
+
   return (
     <div className="w-full flex flex-col gap-6 py-6">
       <div className="text-[#333333] font-medium text-2xl">Indikator</div>
       <div className="flex justify-end items-center gap-2">
         <Link
           to="/master/indikator/tambah"
-          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
+          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#063a69] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
         >
           <BiPlus className="text-base" />
           Tambah Indikator

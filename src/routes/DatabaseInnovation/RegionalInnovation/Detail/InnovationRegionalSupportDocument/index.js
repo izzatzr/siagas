@@ -37,7 +37,7 @@ const InnovationRegionalSupportDocument = () => {
   const [filterParams, setFilterParams] = React.useState({
     ...initialParams,
     indicator_id: params.indicator,
-    inovasi_id : params?.id
+    inovasi_id: params?.id
   });
   const [showDelete, setShowDelete] = React.useState(false);
   const [currentItem, setCurrentItem] = React.useState(null);
@@ -87,7 +87,7 @@ const InnovationRegionalSupportDocument = () => {
     tentang: "",
     dokumen: null,
     indikator_id: params?.indicator,
-    inovasi_id : params?.id
+    inovasi_id: params?.id
   });
 
   /** Use Query */
@@ -293,7 +293,7 @@ const InnovationRegionalSupportDocument = () => {
           </div>
 
           <button
-            className="flex gap-2 bg-[#069DD9] rounded-lg px-4 py-2 items-center text-white w-28 ml-auto"
+            className="flex gap-2 bg-[#063a69] rounded-lg px-4 py-2 items-center text-white w-28 ml-auto"
             onClick={() => {
               setOpenForm(true);
             }}

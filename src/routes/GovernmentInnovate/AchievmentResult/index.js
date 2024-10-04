@@ -119,7 +119,7 @@ const AchievmentResult = () => {
       api: getDownloadAchievmentResult(newParams),
       titleFile: fileName,
       onError: () => {
-        snackbar("Terjadi Kesalahan", () => {}, "error");
+        snackbar("Terjadi Kesalahan", () => { }, "error");
       },
     });
   };
@@ -132,18 +132,18 @@ const AchievmentResult = () => {
     }
   }, [isLoading]);
 
-  
+
 
   return (
     <div className="flex flex-col w-full gap-6 py-6">
       <div className="text-[#333333] text-2xl">Prestasi Dan Hasil Lapangan</div>
       <div className="flex items-center justify-end gap-2">
-        <button className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5" onClick={onHandleDownloadPDf}>
+        <button className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#063a69] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5" onClick={onHandleDownloadPDf}>
           <BiDownload className="text-base" />
           Unduh Data (PDF)
         </button>
         <button
-          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#069DD9] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
+          className="text-sm text-white flex items-center gap-2 rounded-lg bg-[#063a69] cursor-pointer hover:bg-[#1d8bb7] p-[10px] mt-5"
           onClick={() => {
             onHandleDownloadFile("xlsx");
           }}
