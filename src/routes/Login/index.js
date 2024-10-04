@@ -100,7 +100,7 @@ const Login = () => {
   return auth.isLoggedIn ? (
     <Navigate to="/" />
   ) : (
-    <div className="box-border flex flex-col w-screen h-screen">
+    <div className="box-border flex flex-col w-screen h-screen bg-[#063a69]">
       {loading && <Loading />}
       {/* <div className="z-10 flex items-center justify-between w-full px-24 py-6 bg-[#063a69] text-white shadow-lg">
         <div className="flex gap-4">
@@ -147,8 +147,8 @@ const Login = () => {
           </div>
         </Slider>
       </div> */}
-      <div className="flex items-center justify-center pb-24 bg-cover">
-        <div className="flex mt-[54px] flex-col gap-4 bg-black/5 p-10 w-[484px] items-center shadow-lg rounded-lg">
+      <div className="flex items-center justify-center pb-24 bg-cover bg-[#063a69]">
+        <div className="flex mt-[54px] flex-col gap-4 bg-white p-10 w-[484px] items-center shadow-lg rounded-lg">
           <div className="flex flex-col gap-2 text-center">
             <span className="font-bold text-2xl text-[#333333]">
               Selamat datang di menu inovasi

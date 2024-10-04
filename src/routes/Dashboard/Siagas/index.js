@@ -19,7 +19,7 @@ const Siagas = () => {
     <div className="flex flex-col w-full gap-6 py-6">
       <div className="text-[#333333] text-2xl font-bold">Dashboard SIAGAS</div>
       <div className="flex flex-col gap-6">
-        <AnnouncementCarousel />
+        {/* <AnnouncementCarousel /> */}
         <CardGradient
           showInfo={true}
           type="primary"
