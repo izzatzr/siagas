@@ -9,9 +9,8 @@ const TableRowCell = ({ item, column, action, align }) => {
     return action;
   }
 
-  const cellClass = `text-[13px] px-2 py-3 ${
-    column.key === "title" ? "w-40" : ""
-  }`;
+  const cellClass = `text-[13px] px-2 py-3 ${column.key === "title" ? "w-40" : ""
+    }`;
 
   let cellContent = value;
 

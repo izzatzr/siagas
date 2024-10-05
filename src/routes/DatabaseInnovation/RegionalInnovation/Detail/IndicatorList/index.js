@@ -4,9 +4,10 @@ import TableAction from "../../../../../components/TableAction";
 import { TRANSFER_ACTION_TABLE } from "../../../../../constants";
 import { useLocation, useNavigate } from "react-router-dom";
 import Pagination from "../../../../../components/Pagination";
+import { AiFillCheckCircle } from "react-icons/ai";
 
 const IndicatorList = (props) => {
-  const { data, setIndicatorFilterParams, params } = props;
+  const { data, setIndicatorFilterParams, params, etcData } = props;
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -31,7 +32,10 @@ const IndicatorList = (props) => {
       title: "Dokumen Pendukung",
       render: (item) => {
         return (
-          <div style={{ marginLeft: 10 }}>
+          <div style={{ marginLeft: 10 }} className="flex">
+            {(etcData ?? []).filter((e) => e?.indikator_id === item.id)[0]?.files.length > 0 ?
+              <AiFillCheckCircle color="green" className="mx-2" /> :
+              <div />}
             <TableAction
               data={[
                 {
