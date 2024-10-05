@@ -42,8 +42,6 @@ const Timeline = ({ value, handleEditComment, handleDeleteComment }) => {
 
   const sortedComments = sortCommentsByDate(value ?? []);
 
-  console.log(sortedComments, 'ini sortedComments');
-
   return (
     <div>
       <ol className="ms-4 relative border-s border-gray-200 dark:border-gray-700">
@@ -167,7 +165,6 @@ const RegionalInnovationDetail = () => {
   // Function to delete a comment
   const handleDeleteComment = async (commentId, innovId) => {
     try {
-      console.log(innovId, 'ini innovId', commentId, 'ini commentid');
       await deleteComment(innovId, commentId);
     } catch (error) {
       console.log(error);
@@ -185,11 +182,9 @@ const RegionalInnovationDetail = () => {
 
       const response = await axios({
         method: 'DELETE',
-        url: `${BASE_API_URL}/innovasi_pemerintah_daerah/${innovId}/comment/${commentId}`,
-        headers,
+        url: `${BASE_API_URL}/inovasi_pemerintah_daerah/${innovId}/comment/${commentId}`,
+        headers: headers,
       });
-
-      console.log(response, 'response');
 
       return response;
     } catch (error) {
@@ -222,9 +217,8 @@ const RegionalInnovationDetail = () => {
     });
   };
 
-  console.log(data, 'ini data');
 
-  const hasTimeline = data?.data?.comments_timeline?.length > 0;
+  // const hasTimeline = data?.data?.comments_timeline?.length > 0;
 
   return (
     <div className="w-full flex flex-col gap-6 py-6">
@@ -251,7 +245,7 @@ const RegionalInnovationDetail = () => {
               onChangeTabActive(1);
             }}
           />
-          {getUser()?.is_super_admin === "y" && (
+          {getUser()?.is_super_admin === "y" && tabActive === 0 && (
             <div className="absolute right-56">
               <Chipper
                 active={tabActive === 2}
@@ -355,6 +349,7 @@ const RegionalInnovationDetail = () => {
 
         {tabActive === 1 && (
           <IndicatorList
+            etcData={data?.data?.indikator}
             data={indicators}
             params={indicatorFilterParams}
             setIndicatorFilterParams={setIndicatorFilterParams}
