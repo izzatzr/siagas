@@ -73,7 +73,7 @@ const Timeline = ({ value, handleEditComment, handleDeleteComment }) => {
                   <div className="text-black text-md font-thin">
                     {card.date_formatted}
                   </div>
-                  <button
+                  {getUser()?.is_super_admin === "y" ? <button
                     className="text-red-500 hover:text-black"
                     onClick={(e) => {
                       e.stopPropagation(); // Prevent triggering the edit handler
@@ -81,7 +81,7 @@ const Timeline = ({ value, handleEditComment, handleDeleteComment }) => {
                     }}
                   >
                     Hapus
-                  </button>
+                  </button> : <div />}
                 </div>
               </div>
             ))}
