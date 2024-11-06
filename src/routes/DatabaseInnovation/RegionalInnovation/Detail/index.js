@@ -55,12 +55,14 @@ const Timeline = ({ value, handleEditComment, handleDeleteComment }) => {
               <div
                 key={cardIdx}
                 className="border mt-3 border-gray-600 rounded-lg px-4 py-4 bg-white w-70 z-10 sm:w-72 me-2 mb-2 cursor-pointer hover:shadow-lg"
-                onClick={() =>
-                  handleEditComment(
-                    card.comment.comment,
-                    card.id,
-                    card.gov_innov_id
-                  )
+                onClick={() => {
+                  if (getUser()?.is_super_admin === "y")
+                    handleEditComment(
+                      card.comment.comment,
+                      card.id,
+                      card.gov_innov_id
+                    )
+                }
                 } // Pass edit handler
               >
                 <div className="">
@@ -164,11 +166,9 @@ const RegionalInnovationDetail = () => {
 
   // Function to delete a comment
   const handleDeleteComment = async (commentId, innovId) => {
-    try {
-      await deleteComment(innovId, commentId);
-    } catch (error) {
-      console.log(error);
-    }
+    deleteComment(innovId, commentId).then(() => {
+      window.location.reload();
+    }).catch((err) => console.log(err))
   };
 
   const deleteComment = async (innovId, commentId) => {
