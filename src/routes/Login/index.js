@@ -180,13 +180,6 @@ const Login = () => {
               errorMessage={errors?.password}
             />
           </div>
-          // <div className="flex justify-between w-full">
-          //   <Checkbox
-          //     checked={payload.rememberMe}
-          //     onChange={() => handleChange("rememberMe", !payload.rememberMe)}
-          //     label="Ingatkan Saya"
-          //   />
-          // </div>
           {/* ini buat reChapta nunggu GOOGLE SITE KEY */}
           <div className="w-full">
             <Button text="Masuk" onClick={handleLogin} />
