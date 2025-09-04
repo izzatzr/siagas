@@ -9,6 +9,7 @@ import { useMutation, useQuery } from "react-query";
 import {
   getAllDocumentRegionalInnovation,
   uploadDocumentRegionalInnovation,
+  deleteDocumentRegionalInnovation
 } from "../../../../../services/DatabaseInnovation/regional";
 import { useUtilContexts } from "../../../../../context/Utils";
 import { DELETE_ACTION_TABLE, DOWNLOAD_TABLE } from "../../../../../constants";
@@ -105,7 +106,7 @@ const InnovationRegionalSupportDocument = () => {
   );
 
   const uploadSupportDocumentMutation = useMutation(uploadDocumentRegionalInnovation);
-  // const deleteSupportDocumentMutation = useMutation(deleteDocumentPemdaProfile);
+  const deleteSupportDocumentMutation = useMutation(deleteDocumentRegionalInnovation);
 
   /** End Use Query */
 
@@ -155,22 +156,23 @@ const InnovationRegionalSupportDocument = () => {
     setShowDelete(false);
     setLoadingUtil(true);
 
-    // deleteSupportDocumentMutation.mutate(
-    //   {
-    //     pemda_indikator_id: params.indicator,
-    //     file_id: currentItem?.file?.id,
-    //   },
-    //   {
-    //     onSuccess: (res) => {
-    //       if (res) {
-    //         setLoadingUtil(false);
-    //         snackbar("File dokumen berhasil dihapus", () => {
-    //           refetch();
-    //         });
-    //       }
-    //     },
-    //   }
-    // );
+    deleteSupportDocumentMutation.mutate(
+      {
+        inovasi_id: params.id,
+        indikator_id: params.indicator,
+        file_id: currentItem?.file?.id,
+      },
+      {
+        onSuccess: (res) => {
+          if (res) {
+            setLoadingUtil(false);
+            snackbar("File dokumen berhasil dihapus", () => {
+              refetch();
+            });
+          }
+        },
+      }
+    );
   };
 
   const onHandlePagination = (page) => {

@@ -48,7 +48,7 @@ export const getRegionalInnovation = (id) => async () => {
     }
 
     return null;
-  } catch (error) {}
+  } catch (error) { }
 };
 
 export const getIndicatorRegionalInnovation = (id) => async () => {
@@ -71,15 +71,14 @@ export const getIndicatorRegionalInnovation = (id) => async () => {
     }
 
     return null;
-  } catch (error) {}
+  } catch (error) { }
 };
 
 export const createRegionalInnovation = async (payload) => {
   try {
     const { id, ...body } = payload;
-    const url = `${BASE_API_URL}/inovasi_pemerintah_daerah${
-      id ? '/' + id : ''
-    }`;
+    const url = `${BASE_API_URL}/inovasi_pemerintah_daerah${id ? '/' + id : ''
+      }`;
 
     // Filter out objects in daftar_foto where either title or link is empty
     const filteredDaftarFoto = payload.daftar_foto.filter(
@@ -199,6 +198,33 @@ export const uploadDocumentRegionalInnovation = async (payload) => {
           Authorization: `Bearer ${getToken().token}`,
         },
         body: formData,
+      }
+    );
+
+    const result = await response.json();
+    const isSuccess = result.code === 200;
+
+    if (isSuccess) {
+      return result;
+    }
+
+    throw Error(result.message);
+  } catch (error) {
+    throw Error('Upload dokumen pendukung error');
+  }
+};
+
+
+export const deleteDocumentRegionalInnovation = async (payload) => {
+  try {
+
+    const response = await fetch(
+      `${BASE_API_URL}/inovasi_pemerintah_daerah/indikator/${payload?.inovasi_id}/${payload.indikator_id}/delete/${payload.file_id}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${getToken().token}`,
+        }
       }
     );
 
