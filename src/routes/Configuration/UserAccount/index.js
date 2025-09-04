@@ -64,14 +64,14 @@ const UserAccount = () => {
   const actionTableData = [
     {
       code: EDIT_ACTION_TABLE,
-      label : "Edit",
+      label: "Edit",
       onClick: (value) => {
         navigate(`/konfigurasi/user-account/edit/${value.id}`);
       },
     },
     {
       code: DELETE_ACTION_TABLE,
-      label : "Hapus",
+      label: "Hapus",
       onClick: (item) => {
         setCurrentItem(item);
         setShowDelete(true);
@@ -136,7 +136,7 @@ const UserAccount = () => {
       {showDelete && (
         <ModalConfirmation
           variant="delete"
-          message="Apakah Anda yakin ingin menghapus user"
+          message={`Apakah Anda yakin ingin menghapus user ${currentItem.username}`}
           onCancel={() => setShowDelete(false)}
           onConfirm={onHandleDelete}
         />
