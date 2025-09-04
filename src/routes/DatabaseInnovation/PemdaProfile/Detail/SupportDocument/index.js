@@ -158,7 +158,8 @@ const SupportDocument = () => {
 
     deleteSupportDocumentMutation.mutate(
       {
-        pemda_indikator_id: params.indicator,
+        pemda_id: params?.id,
+        pemda_indikator_id: params?.indicator,
         file_id: currentItem?.file?.id,
       },
       {
