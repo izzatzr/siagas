@@ -12,7 +12,7 @@ import {
   getPemdaProfiles,
   submitPemdaProfil,
 } from "../../../../services/DatabaseInnovation/pemdaProfile";
-import { getUser } from "../../../../utils";
+// import { getUser } from "../../../../utils";
 import { CHECK_USER, GET_PEMDA_PROFILE } from "../../../../constans/constans";
 import { checkUser } from "../../../../services/Auth/login";
 
@@ -124,7 +124,7 @@ const PemdaProfileForm = () => {
         },
         onError: () => {
           setLoadingUtil(false);
-          snackbar("Terjadi kesalahan", () => {}, "error");
+          snackbar("Terjadi kesalahan", () => { }, "error");
         },
       }
     );
@@ -145,18 +145,18 @@ const PemdaProfileForm = () => {
         </div>
 
         <TextInput
-          label="Daerah"
-          placeholder="Tulis Daerah..."
+          label="Nama"
+          placeholder="Tulis Nama..."
           onChange={(e) => onHandleChange("nama_daerah", e.target.value)}
           value={payload.nama_daerah}
         />
-        <TextInput
-          label="Nama Pemda"
+        {/* <TextInput
+          label="Akun Pembuat"
           placeholder="Tulis Nama Pemda..."
           onChange={(e) => onHandleChange("nama_pemda", e.target.value)}
           value={payload.nama_pemda}
           disabled={true}
-        />
+        /> */}
 
         <div className="flex flex-col gap-4">
           <label
@@ -167,10 +167,9 @@ const PemdaProfileForm = () => {
           </label>
           <div className="flex gap-6">
             <div
-              className={`flex gap-2 p-4 border ${
-                payload.opd_yang_menangani === "Badan Litbang" &&
+              className={`flex gap-2 p-4 border ${payload.opd_yang_menangani === "Badan Litbang" &&
                 "border-[#069DD9]"
-              }`}
+                }`}
             >
               <Checkbox
                 checked={payload.opd_yang_menangani === "Badan Litbang"}
@@ -181,10 +180,9 @@ const PemdaProfileForm = () => {
               />
             </div>
             <div
-              className={`flex gap-2 p-4 border ${
-                payload.opd_yang_menangani === "Bappeda Litbang" &&
+              className={`flex gap-2 p-4 border ${payload.opd_yang_menangani === "Bappeda Litbang" &&
                 "border-[#069DD9]"
-              }`}
+                }`}
             >
               <Checkbox
                 checked={payload.opd_yang_menangani === "Bappeda Litbang"}
@@ -196,9 +194,8 @@ const PemdaProfileForm = () => {
             </div>
 
             <div
-              className={`flex gap-2 p-4 border ${
-                payload.opd_yang_menangani === "diluar" && "border-[#069DD9]"
-              }`}
+              className={`flex gap-2 p-4 border ${payload.opd_yang_menangani === "diluar" && "border-[#069DD9]"
+                }`}
             >
               <Checkbox
                 checked={payload.opd_yang_menangani === "diluar"}
