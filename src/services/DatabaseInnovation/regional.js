@@ -76,7 +76,7 @@ export const getIndicatorRegionalInnovation = (id) => async () => {
 
 export const createRegionalInnovation = async (payload) => {
   try {
-    const { id, ...body } = payload;
+    const { id } = payload;
     const url = `${BASE_API_URL}/inovasi_pemerintah_daerah${id ? '/' + id : ''
       }`;
 
@@ -128,7 +128,7 @@ export const createRegionalInnovation = async (payload) => {
 
 export const editRegionalInnovationScore = async (payload) => {
   try {
-    const { id, ...body } = payload;
+    const { id } = payload;
     const url = `${BASE_API_URL}/inovasi_pemerintah_daerah/skor_kematangan/${id}`;
 
     const response = await fetch(url, {
