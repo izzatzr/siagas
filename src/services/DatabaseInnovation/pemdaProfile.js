@@ -52,11 +52,37 @@ export const getPemdaProfiles = (id) => async () => {
   }
 };
 
+export const delPemdaProfiles = async (id) => {
+  try {
+
+    const response = await fetch(`${BASE_API_URL}/profil_pemda/${id}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${getToken().token}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const result = await processResult(response);
+
+      const isSuccess = result.code === 200;
+
+      if (isSuccess) {
+        return result;
+      }
+    }
+
+    throw Error("Terjadi kesalahan");
+  } catch (error) {
+    throwErrorUtil(error, `${error?.message || error}`);
+  }
+};
+
+
 export const submitPemdaProfil = async (payload) => {
   try {
-    const url = `${BASE_API_URL}/profil_pemda${
-      payload?.id ? "/" + payload?.id : ""
-    }`;
+    const url = `${BASE_API_URL}/profil_pemda${payload?.id ? "/" + payload?.id : ""
+      }`;
 
     const formData = new FormData();
     formData.append("nama_pemda", payload.nama_pemda);
@@ -151,10 +177,11 @@ export const uploadDocumentPemdaProfile = async (payload) => {
 export const deleteDocumentPemdaProfile = async ({
   pemda_indikator_id,
   file_id,
+  pemda_id
 }) => {
   try {
     const response = await fetch(
-      `${BASE_API_URL}/profil_pemda/indikator/${pemda_indikator_id}/delete/${file_id}`,
+      `${BASE_API_URL}/profil_pemda/${pemda_id}/indikator/${pemda_indikator_id}/delete/${file_id}`,
       {
         headers: {
           Authorization: `Bearer ${getToken().token}`,
