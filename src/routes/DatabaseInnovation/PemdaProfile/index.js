@@ -3,6 +3,7 @@ import { BiPlus, BiSearch } from "react-icons/bi";
 import Table from "../../../components/Table";
 import TableAction from "../../../components/TableAction";
 import {
+  DELETE_ACTION_TABLE,
   DOWNLOAD_TABLE,
   EDIT_ACTION_TABLE,
   EXCEL_ACTION_TABLE,
@@ -13,6 +14,7 @@ import { downloadExcelBlob, downloadFile, getUser } from "../../../utils";
 import { CHECK_USER, GET_ALL_PEMDA_PROFILE } from "../../../constans/constans";
 import { useMutation, useQuery } from "react-query";
 import {
+  delPemdaProfiles,
   getAllPemdaProfiles,
   getDownloadPemdaProfileFile,
   getPaktaIntegritas,
@@ -23,6 +25,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Pagination from "../../../components/Pagination";
 import Upload from "../../../components/Upload";
 import { checkUser } from "../../../services/Auth/login";
+import ModalConfirmation from "../../../components/ModalConfirmation";
 
 const initialParamsPemdaProfiles = {
   page: 1,
@@ -35,9 +38,11 @@ const PemdaProfile = () => {
   const navigate = useNavigate();
   const user = getUser();
   const [params, setParams] = React.useState(initialParamsPemdaProfiles);
-  const { setLoadingUtil, snackbar } = useUtilContexts();
+  const { setLoadingUtil } = useUtilContexts();
+  const [showDelete, setShowDelete] = React.useState(false);
+  const [currentItem, setCurrentItem] = React.useState(null);
 
-  const actionTableData = [
+  var actionTableData = [
     {
       code: PREVIEW_ACTION_TABLE,
       label: "Preview",
@@ -132,6 +137,7 @@ const PemdaProfile = () => {
 
   const postPaktaIntegritasMutation = useMutation(postPaktaIntegritas);
   const downloadPaktaIntegritasMutation = useMutation(getPaktaIntegritas);
+  const deleteMutation = useMutation(delPemdaProfiles);
 
   const onHandlePagination = (page) => {
     setParams({
@@ -139,6 +145,19 @@ const PemdaProfile = () => {
       page: page + 1,
     });
   };
+
+  const onHandleDelete = () => {
+    setShowDelete(false);
+    setLoadingUtil(true);
+    console.log('ini pemda ', currentItem.id);
+
+    deleteMutation.mutate(currentItem?.id, {
+      onSuccess: (res) => {
+        navigate(0);
+      },
+    });
+  };
+
 
   const onHandleSarch = (event) => {
     if (event.key === "Enter") {
@@ -202,6 +221,20 @@ const PemdaProfile = () => {
     });
   };
 
+  if (user?.name === 'Super Admin') {
+    actionTableData = [
+      ...actionTableData,
+      {
+        code: DELETE_ACTION_TABLE,
+        label: 'Hapus',
+        onClick: (item) => {
+          setCurrentItem(item);
+          setShowDelete(true);
+        },
+      },
+    ];
+  }
+
   React.useEffect(() => {
     if (isLoadingPemdaProfile) {
       setLoadingUtil(true);
@@ -210,8 +243,21 @@ const PemdaProfile = () => {
     }
   }, [isLoadingPemdaProfile]);
 
+
+
   return (
     <div className="w-full flex flex-col gap-6 py-6">
+      {showDelete && (
+        <ModalConfirmation
+          variant="delete"
+          message={`Apakah Anda yakin ingin menghapus "${currentItem.nama_daerah}" ?`}
+          onCancel={() => {
+            setCurrentItem(null);
+            setShowDelete(false);
+          }}
+          onConfirm={onHandleDelete}
+        />
+      )}
       <div className="text-[#333333] text-2xl">Profile Pemda</div>
       {user?.is_super_admin === "t" && (
         <Upload
